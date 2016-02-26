@@ -19,16 +19,19 @@ fi
 # GLOBALS
 
 ## End user can mod these
-PULPSERVER="172.29.32.79";
-PULP_VERIFYSSL="false";
+PULPSERVER="dev-32-79.lon1.centos.org";
+PULP_VERIFYSSL="False";
 ### Keep one active
-REPO="rhel"; 
+REPO="rhel";
 #REPO="fedora"; 
 
 ## The untouchables
 DONE="\x1b[32mDONE\x1b[0m"
 PULPADMIN="admin";
 PULPADMINPASS="cccp@devcloud";
+F_INJECTFILE="/tmp/pulpadmin_config_toinject"; 
+F_PULPADMIN="/etc/pulp/admin/admin.conf"
+F_CONSUMER="/etc/pulp/consumer/consumer.conf";
 
 # Warn user to do his updates
 proceed="z";
@@ -49,38 +52,62 @@ done
 
 #echo "test"; #TEST
 
+#Prep the confinjectfile (temporary file)
+if [ -f $F_INJECTFILE ]; then
+	rm -rf $F_INJECTFILE;
+fi
+cat <<EOF >> $F_INJECTFILE
+host: $PULPSERVER
+verify_ssl: $PULP_VERIFYSSL
+EOF
+
 # Download and install nessasary repos
-printf " * [FAKE]Setting up nessasary repositories\t";
-#yum install wget -y &> /dev/null;
-#wget https://repos.fedorapeople.org/repos/pulp/pulp/`echo $REPO`-pulp.repo -O /etc/yum.repos.d/`echo $REPO`-pulp.repo &> /dev/null;
-#yum install http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm &> /dev/null;
-printf " $DONE ";
+printf " * Setting up nessasary repositories\t  ";
+yum install wget -y &> /dev/null;
+wget https://repos.fedorapeople.org/repos/pulp/pulp/`echo $REPO`-pulp.repo -O /etc/yum.repos.d/`echo $REPO`-pulp.repo &> /dev/null;
+yum install http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm &> /dev/null;
+printf " [$DONE] ";
 echo;
 
 # Install pulp admin client
-printf " * [Fake]Installing pulp-admin client\t\t";
-#yum groupinstall pulp-admini &> /dev/null
+printf " * Installing pulp-admin client\t\t  ";
+yum groupinstall pulp-admin &> /dev/null;
 #inject config changes into /etc/pulp/admin/admin.conf
-printf " $DONE ";
+sed -i "/[server]/r $F_INJECTFILE" $C_PULPADMIN;
+printf " [$DONE] ";
 echo;
 
 # Setup consumer and agent
-printf " * [FAKE]Installing pulp consumer and agent\t";
-#yum groupinstall pulp-consumer-qpid &> /dev/null
+printf " * Installing pulp consumer and agent\t  ";
+yum groupinstall pulp-consumer-qpid &> /dev/null;
 #Inject config changes into /etc/pulp/consumer/consumer.conf
-printf " $DONE ";
+sed -i "/[server]/r $F_INJECTFILE" $C_CONSUMER;
+printf " [$DONE] ";
 echo;
 
 # Start consumer services
-printf " * [FAKE]Getting things started\t\t\t";
-#systemctl enable goferd &> /dev/null
-#systemctl start goferd &> /dev/null
-printf " $DONE ";
+printf " * Getting things started\t\t  ";
+systemctl enable goferd &> /dev/null;
+systemctl start goferd &> /dev/null;
+systemctl enable docker &> /dev/null;
+systemctl start docker &> /dev/null;
+printf " [$DONE] ";
 echo;
 
 # Setup docker components for pulp-admin
-printf " * [FAKE]Installing pulp-admin docker components\t";
+printf " * Installing pulp-admin docker components";
+yum install pulp-docker-admin-extensions -y &> /dev/null;
+printf " [$DONE] ";
+echo;echo;
+echo "######################Setup completed#################";echo;
 
-echo "Setup completed";echo;
+# Get the user started
+echo "######################Get started#####################";echo;
+echo "Login : pulp-admin login -u $PULPADMIN -p $PULPADMINPASS";
+echo "List available repos : pulp-admin repo list";
+echo "Create a new repo : pulp-admin docker repo create --repo-id=theid"
+echo "Upload docker image to repo : pulp-admin docker repo uploads upload --repo-id=existingrepo theimage.tar";
+echo "More info available at https://pulp-docker.readthedocs.org/en/latest/user-guide/recipes.html"
+echo;echo;
 
-echo ""
+ 
