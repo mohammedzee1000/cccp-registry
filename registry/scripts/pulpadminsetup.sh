@@ -65,7 +65,8 @@ EOF
 printf " * Setting up nessasary repositories\t  ";
 yum install wget -y &> /dev/null;
 wget https://repos.fedorapeople.org/repos/pulp/pulp/`echo $REPO`-pulp.repo -O /etc/yum.repos.d/`echo $REPO`-pulp.repo &> /dev/null;
-yum install http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm &> /dev/null;
+wget http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm &> /dev/null;
+yum localinstall epel-release-latest-7.noarch.rpm -y &> /dev/null;
 printf " [$DONE] ";
 echo;
 
