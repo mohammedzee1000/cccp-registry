@@ -72,7 +72,7 @@ echo;
 
 # Install pulp admin client
 printf " * Installing pulp-admin client\t\t  ";
-yum groupinstall pulp-admin &> /dev/null;
+yum groupinstall pulp-admin -y &> /dev/null;
 #inject config changes into /etc/pulp/admin/admin.conf
 sed -i "/[server]/r $F_INJECTFILE" $C_PULPADMIN;
 printf " [$DONE] ";
@@ -80,7 +80,7 @@ echo;
 
 # Setup consumer and agent
 printf " * Installing pulp consumer and agent\t  ";
-yum groupinstall pulp-consumer-qpid &> /dev/null;
+yum groupinstall pulp-consumer-qpid -y &> /dev/null;
 #Inject config changes into /etc/pulp/consumer/consumer.conf
 sed -i "/[server]/r $F_INJECTFILE" $C_CONSUMER;
 printf " [$DONE] ";
