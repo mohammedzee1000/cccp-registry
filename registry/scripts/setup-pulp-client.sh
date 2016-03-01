@@ -86,6 +86,12 @@ sed -i "/\[server]\/r $F_INJECTFILE" $F_CONSUMER &> /dev/null;
 printf " [$DONE] ";
 echo;
 
+# Setup docker components for pulp-admin
+printf " * Installing pulp-admin docker components";
+yum install pulp-docker-admin-extensions -y &> /dev/null;
+printf " [$DONE] ";
+echo;
+
 # Start consumer services
 printf " * Getting things started\t\t  ";
 systemctl enable goferd &> /dev/null;
@@ -93,13 +99,8 @@ systemctl start goferd &> /dev/null;
 systemctl enable docker &> /dev/null;
 systemctl start docker &> /dev/null;
 printf " [$DONE] ";
-echo;
-
-# Setup docker components for pulp-admin
-printf " * Installing pulp-admin docker components";
-yum install pulp-docker-admin-extensions -y &> /dev/null;
-printf " [$DONE] ";
 echo;echo;
+
 echo "######################Setup completed#################";echo;
 
 # Get the user started
@@ -109,6 +110,4 @@ echo "List available repos : pulp-admin repo list";
 echo "Create a new repo : pulp-admin docker repo create --repo-id=theid"
 echo "Upload docker image to repo : pulp-admin docker repo uploads upload --repo-id=existingrepo theimage.tar";
 echo "More info available at https://pulp-docker.readthedocs.org/en/latest/user-guide/recipes.html"
-echo;echo;
-
- 
+echo;echo; 
