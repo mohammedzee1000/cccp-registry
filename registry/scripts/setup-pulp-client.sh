@@ -82,7 +82,7 @@ echo;
 printf " * Installing pulp consumer and agent\t  ";
 yum groupinstall pulp-consumer-qpid -y &> /dev/null;
 #Inject config changes into /etc/pulp/consumer/consumer.conf
-sed -i "/\[server]\/r $F_INJECTFILE" $F_CONSUMER &> /dev/null;
+sed -i "/\[server\]/r $F_INJECTFILE" $F_CONSUMER &> /dev/null;
 printf " [$DONE] ";
 echo;
 
