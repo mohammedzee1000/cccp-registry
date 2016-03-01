@@ -4,7 +4,7 @@
 # This script sets up pulpadmin on systems acting as pulp-admin clients for pulpadmin setup on devcloud for     #
 # Centos Container Pipeline.											#
 # 														#
-#	MAINTAINER : Mohammed Zeeshan Ahmed (mohammed.zee1000@gmail.com						#
+#	     AUTHOR : Mohammed Zeeshan Ahmed (mohammed.zee1000@gmail.com					#
 #################################################################################################################
 
 
@@ -74,7 +74,7 @@ echo;
 printf " * Installing pulp-admin client\t\t  ";
 yum groupinstall pulp-admin -y &> /dev/null;
 #Inject config changes into /etc/pulp/admin/admin.conf
-sed -i "/[server]/r $F_INJECTFILE" $F_PULPADMIN &> /dev/null;
+sed -i "/\[server\]/r $F_INJECTFILE" $F_PULPADMIN &> /dev/null;
 printf " [$DONE] ";
 echo;
 
@@ -82,7 +82,7 @@ echo;
 printf " * Installing pulp consumer and agent\t  ";
 yum groupinstall pulp-consumer-qpid -y &> /dev/null;
 #Inject config changes into /etc/pulp/consumer/consumer.conf
-sed -i "/[server]/r $F_INJECTFILE" $F_CONSUMER &> /dev/null;
+sed -i "/\[server]\/r $F_INJECTFILE" $F_CONSUMER &> /dev/null;
 printf " [$DONE] ";
 echo;
 
