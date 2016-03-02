@@ -19,7 +19,7 @@ fi
 # GLOBALS
 
 ## End user can mod these
-PULPSERVER="172.29.32.16";
+PULPSERVER="dev-32-16.lon1.centos.org";
 PULP_VERIFYSSL="False";
 ### Keep one active
 REPO="rhel";
