@@ -81,6 +81,7 @@ echo;
 printf " * Setting up the backend stuff\t ";
 yum install mongodb-server -y &> /dev/null;
 systemctl enable mongod  &> /dev/null;
+systemctl start mongod  &> /dev/null;
 yum install -y qpid-cpp-server qpid-cpp-server-store &> /dev/null;
 systemctl enable qpidd &> /dev/null;
 systemctl start qpidd &> /dev/null;
@@ -106,6 +107,7 @@ systemctl enable pulp_celerybeat &> /dev/null;
 systemctl start pulp_celerybeat &> /dev/null;
 systemctl enable pulp_resource_manager &> /dev/null;
 systemctl start pulp_resource_manager &> /dev/null;
+sudo -u apache pulp-manage-db &> /dev/null;
 printf " [$DONE] ";
 echo;echo;
 
