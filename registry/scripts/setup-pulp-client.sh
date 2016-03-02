@@ -65,7 +65,10 @@ EOF
 # Download and install nessasary repos
 printf " * Setting up nessasary repositories\t  ";
 yum install wget -y &> /dev/null;
-#wget https://repos.fedorapeople.org/repos/pulp/pulp/`echo $REPO`-pulp.repo -O /etc/yum.repos.d/`echo $REPO`-pulp.repo &> /dev/null;
+#wget https://repos.fedorapeople.org/repos/pulp/pulp/`echo $REPO`-pulp.repo -O /etc/yum.repos.d/`echo $REPO`-pulp.repo &> /dev/null;i
+if [ -f $F_PULPREPO ]; then
+	rm -rf $F_PULPREPO;
+fi
 cat <<EOF >> $F_PULPREPO
 [pulp-repo]
 name=Pulp-Crane Repo
