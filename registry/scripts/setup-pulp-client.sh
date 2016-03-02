@@ -72,7 +72,6 @@ name=Pulp-Crane Repo
 baseurl=https://repos.fedorapeople.org/pulp/pulp/beta/2.8/7/x86_64/
 gpgcheck=0
 EOF
-https://repos.fedorapeople.org/pulp/pulp/beta/2.8/7Server/x86_64/
 wget http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm &> /dev/null;
 yum localinstall epel-release-latest-7.noarch.rpm -y &> /dev/null;
 printf " [$DONE] ";
