@@ -29,7 +29,8 @@ DONE="\x1b[32mDONE\x1b[0m"
 PULPADMIN="admin";
 PULPADMINPASS="cccp@devcloud";
 F_INJECTFILE="/tmp/pulp_config_toinject";
-F_PULPSERVER="/etc/pulp/server.conf"
+F_PULPSERVER="/etc/pulp/server.conf";
+#F_LOG="/var/log/"
 #F_PULPADMIN="/etc/pulp/admin/admin.conf"
 #F_CONSUMER="/etc/pulp/consumer/consumer.conf";
 
@@ -97,6 +98,13 @@ sudo -u apache pulp-manage-db &> /dev/null;
 printf " [$DONE] ";
 echo;
 
+# Setup crane
+printf " * Setting up the crane\t "
+yum install python-crane -y &> /dev/null;
+cp /usr/share/crane/apache.conf /etc/httpd/conf.d/crane.conf
+printf " [$DONE] ";
+echo;
+
 # Start consumer services
 printf " * Getting things started\t\t  ";
 systemctl enable httpd &> /dev/null;
@@ -113,3 +121,8 @@ echo;echo;
 
 
 echo "######################Setup completed#################";echo;
+echo "######################TODO#################";echo;
+echo "Edit /etc/httpd/conf.d/crane.conf as needed";
+echo "Make sure you make the hostname of the server known to be put into setup-pulp-client.sh";
+echo;
+
