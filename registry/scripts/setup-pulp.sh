@@ -29,8 +29,9 @@ DONE="\x1b[32mDONE\x1b[0m"
 PULPADMIN="admin";
 PULPADMINPASS="cccp@devcloud";
 F_INJECTFILE="/tmp/pulp_config_toinject";
-F_PULPADMIN="/etc/pulp/admin/admin.conf"
-F_CONSUMER="/etc/pulp/consumer/consumer.conf";
+F_PULPSERVER="/etc/pulp/server.conf"
+#F_PULPADMIN="/etc/pulp/admin/admin.conf"
+#F_CONSUMER="/etc/pulp/consumer/consumer.conf";
 
 # Warn user to do his updates
 proceed="z";
@@ -89,6 +90,8 @@ echo;
 # Setup pulp server
 printf " * Setting up the pulp server\t "
 yum groupinstall pulp-server-qpid -y &> /dev/null;
+# Insert modifications into /etc/pulp/server.conf
+sed -i "/\[server\]/r $F_INJECTFILE" $F_PULPSERVER &> /dev/null;
 sudo -u apache pulp-manage-db &> /dev/null;
 printf " [$DONE] ";
 echo;
