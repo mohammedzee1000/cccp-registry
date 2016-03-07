@@ -77,6 +77,7 @@ gpgcheck=0
 EOF
 wget http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm &> /dev/null;
 yum localinstall epel-release-latest-7.noarch.rpm -y &> /dev/null;
+rm -rf epel-release-latest-7.noarch.rpm &> /dev/null;
 printf " [$DONE] ";
 echo;
 

@@ -30,6 +30,7 @@ PULPADMIN="admin";
 PULPADMINPASS="cccp@devcloud";
 F_INJECTFILE="/tmp/pulp_config_toinject";
 F_PULPSERVER="/etc/pulp/server.conf";
+F_CRANECONFIG="/etc/crane.conf";
 #F_LOG="/var/log/"
 #F_PULPADMIN="/etc/pulp/admin/admin.conf"
 #F_CONSUMER="/etc/pulp/consumer/consumer.conf";
@@ -75,6 +76,7 @@ gpgcheck=0
 EOF
 wget http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm &> /dev/null;
 yum localinstall epel-release-latest-7.noarch.rpm -y &> /dev/null;
+rm -rf epel-release-latest-7.noarch.rpm &> /dev/null;
 printf " [$DONE] ";
 echo;
 
@@ -102,6 +104,18 @@ echo;
 printf " * Setting up the crane\t "
 yum install python-crane -y &> /dev/null;
 cp /usr/share/crane/apache.conf /etc/httpd/conf.d/crane.conf
+#Prep the confinjectfile (temporary file) this time to inject crane config
+if [ -f $F_CRANECONFIG ]; then
+        rm -rf $F_CRANECONFIG;
+fi
+
+cat <<EOF >> $F_CRANECONFIG
+[general]
+debug: true
+data_dir: /var/www/pub/v1/app/
+endpoint: localhost:5000
+EOF
+
 printf " [$DONE] ";
 echo;
 
@@ -123,6 +137,7 @@ echo;echo;
 echo "######################Setup completed#################";echo;
 echo "######################TODO#################";echo;
 echo "Edit /etc/httpd/conf.d/crane.conf as needed";
+echo "Edit $F_CRANECONFIG as needed";
 echo "Make sure you make the hostname of the server known to be put into setup-pulp-client.sh";
 echo;
 
