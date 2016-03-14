@@ -29,7 +29,7 @@ F_PULPREPO="/etc/yum.repos.d/pulp.repo";
 ## The untouchables
 DONE="\x1b[32mDONE\x1b[0m"
 PULPADMIN="admin";
-PULPADMINPASS="cccp@devcloud";
+PULPADMINPASS="###"; # Set the password as needed before running this
 F_INJECTFILE="/tmp/pulpadmin_config_toinject"; 
 F_PULPADMIN="/etc/pulp/admin/admin.conf"
 F_CONSUMER="/etc/pulp/consumer/consumer.conf";
