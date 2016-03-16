@@ -112,8 +112,8 @@ fi
 cat <<EOF >> $F_CRANECONFIG
 [general]
 debug: true
-data_dir: /var/www/pub/v1/app/
-endpoint: localhost:5000
+data_dir: /var/www/pub/docker/
+endpoint: `hostname`:5000
 EOF
 
 printf " [$DONE] ";
@@ -138,6 +138,7 @@ echo "######################Setup completed#################";echo;
 echo "######################TODO#################";echo;
 echo "Edit /etc/httpd/conf.d/crane.conf as needed";
 echo "Edit $F_CRANECONFIG as needed";
+echo "Enable SSLInsecureRenegotiation on and SSLVerifyClient off"
 echo "Make sure you make the hostname of the server known to be put into setup-pulp-client.sh";
 echo;
 
