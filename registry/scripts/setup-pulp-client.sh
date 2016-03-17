@@ -119,6 +119,6 @@ echo "######################Get started#####################";echo;
 echo "Login : pulp-admin login -u $PULPADMIN -p $PULPADMINPASS";
 echo "List available repos : pulp-admin repo list";
 echo "Create a new repo : pulp-admin docker repo create --repo-id=theid"
-echo "Upload docker image to repo : pulp-admin docker repo uploads upload --repo-id=existingrepo theimage.tar";
+echo "Upload docker image to repo : pulp-admin docker repo uploads upload --repo-id=existingrepo -f theimage.tar";
 echo "More info available at https://pulp-docker.readthedocs.org/en/latest/user-guide/recipes.html"
 echo;echo; 

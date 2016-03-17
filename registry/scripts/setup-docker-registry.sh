@@ -17,7 +17,11 @@ if (( $EUID != 0 )); then
 fi
 
 
+# Globals
+
 ## The untouchables
+F_REGCONF="/etc/docker-registry.yml";
+F_SSLCONF="/etc/httpd/conf.d/ssl.conf";
 DONE="\x1b[32mDONE\x1b[0m";
 
 # Warn user to do his updates
@@ -37,7 +41,6 @@ while true; do
         fi
 done
 
-
 # Download and install nessasary repos
 printf " * Setting up nessasary repositories\t  ";
 yum install wget -y &> /dev/null;
@@ -50,8 +53,25 @@ echo;
 
 # Install nessasary packages
 printf " * Installing nessasary packages\t";
-yum install docker docker-registry httpd mod_ssl -y &> /dev/null;
+yum install docker docker-registry httpd mod_ssl firewalld -y &> /dev/null;
+
 printf " [$DONE] ";
 echo;
 
+##############################################################################################
 
+echo "###########################################Basic Setup Complete requires some reconfiguration";
+echo "Edit $F_REGCONF, set local \n storage_path = /path/to/loads/of/storage";
+echo "Generate SSL Cert : openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ca.key -out ca.crt";
+echo "In the questionnaire, make sure you set the common name to the fqdn that users will use to get to service";
+echo "Copy the files to appropriate locations in /etc/pki/tls/certs/ca.crt and /etc/pki/tls/private/ca.key"
+echo "Also paste the ca.crt somewhere publically available such as http server";
+echo "Edit $F_SSLCONF to include following information before </VirtualHost>";
+echo;
+echo "<VirtualHost *:443>";
+echo "SSLInsecureRenegotiation=false";
+echo "ServerName=fqdn users will use to get to your service";
+echo -e "ProxyRequests off\nProxyPreserveHost on\nProxyPass / http://127.0.0.1:5000/\nProxyPassReverse / http://127.0.0.1:5000/";
+echo -e "<Location />\nOrder deny,allow\nAllow from all\nAuthName 'Registry Authentication'\nAuthType basic\n";
+echo -e ""
+echo -e "<Limit PUT>\nRequire valid-user\n</Limit>\n";

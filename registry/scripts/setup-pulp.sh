@@ -19,6 +19,8 @@ fi
 # Globals 
 
 PULP_VERIFYSSL="False";
+PULPADMINPASS="###"; #set the password before before running this script
+PULPSERVER="registry.pco.centos.in"
 ### Keep one active
 REPO="rhel";
 #REPO="fedora"; 
@@ -27,7 +29,6 @@ F_PULPREPO="/etc/yum.repos.d/pulp.repo";
 ## The untouchables
 DONE="\x1b[32mDONE\x1b[0m"
 PULPADMIN="admin";
-PULPADMINPASS="###"; #set the password before before running this script
 F_INJECTFILE="/tmp/pulp_config_toinject";
 F_PULPSERVER="/etc/pulp/server.conf";
 F_CRANECONFIG="/etc/crane.conf";
@@ -57,6 +58,7 @@ if [ -f $F_INJECTFILE ]; then
         rm -rf $F_INJECTFILE;
 fi
 cat <<EOF >> $F_INJECTFILE
+server_name: $PULPSERVER
 default_login: $PULPADMIN
 default_password: $PULPADMINPASS
 EOF
