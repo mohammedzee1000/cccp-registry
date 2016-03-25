@@ -44,19 +44,20 @@ done
 # Download and install nessasary repos
 printf " * Setting up nessasary repositories\t  ";
 yum install wget -y &> /dev/null;
-wget http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm &> /dev/null;
-yum localinstall epel-release-latest-7.noarch.rpm -y &> /dev/null;
-rm -rf epel-release-latest-7.noarch.rpm &> /dev/null;
+#wget http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm &> /dev/null;
+#yum localinstall epel-release-latest-7.noarch.rpm -y &> /dev/null;
+#rm -rf epel-release-latest-7.noarch.rpm &> /dev/null;
 printf " [$DONE] ";
 echo;
 
 
 # Install nessasary packages
 printf " * Installing nessasary packages\t";
-yum install docker docker-registry httpd mod_ssl firewalld -y &> /dev/null;
-
+yum install docker docker-registry httpd mod_ssl firewalld git letsencrypt -y &> /dev/null;
 printf " [$DONE] ";
 echo;
+
+# Generating nessasary certificates
 
 ##############################################################################################
 
