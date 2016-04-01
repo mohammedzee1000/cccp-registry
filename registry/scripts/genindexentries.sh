@@ -57,19 +57,31 @@ function indexentry(){
 		;;
 		GEN_ENTRY)
 			#entry="- id\t\t: $theid\n";
-			entry="app-id\t: $app_id\n";
-			entry+="job-id\t: $job_id\n";
-			entry+="git-url\t: $git_url\n";
-			entry+="git-path\t: $git_path\n";
-			entry+="git-branch\t: $git_branch\n";
-			entry+="notify-email: $notify_email\n";
-			echo -e $entry >> $tmpfile;
+				
+			echo -en "app-id      : $app_id" > $tmpfile;
+	
+			content=$(cat $tmpfile);
+			echo -en "$content\njob-id      : $job_id" > $tmpfile;
+
+			content=$(cat $tmpfile);
+			echo -en "$content\ngit-url     : $git_url" > $tmpfile;
+
+			content=$(cat $tmpfile);
+			echo -en "$content\ngit-path    : $git_path" > $tmpfile;
+
+			content=$(cat $tmpfile);
+			echo -en "$content\ngit-branch  : $git_branch" > $tmpfile;
+
+			content=$(cat $tmpfile);
+			echo -en "$content\nnotify-email: $notify_email" > $tmpfile;
+
 			sed -e 's/^/  /' -i $tmpfile;
 			content=$(cat $tmpfile);
-			echo -en "- id\t\t: $theid\n$content" > $tmpfile;
+			echo -en "- id          : $theid\n$content" > $tmpfile;
 			sed -e 's/^/  /' -i $tmpfile;
 			#cat $tmpfile; #TEST;
 			cat $tmpfile >> $indexpath;
+			echo >> $indexpath;
 			echo >> $indexpath;
 		;;
 	esac
