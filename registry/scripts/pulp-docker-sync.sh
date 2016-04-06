@@ -63,7 +63,7 @@ else
 fi
 
 # Check if parameters were passed correctly.
-if [ $# -lt 4 ]; then
+if [ $# -lt 5 ]; then
 	err PARAMS_ERROR;
 fi
 
