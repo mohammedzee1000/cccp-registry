@@ -9,6 +9,42 @@
 
 function err_handle() {
 	err=$1;
+        err_handle PLP_LOGIN_FAIL;
+fi
+
+# Create the tarball
+if [ -f $TARBALL ]; then
+        rm -rf $TARBALL;
+fi
+docker save $ORIGIMG > $TARBALL;
+
+# Check for existance of the repo
+pulp-admin docker repo list | grep $REPOID_INTERNAL &> /dev/null;
+REPOEXISTS=$?;
+
+# If it exists, remove it.
+if [ $REPOEXISTS -gt 0 ]; then
+        pulp-admin docker repo delete --repo-id=$REPOID_INTERNAL;
+fi
+
+# Create the fresh repo
+pulp-admin docker repo create --repo-id=$REPOID_INTERNAL --redirect-url=$CDNURL;
+
+# Upload image layers to created repo
+ pulp-admin docker repo uploads upload --repo-id=$REPOID_INTERNAL -f $TARBALL;
+
+# Publish the data for crane to consume
+pulp-admin docker repo update --repo-id=$REPOID_INTERNAL --repo-registry-id=$PUBLISHEDID;
+pulp-admin docker repo publish run --repo-id=$REPOID_INTERNAL;
+
+echo;
+echo "TASK COMPLETED";
+
+~                                                                                                                                       
+~                                                                                                                                       
+~                                                                                                                                       
+~                                                                                                                                       
+                                                                                                                      73,0-1        Bot
 	err_code=1;
 
 	case $err in
