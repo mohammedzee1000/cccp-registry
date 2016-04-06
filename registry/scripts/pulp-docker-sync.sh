@@ -24,13 +24,14 @@ repoid_pulp_internal=$4;
 repoid_pulp_publish=$5;
 
 ## Base 
-extern_reg_url="https://dev-32-56.lon1.centos.org:5000";
-CDN_Server="https://dev-32-49.lon1.centos.org/pulp/docker";
-CDN_Repo_Version="2";
-LOG="/var/log/pulp_docker_sync_log";
+extern_reg_url="https://dev-32-56.lon1.centos.org:5000"; # The repository with wuch the sync will happen - Certificate required on pulp server
+CDN_Server="https://dev-32-49.lon1.centos.org"; # The CDN Server for pulp.
+CDN_Repo_Version="2"; # Repository version of pulp.
+LOG="/var/log/pulp_docker_sync_log"; # Temp Log file.
 
 ## Derived
-redirecturl="$CDN_Server/v$CDN_Repo_Version/$repoid_pulp_internal";
+CDN_URL="$CDN_Server/pulp/docker"; # THE CDN url where images are stored
+redirecturl="$CDN_URL/v$CDN_Repo_Version/$repoid_pulp_internal"; # The final redirect url per image.
 
 function usage() {
 	echo "USAGE : $0 pulp_uid pulp_pass extern_reg_reponame repoid_pulp_internal repoid_pulp_publish";
