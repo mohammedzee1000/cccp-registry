@@ -25,7 +25,7 @@ repoid_pulp_publish=$5;
 
 ## Base 
 extern_reg_url="https://dev-32-56.lon1.centos.org:5000";
-CDN_Server="https://dev-32-49.lon1.centos.org";
+CDN_Server="https://dev-32-49.lon1.centos.org/pulp/docker";
 CDN_Repo_Version="2";
 LOG="/var/log/pulp_docker_sync_log";
 
