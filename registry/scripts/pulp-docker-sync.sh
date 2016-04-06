@@ -25,7 +25,7 @@ repoid_pulp_publish=$5;
 
 ## Base 
 extern_reg_url="https://dev-32-56.lon1.centos.org:5000";
-CDN_Server="https://dev=32-49.lon1.centos.org";
+CDN_Server="https://dev-32-49.lon1.centos.org";
 CDN_Repo_Version="2";
 LOG="/var/log/pulp_docker_sync_log";
 
@@ -84,7 +84,7 @@ if [ $? -eq 0 ]; then
 fi
 
 # Create the repo
-pulp-admin repo create --repo-id=$repoid_pulp_internal --repo-registry-id=$repoid_pulp_publish --feed=$extern_reg_url --verify-feed-ssl false --upstream-name=$extern_reg_reponame  --redirect-url=$redirecturl;
+pulp-admin docker repo create --repo-id=$repoid_pulp_internal --repo-registry-id=$repoid_pulp_publish --feed=$extern_reg_url --verify-feed-ssl false --upstream-name=$extern_reg_reponame  --redirect-url=$redirecturl;
 
 # Run the sync on the repository.
 pulp-admin docker repo sync run --repo-id=$repoid_pulp_internal;
