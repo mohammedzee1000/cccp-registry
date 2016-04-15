@@ -11,7 +11,7 @@
 DIRROOT=$1;
 PROJECT=$2;
 ORDERFILE=$3;
-LOGFILE="$HOME/builddockerfile";
+LOGFILE="$HOME/dockerfilebuildtest.log";
 
 function usage() {
 	echo "USAGE : $0 [DIRROOT] [PROJECTNAME] [ORDERFILE]";
@@ -132,8 +132,9 @@ if [ ! -f $LOGFILE ]; then
 	touch $LOGFILE;
 fi
 
-printf "Docker version : `docker -v`\n\n######################################## BEGIN #############################" > $LOGFILE
+printf "Docker Builder version : `docker version`\n\n######################################## BEGIN #############################" > $LOGFILE
 pushd $DIRROOT &> /dev/null;
 build 1;
 popd &> /dev/null;
-printf "\n########################### END ######################";
+printf "\n########################### END ######################\n\n" >> $LOGFILE;
+
