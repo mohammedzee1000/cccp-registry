@@ -42,7 +42,7 @@ function build() {
 	local ITEM;
 	if [ -f $ORDERFILE]; then
 
-		for ITEM in `echo $ORDERFILE`; do
+		for ITEM in `cat $ORDERFILE`; do
 			if [ -d "$ITEM" -a ! -L "$ITEM" ]; then
 				ls ./$ITEM | grep -i Dockerfile &> /dev/null;
 				if [ $? -eq 0 ]; then
