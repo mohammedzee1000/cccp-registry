@@ -14,7 +14,7 @@ ORDERFILE=$3;
 LOGFILE="$HOME/builddockerfile";
 
 function usage() {
-	echo "USAGE : $0 [DIRROOT] [PROJECTNAME] [BASEDIR] [ORDERFILE]";
+	echo "USAGE : $0 [DIRROOT] [PROJECTNAME] [ORDERFILE]";
 	echo;
 	echo "*   Directory Root - The folder which containes dockerfiles, remember only one Dockerfile per directory/subdirectory.";
 	echo "*   PROJECTNAME - Name you wish to assign to the project.";
@@ -40,26 +40,39 @@ function err() {
 function build() {
 	level=$1;
 	local ITEM;
-	if [ -f $ORDERFILE]; then
-
+	local state;
+	if [ -f $ORDERFILE ]; then
+		printf "\nFound $ORDERFILE, reading...\n\n";
 		for ITEM in `cat $ORDERFILE`; do
 			if [ -d "$ITEM" -a ! -L "$ITEM" ]; then
+
 				ls ./$ITEM | grep -i Dockerfile &> /dev/null;
+
 				if [ $? -eq 0 ]; then
 					echo;echo;
-					echo "* Found dockerfile at $PWD/ITEM...";
+					echo "* Found dockerfile at orderfile location $PWD/$ITEM...";
 					buildid_t="$PROJECT/$ITEM";
 					buildid=`echo $buildid_t | tr '[:upper:]' '[:lower:]'`;
 					printf "** Building as $buildid...\n";
+
+					printf "\n\nBuilding $PWD/$ITEM as $buildid\n\n" >> $LOGFILE;
+					pushd $PWD/$ITEM &> /dev/null;
 					docker build -t $buildid . >> $LOGFILE 2>&1;
-               		                if [ $? -eq 0 ]; then
+
+               		                if [ $? -gt 0 ]; then
+
+                                	         state="failure";
+
+                        	        else
+
                 	               		 state="success";
                         	                 docker rmi $buildid &> /dev/null;
-                        	        else
-                                	         state="failure";
+
                                		fi
-					printf "$state\n\n";
-					printf "$state\n\n" >> $LOGFILE;
+
+					popd &> /dev/null;
+					printf "Build was $state\n\n";
+					printf "Build was $state\n\n" >> $LOGFILE;
 
 				fi
 				echo;echo;
@@ -72,6 +85,7 @@ function build() {
 		for ITEM in `ls`; do
 			#echo $ITEM; #test
 			if [ -d "./$ITEM" -a ! -L "./$ITEM" ]; then
+
 				#echo "$ITEM is directory" #test
 				#ls -l $ITEM; #test
 				pushd ./$ITEM &> /dev/null;
@@ -106,18 +120,20 @@ function build() {
 }
 
 if [ $# -lt 2 ]; then
+
 	err INVAL_USAGE;
+
 fi
 
+echo "Log file at $LOGFILE";
 
-echo "Log file not provided, defaulting to $LOGFILE";
-
-
-if [ -f $LOGFILE ]; then
-	rm -rf $LOGFILE;
+if [ ! -f $LOGFILE ]; then
+	#rm -rf $LOGFILE;
+	touch $LOGFILE;
 fi
 
-touch $LOGFILE;
+printf "Docker version : `docker -v`\n\n######################################## BEGIN #############################" > $LOGFILE
 pushd $DIRROOT &> /dev/null;
 build 1;
 popd &> /dev/null;
+printf "\n########################### END ######################";
