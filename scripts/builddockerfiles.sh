@@ -11,14 +11,17 @@
 DIRROOT=$1;
 PROJECT=$2;
 ORDERFILE=$3;
+CLEANUPAFTER=$4;
 LOGFILE="$HOME/dockerfilebuildtest.log";
+CLEANUPFILE="$HOME/builtimagelist";
 
 function usage() {
-	echo "USAGE : $0 [DIRROOT] [PROJECTNAME] [ORDERFILE]";
+	echo "USAGE : $0 [DIRROOT] [PROJECTNAME] [ORDERFILE] [CLEANUPAFTER]";
 	echo;
-	echo "*   Directory Root - The folder which containes dockerfiles, remember only one Dockerfile per directory/subdirectory.";
+	echo "*   DIRROOT - The folder which containes dockerfiles, remember only one Dockerfile per directory/subdirectory.";
 	echo "*   PROJECTNAME - Name you wish to assign to the project.";
-	echo "    ORDERFILE - Pattern ";
+	echo "    ORDERFILE - List of relative paths(relative to DIRROOT of dockerfiles to be built in order ";
+	echo "*   CLEANUPAFTER - If true, then cleanup of built images will happen after everything is built";
 	echo;
 }
 
@@ -37,11 +40,27 @@ function err() {
 	exit $errcode
 }
 
+function cleanupafter() {
+
+	echo "Cleaning up built images...";
+
+	local ITEM;
+
+	for ITEM in `cat $CLEANUPFILE`; do
+
+		docker rmi $ITEM &> /dev/null;
+
+	done
+
+}
+
 function build() {
 	level=$1;
 	local ITEM;
 	local state;
+
 	if [ -f $ORDERFILE ]; then
+
 		printf "\nFound $ORDERFILE, reading...\n\n";
 		for ITEM in `cat $ORDERFILE`; do
 			if [ -d "$ITEM" -a ! -L "$ITEM" ]; then
@@ -66,8 +85,18 @@ function build() {
                         	        else
 
                 	               		 state="success";
-                        	                 docker rmi $buildid &> /dev/null;
 
+						 if [ $CLEANUPAFTER == "true" ]; then
+
+							echo "Skipping cleanup for now..";
+
+						 else
+							
+							echo "Cleaning up $buildid";
+                        	                 	docker rmi $buildid &> /dev/null;
+			
+						 fi
+						
                                		fi
 
 					popd &> /dev/null;
@@ -102,12 +131,29 @@ function build() {
 					printf "** Building as $buildid, this could take a while ...";
 					printf "\n\n\nBuild $PWD dockerfile\n" >> $LOGFILE; 
 					docker build -t $buildid . >> $LOGFILE 2>&1;
-					if [ $? -eq 0 ]; then
-						state="success";
-						docker rmi $buildid &> /dev/null;
-					else
-						state="failure";
-					fi
+					
+                                        if [ $? -gt 0 ]; then
+
+                                                 state="failure";
+
+                                        else
+
+                                                 state="success";
+
+                                                 if [ $CLEANUPAFTER == "true" ]; then
+
+                                                        echo "Skipping cleanup for now..";
+
+                                                 else
+
+                                                        echo "Cleaning up $buildid";
+                                                        docker rmi $buildid &> /dev/null;
+
+                                                 fi
+
+                                        fi
+
+
 					echo;echo;
 					printf "$state\n\n" >> $LOGFILE;
 					printf "$state\n\n";
@@ -132,7 +178,26 @@ if [ ! -f $LOGFILE ]; then
 	touch $LOGFILE;
 fi
 
-printf "Docker Builder version : `docker version`\n\n######################################## BEGIN #############################" > $LOGFILE
+if [ ! -f $CLEANUPFILE ]; then
+
+	touch $CLEANUPFILE;
+
+fi
+
+printf "Docker Builder version : `docker version`\n\n######################################## BEGIN #############################" > $LOGFILE;
+
+if [ $CLEANUPAFTER == "true"]; then
+
+	printf "\n\n Images will be cleaned up after the build process.\n\n" >> $LOGFILE;
+
+else
+
+	printf "\n\n Images will be cleaned up immediately when build succeeds.\n\n" >> $LOGFILE;
+
+fi
+
+
+printf "" > $CLEANUPFILE;
 pushd $DIRROOT &> /dev/null;
 build 1;
 popd &> /dev/null;
