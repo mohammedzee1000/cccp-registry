@@ -186,7 +186,9 @@ fi
 
 printf "Docker Builder version : `docker version`\n\n######################################## BEGIN #############################" > $LOGFILE;
 
-if [ $CLEANUPAFTER == "true"]; then
+echo "clafter=$CLEANUPAFTER"
+
+if [ $CLEANUPAFTER == "true" ]; then
 
 	printf "\n\n Images will be cleaned up after the build process.\n\n" >> $LOGFILE;
 
@@ -202,4 +204,6 @@ pushd $DIRROOT &> /dev/null;
 build 1;
 popd &> /dev/null;
 printf "\n########################### END ######################\n\n" >> $LOGFILE;
+
+
 
