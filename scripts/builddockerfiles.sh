@@ -63,14 +63,40 @@ function build() {
 
 		printf "\nFound $ORDERFILE, reading...\n\n";
 		for ITEM in `cat $ORDERFILE`; do
-			if [ -d "$ITEM" -a ! -L "$ITEM" ]; then
 
-				ls ./$ITEM | grep -i Dockerfile &> /dev/null;
+			echo $ITEM | grep ":" &> /dev/null;
+
+			if [ $? -eq 0 ]; then
+
+				FLDR=`echo $ITEM | cut -d ':' -f1`;
+				PRJID=`echo $ITEM | cut -d ':' -f2`;
+
+			else
+
+				FLDR=$ITEM;
+
+			fi
+
+
+			if [ -d "$FLDR" -a ! -L "$FLDR" ]; then
+
+				ls ./$FLDR | grep -i Dockerfile &> /dev/null;
 
 				if [ $? -eq 0 ]; then
+
 					echo;echo;
-					echo "* Found dockerfile at orderfile location $PWD/$ITEM...";
-					buildid_t="$PROJECT/$ITEM";
+					echo "* Found dockerfile at orderfile location $PWD/$FLDR...";
+
+					if [ ! -z $PRJID ]; then
+		
+						buildid_t="$PROJECT/$PRJID";
+
+					else
+
+						buildid_t="$PROJECT/$FLDR";
+
+					fi					
+
 					buildid=`echo $buildid_t | tr '[:upper:]' '[:lower:]'`;
 					printf "** Building as $buildid...\n";
 
