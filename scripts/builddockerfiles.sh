@@ -62,14 +62,17 @@ function build() {
 	if [ -f $ORDERFILE ]; then
 
 		printf "\nFound $ORDERFILE, reading...\n\n";
+
 		for ITEM in `cat $ORDERFILE`; do
 
 			echo $ITEM | grep ":" &> /dev/null;
 
 			if [ $? -eq 0 ]; then
 
+				#echo "Contains splitter" #TEST
 				FLDR=`echo $ITEM | cut -d ':' -f1`;
 				PRJID=`echo $ITEM | cut -d ':' -f2`;
+				#echo "$FLDR  ----  $PRJID"; #TEST
 
 			else
 
@@ -101,7 +104,7 @@ function build() {
 					printf "** Building as $buildid...\n";
 
 					printf "\n\nBuilding $PWD/$ITEM as $buildid\n\n" >> $LOGFILE;
-					pushd $PWD/$ITEM &> /dev/null;
+					pushd $PWD/$FLDR &> /dev/null;
 					docker build -t $buildid . >> $LOGFILE 2>&1;
 
                		                if [ $? -gt 0 ]; then
@@ -230,6 +233,5 @@ pushd $DIRROOT &> /dev/null;
 build 1;
 popd &> /dev/null;
 printf "\n########################### END ######################\n\n" >> $LOGFILE;
-
 
 
