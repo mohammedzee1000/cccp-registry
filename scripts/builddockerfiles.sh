@@ -15,6 +15,7 @@ ORDERFILE=$4;
 CLEANUPAFTER=$3;
 LOGFILE="$HOME/dockerfilebuildtest.log";
 CLEANUPFILE="$HOME/builtimagelist";
+INSPECTDIR="$HOME/dockerfilebuildinspects";
 
 # Displays usage information for the command.
 function usage() {
@@ -61,12 +62,55 @@ function cleanupafter() {
 
 }
 
+# Function actually builds the image, while logging the build.
+function build_image() {
+	# buildid - The ID of the image to build
+	buildid=$1;
+
+	# Setup the inspectdir
+	INSPECTDIR_B="$INSPECTDIR/$buildid";
+	mkdir -p "$INSPECTDIR_B";
+
+	docker build -t $buildid . >> $LOGFILE 2>&1;
+
+	# If build failed, then state is failed.
+        if [ $? -gt 0 ]; then
+
+       		state="failure";
+		
+	# Else it is success.
+        else
+
+        	state="success";
+
+		# If success and cleanupafter is set, skip cleaning up the image
+		if [ $CLEANUPAFTER == "true" ]; then
+
+			echo "Skipping cleanup for now..";
+			echo $buildid >> $CLEANUPFILE;
+
+		# Else clean up image immediately.
+		else
+							
+			echo "Cleaning up $buildid";
+                        docker rmi $buildid &> /dev/null;
+			
+		fi
+						
+	fi
+
+	docker inspect $buildid > "$INSPECTDIR_B/$buildid.inspect" 2>&1;
+	echo "Inspect available in $INSPECTDIR_B";
+	printf "\nInspect available at $INSPECTDIR_B\n" >> $LOGFILE;
+}
+
 # Partially recursive function that does the actual building of images.
 function build() {
         # level - Depth of tree as there is a DFT (Depth First Traversal) here.
 	level=$1;
 	local ITEM;
 	local state;
+	local INSPECTDIR_B;
 
 	# Check if Orderfile has been specified.
 	if [ -f $ORDERFILE ]; then
@@ -123,38 +167,14 @@ function build() {
 
 					# The image id must be all small characters.
 					buildid=`echo $buildid_t | tr '[:upper:]' '[:lower:]'`;
+
 					printf "** Building as $buildid...\n";
 					printf "\n\nBuilding $PWD/$ITEM as $buildid\n\n" >> $LOGFILE;
 		
 					# Get into the directory and build the image
 					pushd $PWD/$FLDR &> /dev/null;
-					docker build -t $buildid . >> $LOGFILE 2>&1;
 
-					# If build failed, then state is failed.
-               		                if [ $? -gt 0 ]; then
-
-                                	         state="failure";
-		
-					# Else it is success.
-                        	        else
-
-                	               		 state="success";
-
-						 # If success and cleanupafter is set, skip cleaning up the image
-						 if [ $CLEANUPAFTER == "true" ]; then
-
-							echo "Skipping cleanup for now..";
-							echo $buildid >> $CLEANUPFILE;
-
-						 # Else clean up image immediately.
-						 else
-							
-							echo "Cleaning up $buildid";
-                        	                 	docker rmi $buildid &> /dev/null;
-			
-						 fi
-						
-                               		fi
+					build_image $buildid;
 
 					popd &> /dev/null;
 					printf "Build was $state\n\n";
@@ -197,34 +217,7 @@ function build() {
 					printf "** Building as $buildid, this could take a while ...";
 					printf "\n\n\nBuild $PWD dockerfile\n" >> $LOGFILE; 
 
-					docker build -t $buildid . >> $LOGFILE 2>&1;
-					
-					# If build failed, note it as failure. 		
-                                        if [ $? -gt 0 ]; then
-
-                                                 state="failure";
-
-					# Else note it as success.
-                                        else
-
-                                                 state="success";
-
-						 # If cleanupafter is set, skip image cleanup.
-                                                 if [ $CLEANUPAFTER == "true" ]; then
-
-                                                        echo "Skipping cleanup for now..";
-							echo $buildid >> $CLEANUPFILE;
-
-						 # Else, clean it up immediately.
-                                                 else
-
-                                                        echo "Cleaning up $buildid";
-                                                        docker rmi $buildid &> /dev/null;
-
-                                                 fi
-
-                                        fi
-
+					build_image $buildid;
 
 					echo;echo;
 					printf "$state\n\n" >> $LOGFILE;
@@ -261,6 +254,15 @@ if [ ! -f $CLEANUPFILE ]; then
 	touch $CLEANUPFILE;
 
 fi
+
+# Check and create inspectdir which will contain the inspect logs.
+if [ -d $INSPECTDIR ]; then
+
+	rm -rf $INSPECTDIR;
+
+fi
+
+mkdir -p $INSPECTDIR &> /dev/null;
 
 # Record the docker version used to do the build.
 printf "Docker Builder version : `docker version`\n\n######################################## BEGIN #############################" > $LOGFILE;
