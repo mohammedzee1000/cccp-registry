@@ -89,7 +89,7 @@ function build() {
 
 					if [ ! -z $PRJID ]; then
 		
-						buildid_t="$PROJECT/$PRJID";
+						buildid_t="$PRJID";
 
 					else
 
