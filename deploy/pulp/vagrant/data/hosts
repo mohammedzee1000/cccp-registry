@@ -1,5 +1,5 @@
 192.168.33.50  nfs.pulpcluster
 192.168.33.51  server.pulpcluster
 192.168.33.52  cdn.pulpcluster
-192.168.33.53  crane.pulpcluser
+192.168.33.53  crane.pulpcluster
 192.168.33.54  client.pulpcluster
