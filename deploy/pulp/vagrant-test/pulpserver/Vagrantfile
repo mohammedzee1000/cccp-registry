@@ -1,0 +1,18 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure(2) do |config|
+  config.vm.define "pulpserver", autostart: false do |pulpserver|
+        pulpserver.vm.box = "centos/7"
+        pulpserver.vm.hostname = "server.pulpcluster"
+        pulpserver.vm.network "private_network", ip: "192.168.33.51"
+	pulpserver.vm.synced_folder "../artifacts", "/artifacts"
+        pulpserver.vm.provision :shell, inline: <<-SHELL
+                chmod +x /artifacts/scripts/prereq.sh;
+                /artifacts/scripts/prereq.sh;
+                chmod +x /home/vagrant/sync/data/scripts/setuppulp.sh;
+                /artifacts/scripts/setuppulp.sh;
+                cat /artifacts/hosts >> /etc/hosts;
+        SHELL
+  end  	
+end

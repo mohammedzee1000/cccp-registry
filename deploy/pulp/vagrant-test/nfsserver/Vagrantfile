@@ -1,0 +1,26 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure(2) do |config|
+  config.vm.define "nfsserver", autostart: false do |nfsserver|
+        nfsserver.vm.box = "centos/7"
+        nfsserver.vm.hostname = "nfs.pulpcluster"
+        nfsserver.vm.network "private_network", ip: "192.168.33.50"
+	nfsserver.vm.synced_folder "../artifacts", "/artifacts"
+        nfsserver.vm.provision :shell, inline: <<-SHELL
+                yum install nfs-utils -y;
+                mkdir -p /var/nfsshares/var-lib-pulp;
+                chmod -R 777 /var/nfsshares/var-lib-pulp;
+                echo "/var/nfsshares/var-lib-pulp       *(rw,sync,no_root_squash,no_all_squash)" >> /etc/exports;
+                systemctl enable rpcbind;
+                systemctl enable nfs-server;
+                systemctl enable nfs-lock;
+                systemctl enable nfs-idmap;
+                systemctl start rpcbind;
+                systemctl start nfs-server;
+                systemctl start nfs-lock;
+                systemctl start nfs-idmap;
+                cat /artifacts/hosts >> /etc/hosts;
+        SHELL
+  end  	
+end

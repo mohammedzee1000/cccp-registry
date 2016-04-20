@@ -27,23 +27,16 @@ REPO="rhel";
 F_PULPREPO="/etc/yum.repos.d/pulp.repo";
 
 ## The untouchables
-DONE="\x1b[32mDONE\x1b[0m"
+DONE="DONE"
 PULPADMIN="admin";
 F_INJECTFILE="/tmp/pulp_config_toinject";
-F_PULPSERVER="/etc/pulp/server.conf";
-#F_LOG="/var/log/"
-#F_PULPADMIN="/etc/pulp/admin/admin.conf"
-#F_CONSUMER="/etc/pulp/consumer/consumer.conf";
+F_CRANECONFIG="/etc/crane.conf";
+F_HTTP_CRANECONFIG="/etc/httpd/conf.d/crane.conf";
 
 #Prep the confinjectfile (temporary file)
 if [ -f $F_INJECTFILE ]; then
         rm -rf $F_INJECTFILE;
 fi
-cat <<EOF >> $F_INJECTFILE
-server_name: $PULPSERVER
-default_login: $PULPADMIN
-default_password: $PULPADMINPASS
-EOF
 
 # Download and install nessasary repos
 printf " * Setting up nessasary repositories\t  ";
@@ -64,48 +57,63 @@ rm -rf epel-release-latest-7.noarch.rpm &> /dev/null;
 printf " [$DONE] ";
 echo;
 
-# Setting up Backend
-printf " * Setting up the backend stuff\t ";
-yum install mongodb-server -y &> /dev/null;
-systemctl enable mongod  &> /dev/null;
-systemctl start mongod  &> /dev/null;
-yum install -y qpid-cpp-server qpid-cpp-server-store &> /dev/null;
-systemctl enable qpidd &> /dev/null;
-systemctl start qpidd &> /dev/null;
-printf " [$DONE] ";
-echo;
+# Setup crane
+printf " * Setting up the crane\t "
+yum install httpd mod_ssl python-crane -y &> /dev/null;
+cp /usr/share/crane/apache.conf /etc/httpd/conf.d/crane.conf
+#Prep the confinjectfile (temporary file) this time to inject crane config
+if [ -f $F_CRANECONFIG ]; then
+        rm -rf $F_CRANECONFIG;
+fi
 
-# Setup pulp server
-printf " * Setting up the pulp server\t "
-yum groupinstall pulp-server-qpid -y &> /dev/null;
-# Insert modifications into /etc/pulp/server.conf
-sed -i "/\[server\]/r $F_INJECTFILE" $F_PULPSERVER &> /dev/null;
-# Insert ssl insecure verify into ssl.conf
 echo "SSLInsecureRenegotiation On" > $F_INJECTFILE;
 sed -i "/#SSLCryptoDevice ubsec/r $F_INJECTFILE" /etc/httpd/conf.d/ssl.conf &> /dev/null;
-cp -rf /home/vagrant/sync/data/certs/server.pulpcluster.crt /etc/pki/pulp/ca.crt;
-cp -rf /home/vagrant/sync/data/certs/ca.key /etc/pki/pulp/ca.key;
-sudo -u apache pulp-manage-db &> /dev/null;
+
+mkdir /etc/pki/crane;
+cp -rf /home/vagrant/sync/data/certs/crane.pulpcluster.crt /etc/pki/crane/ca.crt;
+cp -rf /home/vagrant/sync/data/certs/ca.key /etc/pki/crane/ca.key;
+
+if [ ! -f $F_HTTP_CRANECONF  ]; then
+
+	touch $F_HTTP_CRANECONF;
+
+fi
+
+cat <<EOF >> $F_HTTP_CRANECONFIG
+Listen 5000 https
+
+ <VirtualHost *:5000>
+     SSLEngine on
+     SSLCertificateFile /etc/pki/crane/ca.crt
+     SSLCertificateKeyFile /etc/pki/crane/ca.key
+     WSGIScriptAlias / /usr/share/crane/crane.wsgi
+     <Location /crane>
+         Require all granted
+     </Location>
+     <Directory /usr/share/crane/>
+         SSLVerifyClient off
+         SSLVerifyDepth 2
+         SSLOptions +StdEnvVars +ExportCertData +FakeBasicAuth
+         Require all granted
+     </Directory>
+ </VirtualHost>
+EOF
+
+cat <<EOF >> $F_CRANECONFIG
+[general]
+debug: true
+data_dir: /var/www/crane/docker
+endpoint: `hostname`:5000
+EOF
+
+ln -s /var/www/crane /var/lib/pulp;
+
 printf " [$DONE] ";
 echo;
 
-# Start consumer services
-printf " * Getting things started\t\t  ";
-systemctl enable httpd &> /dev/null;
-systemctl start httpd &> /dev/null;
-systemctl enable pulp_workers &> /dev/null;
-systemctl start pulp_workers &> /dev/null;
-systemctl enable pulp_celerybeat &> /dev/null;
-systemctl start pulp_celerybeat &> /dev/null;
-systemctl enable pulp_resource_manager &> /dev/null;
-systemctl start pulp_resource_manager &> /dev/null;
-sudo -u apache pulp-manage-db &> /dev/null;
-printf " [$DONE] ";
-echo;echo;
-
+systemctl enable httpd;
+systemctl start httpd;
 
 echo "######################Setup completed#################";echo;
-echo "######################TODO#################";echo;
-echo "Make sure you make the hostname of the server known to be put into setup-pulp-client.sh";
 echo;
 
