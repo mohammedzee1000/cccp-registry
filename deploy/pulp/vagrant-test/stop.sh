@@ -1,8 +1,9 @@
 #!/bin/bash
 
 for item in nfsserver pulpserver cdnserver craneserver; do
-	pushd ./$item &> /dev/null;
+	actualdir=$(cat itemlist | grep $item);
+	pushd ./virtual-machines/$actualdir &> /dev/null;
 	vagrant destroy $item;
-	rm -rf .vagrant;
 	popd &> /dev/null;
+	rm -rf ./virtual-machines/$actualdir;
 done

@@ -69,9 +69,9 @@ fi
 echo "SSLInsecureRenegotiation On" > $F_INJECTFILE;
 sed -i "/#SSLCryptoDevice ubsec/r $F_INJECTFILE" /etc/httpd/conf.d/ssl.conf &> /dev/null;
 
-mkdir /etc/pki/crane;
-cp -rf /home/vagrant/sync/data/certs/crane.pulpcluster.crt /etc/pki/crane/ca.crt;
-cp -rf /home/vagrant/sync/data/certs/ca.key /etc/pki/crane/ca.key;
+mkdir -p /etc/pki/crane;
+cp -rf /artifacts/certs/crane.pulpcluster.crt /etc/pki/crane/ca.crt;
+cp -rf /artifacts/certs/ca.key /etc/pki/crane/ca.key;
 
 if [ ! -f $F_HTTP_CRANECONF  ]; then
 
@@ -79,6 +79,7 @@ if [ ! -f $F_HTTP_CRANECONF  ]; then
 
 fi
 
+echo "" > $F_HTTP_CRANECONFIG;
 cat <<EOF >> $F_HTTP_CRANECONFIG
 Listen 5000 https
 
@@ -110,6 +111,8 @@ ln -s /var/www/crane /var/lib/pulp;
 
 printf " [$DONE] ";
 echo;
+
+semanage port -a -t http_port_t -p tcp 5000;
 
 systemctl enable httpd;
 systemctl start httpd;
