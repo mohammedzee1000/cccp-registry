@@ -9,10 +9,12 @@ import os
 
 # * Initialize nessasary parameters
 
-fname = "/etc/origin/master/master-config.yaml" # Name of the origin master config file
+#fname = "/etc/origin/master/master-config.yaml" # Name of the origin master config file
 #fname = "test.yaml" #TEST
 
-passwd = sys.argv[1] # The password as supplied by the user.
+fname = sys.argv[1]
+
+passwd = sys.argv[2] # The password as supplied by the user.
 
 htpassfile = "/etc/origin/master/users.htpasswd" # The password file where the users password will be saved.
 #htpassfile = "./thepass" #TEST
