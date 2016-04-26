@@ -7,7 +7,7 @@ import yaml
 import sys
 import os
 
-# * Initialize nessasary parameters
+# * Initialize necessary parameters
 
 fname = "/etc/origin/master/master-config.yaml" # Name of the origin master config file
 #fname = "test.yaml" #TEST
