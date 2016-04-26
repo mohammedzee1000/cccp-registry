@@ -1,0 +1,18 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure(2) do |config|
+  config.vm.define "cdnserver", autostart: false do |cdnserver|
+        cdnserver.vm.box = "centos/7"
+        cdnserver.vm.hostname = "cdn.pulpcluster"
+        cdnserver.vm.network "private_network", ip: "192.168.33.150"
+	cdnserver.vm.synced_folder "../../artifacts", "/artifacts"
+        cdnserver.vm.provision :shell, inline: <<-SHELL
+                chmod +x /artifacts/scripts/prereq.sh;
+                /artifacts/scripts/prereq.sh;
+                chmod +x /artifacts/scripts/setupcdn.sh
+                /artifacts/scripts/setupcdn.sh;
+                cat /artifacts/hosts >> /etc/hosts;
+        SHELL
+  end  	
+end
