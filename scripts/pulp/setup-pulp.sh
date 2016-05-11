@@ -86,6 +86,11 @@ echo;
 # Setting up Backend
 printf " * Setting up the backend stuff\t ";
 yum install mongodb-server -y &> /dev/null;
+semanage port -at mongod_port_t -p tcp 27017;
+semanage port -at mongod_port_t -p udp 27017;
+firewall-cmd --permanent --add-port 27017/tcp &> /dev/null;
+firewall-cmd --permanent --add-port 27017/udp &> /dev/null;
+firewall-cmd --reload;
 systemctl enable mongod  &> /dev/null;
 systemctl start mongod  &> /dev/null;
 yum install -y qpid-cpp-server qpid-cpp-server-store &> /dev/null;
@@ -125,8 +130,6 @@ echo;
 # Start consumer services
 printf " * Getting things started\t\t  ";
 firewall-cmd --permanent --add-service http --add-service https >> /dev/null;
-firewall-cmd --permanent --add-port 27017/tcp &> /dev/null;
-firewall-cmd --permanent --add-port 27017/udp &> /dev/null;
 firewall-cmd --reload;
 setsebool -P httpd_use_nfs 1 $> /dev/null; 
 setsebool -P httpd_can_network_connect 1 $> /dev/null;
