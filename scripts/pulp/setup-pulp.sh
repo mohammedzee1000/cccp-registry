@@ -124,6 +124,12 @@ echo;
 
 # Start consumer services
 printf " * Getting things started\t\t  ";
+firewall-cmd --permanent --add-service http --add-service https >> /dev/null;
+firewall-cmd --permanent --add-port 27017/tcp &> /dev/null;
+firewall-cmd --permanent --add-port 27017/udp &> /dev/null;
+firewall-cmd --reload;
+setsebool -P httpd_use_nfs 1 $> /dev/null; 
+setsebool -P httpd_can_network_connect 1 $> /dev/null;
 systemctl enable httpd &> /dev/null;
 systemctl start httpd &> /dev/null;
 systemctl enable pulp_workers &> /dev/null;
