@@ -190,7 +190,7 @@ def initialize_ca_config(camode):
     config.set(currsec, "crl_dir", "$dir/"
                + CA_DIR_CRL)
 
-    config.set(currsec, "newcerts_dir", "$dir/"
+    config.set(currsec, "new_certs_dir", "$dir/"
                + CA_DIR_NEWCERTS)
 
     config.set(currsec, "database", "$dir/"
@@ -234,7 +234,7 @@ def initialize_ca_config(camode):
     config.add_section(currsec)
     config.set(currsec, "countryName", "match")
     config.set(currsec, "stateOrProvinceName", "match")
-    config.set(currsec, "OrganizationName", "match")
+    config.set(currsec, "organizationName", "match")
     config.set(currsec, "organizationalUnitName", "optional")
     config.set(currsec, "commonName", "supplied")
     config.set(currsec, "emailAddress", "optional")
@@ -331,6 +331,169 @@ def initialize_ca_config(camode):
     # Write the config changes to config file
     with open(cnffile, 'wb') as configfile:
         config.write(configfile)
+
+    return
+
+def create_ca_pair(camode):
+    """Creates the ca pair for the root or intermediate CA."""
+
+    usermsg1 = "\n* Generating CA pair for "
+    usermsg2 = "** Please enter the passwords when prompted."
+
+    SUBJ_PRM = "/C=" \
+               + SUBJ_COUNTRY \
+               + "/ST=" \
+               + SUBJ_STATEORPROVINCE \
+               + "/L=" \
+               + SUBJ_LOCALITY \
+               + "/O=" \
+               + SUBJ_ORGNAME \
+               + "/OU=" \
+               + SUBJ_OU \
+               + "/CN="
+
+    thefile = ""
+
+    # Check invalid camode :
+    if camode != CAMODE.root and camode != CAMODE.intermediate:
+        raise Exception("Invalid method of function call.")
+
+    # Create the KEY
+
+    # 1. Init the cmd :
+    CMDKEY = ["openssl", "genrsa", "-aes256", "-out"]
+
+    # 2. Set up parameters
+    if camode == CAMODE.root:
+
+        print usermsg1 \
+              + "Root CA\n" \
+ \
+        thefile = CA_DIR \
+                  + "/" \
+                  + CA_DIR_PRIVATE + \
+                  "/" \
+                  + CA_KEY
+
+    elif camode == CAMODE.intermediate:
+
+        print usermsg1 \
+              + "Intermediate CA\n"
+
+        thefile = INT_DIR \
+                  + "/" \
+                  + CA_DIR_PRIVATE \
+                  + "/" + INT_KEY
+
+    print usermsg2 + "\n"
+
+    # 3. Append the values to cmd
+    CMDKEY.append(thefile)
+    CMDKEY.append("4096")
+
+    # 4. Execute cmd
+    print "*** Generating KEY : \n"
+    #print  CMDKEY # Test
+    call(CMDKEY)
+
+    # Create the CSR (intermediate ONLY)
+    if camode == CAMODE.intermediate:
+
+        # 1. Init the cmd
+        CMDCSR = ["openssl", "req", "-config", INT_DIR
+                  + "/"
+                  + CA_FILE_CNF, "-new", "-sha256"]
+
+        # 2. Setup the parameters
+        CMDCSR.append("-key")
+
+        CMDCSR.append(INT_DIR
+                      + "/"
+                      + CA_DIR_PRIVATE
+                      + "/"
+                      + INT_KEY)
+
+        CMDCSR.append("-out")
+
+        CMDCSR.append(INT_DIR
+                      + "/"
+                      + CA_DIR_CSR
+                      + "/"
+                      + INT_CSR )
+
+        CMDCSR.append("-subj")
+        CMDCSR.append(SUBJ_PRM + INT_CN)
+
+
+        # 3. Run the cmd
+        print "\n*** Generating CSR for intermediate CA : \n"
+        #print CMDCSR #test
+        call(CMDCSR)
+
+    # Create the CA cert
+
+    # 1. Init the CMD
+    CMDCERT = ["openssl", "req", "-config", CA_DIR + "/" + CA_FILE_CNF]
+
+    # 2. Setup the parameters
+    if camode == CAMODE.root:
+        CMDCERT.append("-key")
+
+        CMDCERT.append(CA_DIR
+                       + "/"
+                       + CA_DIR_PRIVATE
+                       + "/"
+                       + CA_KEY)
+
+        CMDCERT.append("-new")
+        CMDCERT.append("-x509")
+        CMDCERT.append("-days")
+        CMDCERT.append("7300")
+        CMDCERT.append("-sha256")
+        CMDCERT.append("-extensions")
+        CMDCERT.append("v3_ca")
+        CMDCERT.append("-out")
+
+        CMDCERT.append(CA_DIR
+                       + "/"
+                       + CA_DIR_CERTS
+                       + "/"
+                       + CA_CERT)
+
+        CMDCERT.append("-subj")
+
+        CMDCERT.append(SUBJ_PRM
+                       + CA_CN)
+
+    elif camode == CAMODE.intermediate:
+        CMDCERT[1] = "ca"
+        CMDCERT.append("-extensions")
+        CMDCERT.append("v3_intermediate_ca")
+        CMDCERT.append("-days")
+        CMDCERT.append("3650")
+        CMDCERT.append("-notext")
+        CMDCERT.append("-md")
+        CMDCERT.append("sha256")
+        CMDCERT.append("-in")
+
+        CMDCERT.append(INT_DIR
+                       + "/"
+                       + CA_DIR_CSR
+                       + "/"
+                       + INT_CSR)
+
+        CMDCERT.append("-out")
+
+        CMDCERT.append(INT_DIR
+                       + "/"
+                       + CA_DIR_CERTS
+                       + "/"
+                       + INT_CERT)
+
+    # 3. Execute the CMD
+    print "\n*** Generating CERT File : \n"
+    #print CMDCERT # TEST
+    call(CMDCERT)
 
     return
 
@@ -468,169 +631,6 @@ def get_input(inpmode):
         raise Exception("Invalid mode of function call.")
 
     print "* Alight lets get this done you. :)\n\n"
-
-    return
-
-def create_ca_pair(camode):
-    """Creates the ca pair for the root or intermediate CA."""
-
-    usermsg1 = "\n* Generating CA pair for "
-    usermsg2 = "** Please enter the passwords when prompted."
-
-    SUBJ_PRM = "/C=" \
-               + SUBJ_COUNTRY \
-               + "/ST=" \
-               + SUBJ_STATEORPROVINCE \
-               + "/L=" \
-               + SUBJ_LOCALITY \
-               + "/O=" \
-               + SUBJ_ORGNAME \
-               + "/OU=" \
-               + SUBJ_OU \
-               + "/CN="
-
-    thefile = ""
-
-    # Check invalid camode :
-    if camode != CAMODE.root and camode != CAMODE.intermediate:
-        raise Exception("Invalid method of function call.")
-
-    # Create the KEY
-
-    # 1. Init the cmd :
-    CMDKEY = ["openssl", "genrsa", "-aes256", "-out"]
-
-    # 2. Set up parameters
-    if camode == CAMODE.root:
-
-        print usermsg1 \
-              + "Root CA\n" \
-
-        thefile = CA_DIR \
-                  + "/" \
-                  + CA_DIR_PRIVATE + \
-                  "/" \
-                  + CA_KEY
-
-    elif camode == CAMODE.intermediate:
-
-        print usermsg1 \
-               + "Intermediate CA\n"
-
-        thefile = INT_DIR \
-                  + "/" \
-                  + CA_DIR_PRIVATE \
-                  + "/" + INT_KEY
-
-    print usermsg2 + "\n"
-
-    # 3. Append the values to cmd
-    CMDKEY.append(thefile)
-    CMDKEY.append("4096")
-
-    # 4. Execute cmd
-    #print  CMDKEY # Test
-    call(CMDKEY)
-
-    # Create the CSR (intermediate ONLY)
-    if camode == CAMODE.intermediate:
-
-        print "*** Generating CSR for intermediate CA : \n"
-
-        # 1. Init the cmd
-        CMDCSR = ["openssl", "req", "-config", INT_DIR
-                  + "/"
-                  + CA_FILE_CNF, "-new", "-sha256"]
-
-        # 2. Setup the parameters
-        CMDCSR.append("-key")
-
-        CMDCSR.append(INT_DIR
-                      + "/"
-                      + CA_DIR_PRIVATE
-                      + "/"
-                      + INT_KEY)
-
-        CMDCSR.append("-out")
-
-        CMDCSR.append(INT_DIR
-                      + "/"
-                      + CA_DIR_CSR
-                      + "/"
-                      + INT_CSR )
-
-        CMDCSR.append("-subj")
-        CMDCSR.append(SUBJ_PRM + INT_CN)
-
-        # 3. Run the cmd
-        #print CMDCSR #test
-        call(CMDCSR)
-
-    # Create the CA cert
-
-    # 1. Init the CMD
-    CMDCERT = ["openssl", "req", "-config", CA_DIR + "/" + CA_FILE_CNF]
-
-    # 2. Setup the parameters
-    if camode == CAMODE.root:
-        CMDCERT.append("-key")
-
-        CMDCERT.append(CA_DIR
-                       + "/"
-                       + CA_DIR_PRIVATE
-                       + "/"
-                       + CA_KEY)
-
-        CMDCERT.append("-new")
-        CMDCERT.append("-x509")
-        CMDCERT.append("-days")
-        CMDCERT.append("7300")
-        CMDCERT.append("-sha256")
-        CMDCERT.append("-extensions")
-        CMDCERT.append("v3_ca")
-        CMDCERT.append("-out")
-
-        CMDCERT.append(CA_DIR
-                       + "/"
-                       + CA_DIR_CERTS
-                       + "/"
-                       + CA_CERT)
-
-        CMDCERT.append("-subj")
-
-        CMDCERT.append(SUBJ_PRM
-                       + CA_CN)
-
-    elif camode == CAMODE.intermediate:
-        CMDCERT[1] = "ca"
-        CMDCERT.append("-extensions")
-        CMDCERT.append("v3_intermediate_ca")
-        CMDCERT.append("-days")
-        CMDCERT.append("3650")
-        CMDCERT.append("-notext")
-        CMDCERT.append("-md")
-        CMDCERT.append("sha256")
-        CMDCERT.append("-in")
-
-        CMDCERT.append(INT_DIR
-                       + "/"
-                       + CA_DIR_CSR
-                       + "/"
-                       + INT_CSR)
-
-        CMDCERT.append("-out")
-
-        CMDCERT.append(INT_DIR
-                       + "/"
-                       + CA_DIR_CERTS
-                       + "/"
-                       + INT_CERT)
-
-        print CMDCERT
-
-    # 3. Execute the CMD
-    #print CMDCERT # TEST
-    call(CMDCERT)
 
     return
 
