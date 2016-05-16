@@ -6,6 +6,7 @@ import os
 from enum import Enum
 import  sys
 from subprocess import call
+from subprocess import Popen
 import re
 
 # CA SPECIFTC - USER MODIFIES THESE
@@ -14,6 +15,9 @@ import re
 CA_LOC = "." # TEST
 CA_CN = "CentOS Devcloud Root CA"
 INT_CN = "CentOS Devcloud Intermediate CA"
+
+GENCERT = "gencert.sh"
+PUBCERT = "pubcerts.sh"
 
 SUBJ_COUNTRY = "GB"
 SUBJ_STATEORPROVINCE = "England"
@@ -34,6 +38,9 @@ INT_KEY = "intermediate.key.pem"    # The name of intermediate CA pair key
 INT_CRL = "intermediate.crl.pem"    # The name of the intermediate CA pair crl
 INT_CSR = "intermediate.csr.pem"    # The name of the intermediate CA CSR
 
+# * Trust chain cert
+CA_TRUST = "ca-chain.cert.pem"
+
 # * DIRECTORY AND FILES TO BE CREATED
 CA_DIR_CERTS = "certs"  # The name of the dir containing the certs
 CA_DIR_CRL = "crl"  # The name of the dir containing the certificate Revocation List
@@ -52,6 +59,9 @@ CA_DIR = CA_LOC \
 
 INT_DIR = CA_DIR \
           + "/intermediate"      # The path of the intermediate CA.
+
+SCRIPT_GENCERT = CA_DIR + "/" + GENCERT
+SCRIPT_PUBCERT = CA_DIR + "/" + PUBCERT
 
 class CAMODE(Enum):
     """This enumeration defines the mode of operation of come of the functions that operate stuff common to root CA or intermediate CA."""
@@ -79,11 +89,15 @@ def create_directory(path, mode=None):
             os.mkdir(path)
     return
 
-def touch_file(filename, text):
+def touch_file(filename, text, perms=None):
     """Touches a file and then writes some text into it, could be an empty string"""
     target = open(filename, "w")
     target.write(text)
     target.close()
+
+    if perms != None:
+        os.chmod(filename, perms)
+
     return
 
 def inititialize_ca_directories(camode):
@@ -368,7 +382,7 @@ def create_ca_pair(camode):
 
         print usermsg1 \
               + "Root CA\n" \
- 
+
         thefile = CA_DIR \
                   + "/" \
                   + CA_DIR_PRIVATE + \
@@ -494,6 +508,57 @@ def create_ca_pair(camode):
     print "\n*** Generating CERT File : \n"
     #print CMDCERT # TEST
     call(CMDCERT)
+
+    return
+
+def gen_ca_trust_chain():
+
+    ca_trust_loc = INT_DIR + "/" + CA_DIR_CERTS + "/" + CA_TRUST
+    int_cert_loc = INT_DIR + "/" + CA_DIR_CERTS + "/" + INT_CERT
+    ca_cert_loc = CA_DIR + "/" + CA_DIR_CERTS + "/" + CA_CERT
+
+    CMD = "cat " + int_cert_loc + " " + ca_cert_loc + " > " + ca_trust_loc
+    os.system(CMD)
+
+    return
+
+def gen_scripts():
+    """This function generates a few scripts to ease generation of certificates by the CA."""
+
+    print "\nGenerating the gencert.sh script in ca directory..."
+
+    SUBJ_PRM = "/C=" \
+               + SUBJ_COUNTRY \
+               + "/ST=" \
+               + SUBJ_STATEORPROVINCE \
+               + "/L=" \
+               + SUBJ_LOCALITY \
+               + "/O=" \
+               + SUBJ_ORGNAME \
+               + "/OU=" \
+               + SUBJ_OU \
+               + "/CN="
+
+    SCRIPT_GENCERT_CONTENT = "#!/bin/bash\nif (( $EUID != 0 )); then\n\tsudo bash $0;\n\texit 0;\nfi\nTHEID=$1\n"
+    SCRIPT_GENCERT_CONTENT = SCRIPT_GENCERT_CONTENT + "openssl genrsa -out intermediate/private/${THEID}.key.pem 2048;\n"
+    SCRIPT_GENCERT_CONTENT = SCRIPT_GENCERT_CONTENT + "chmod 400 intermediate/private/${THEID}.key.pem 2048;\n"
+    SCRIPT_GENCERT_CONTENT = SCRIPT_GENCERT_CONTENT + "openssl req -config intermediate/openssl.cnf -key intermediate/private/${THEID}.key.pem -new -sha256 -out intermediate/csr/${THEID}.csr.pem -subj "
+    SCRIPT_GENCERT_CONTENT = SCRIPT_GENCERT_CONTENT + "\"" + SUBJ_PRM + "${THEID}\"\n"
+    SCRIPT_GENCERT_CONTENT = SCRIPT_GENCERT_CONTENT + "openssl ca -config intermediate/openssl.cnf -extensions server_cert -days 375 -notext -md sha256 -in intermediate/csr/${THEID}.csr.pem -out intermediate/certs/${THEID}.cert.pem;\n"
+    SCRIPT_GENCERT_CONTENT = SCRIPT_GENCERT_CONTENT + "chmod 444 intermediate/certs/${THEID}.cert.pem"
+
+    touch_file(SCRIPT_GENCERT, SCRIPT_GENCERT_CONTENT, 755)
+    print "DONE\n"
+
+    print "\nGenerating the pubcerts.sh script in ca directory..."
+
+    # FIXME : Finish generation of pubcerts.sh
+
+    SCRIPT_PUBCERT_CONTENT = "#!/bin/bash\nINTDIR=\"" + INT_DIR + "\";\nHTTPDIR=\"/var/www/html\"\n"
+
+    touch_file(SCRIPT_PUBCERT, SCRIPT_PUBCERT_CONTENT, 755)
+
+    print "DONE \n"
 
     return
 
@@ -692,6 +757,14 @@ def main():
     INT_DIR = CA_DIR \
               + "/intermediate"
 
+    SCRIPT_GENCERT = CA_DIR \
+                     + "/" \
+                     + GENCERT
+
+    SCRIPT_PUBCERT = CA_DIR \
+                     + "/" \
+                     + PUBCERT
+
     # Set up root CA.
     inititialize_ca_directories(CAMODE.root)
     initialize_ca_config(CAMODE.root)
@@ -701,6 +774,10 @@ def main():
     inititialize_ca_directories(CAMODE.intermediate)
     initialize_ca_config(CAMODE.intermediate)
     create_ca_pair(CAMODE.intermediate)
+
+    gen_ca_trust_chain()
+    gen_scripts()
+
 
     print  "\nOperation Completed\n"
     return
