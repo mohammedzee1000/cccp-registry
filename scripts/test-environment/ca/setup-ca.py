@@ -466,14 +466,14 @@ def getinp(inpmode):
     else:
         raise Exception("Invalid mode of function call.")
 
-    print "* Alight let me finish the job for you. :)"
+    print "* Alight lets get this done you. :)\n\n"
 
     return
 
 def createcacertpair(camode):
     """Creates the ca pair for the root or intermediate CA."""
 
-    usermsg1 = "Generating CA pair for "
+    usermsg1 = "\nGenerating CA pair for "
     usermsg2 = "Please enter the passwords when prompted."
 
     SUBJ_PRM = "/C=" \
@@ -507,12 +507,13 @@ def createcacertpair(camode):
 
         thefile = CA_DIR \
                   + "/" \
-                  + CA_DIR_PRIVATE \
+                  + CA_DIR_PRIVATE + \
+                  "/" \
                   + CA_KEY
 
     elif camode == CAMODE.intermediate:
 
-        print  usermsg1 \
+        print usermsg1 \
                + "Intermediate CA\n"
 
         thefile = INT_DIR \
@@ -560,6 +561,14 @@ def createcacertpair(camode):
         # 3. Run the cmd
         print CMDCSR #test
         #call(CMDCSR)
+
+    # Create the CA cert
+
+    # 1. Init the CMD
+    CMDCERT = ["openssl", "req", "-config", CA_DIR + "/" + CA_FILE_CNF]
+
+    # 2. Setup the parameters
+    # 3. Execute the CMD
 
     return
 
