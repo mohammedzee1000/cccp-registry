@@ -9,10 +9,11 @@ from subprocess import call
 import re
 
 # CA SPECIFTC - USER MODIFIES THESE
-
 # Base variables
 # CA_LOC = "/root" # ACTUAL
 CA_LOC = "." # TEST
+CA_CN = "CentOS Devcloud Root CA"
+INT_CN = "CentOS Devcloud Intermediate CA"
 
 SUBJ_COUNTRY = "GB"
 SUBJ_STATEORPROVINCE = "England"
@@ -31,6 +32,7 @@ CA_CRL = "ca.crl.pem"   # The name of the root CA pair crl
 INT_CERT = "intermediate.cert.pem"  # The name of the intermediate CA pair cert
 INT_KEY = "intermediate.key.pem"    # The name of intermediate CA pair key
 INT_CRL = "intermediate.crl.pem"    # The name of the intermediate CA pair crl
+INT_CSR = "intermediate.csr.pem"    # The name of the intermediate CA CSR
 
 # * DIRECTORY AND FILES TO BE CREATED
 CA_DIR_CERTS = "certs"  # The name of the dir containing the certs
@@ -44,8 +46,12 @@ CA_FILE_CRLNUMBER = "crlnumber"     # The flat file containing the CRL number of
 CA_FILE_CNF = "openssl.cnf"     # The name of the config file
 
 # Derived
-CA_DIR = CA_LOC + "/ca"     # The path of the root CA.
-INT_DIR = CA_DIR + "/intermediate"      # The path of the intermediate CA.
+
+CA_DIR = CA_LOC \
+         + "/ca"     # The path of the root CA.
+
+INT_DIR = CA_DIR \
+          + "/intermediate"      # The path of the intermediate CA.
 
 class CAMODE(Enum):
     """This enumeration defines the mode of operation of come of the functions that operate stuff common to root CA or intermediate CA."""
@@ -58,10 +64,12 @@ class INPMODE(Enum):
     cmdargs = 2
     interactive = 3
 
-def createdir(path, mode=None):
+def createDirectory(path, mode=None):
     """Checks if a specified path exists, if not, creates it."""
     if os.path.exists(path):
-        print "DIRCREATE : Path " + path + " already exists, skipping"
+        print "DIRCREATE : Path " \
+              + path + " already exists, skipping"
+
         if mode != None:
             os.chmod(path, mode)
     else:
@@ -71,7 +79,7 @@ def createdir(path, mode=None):
             os.mkdir(path)
     return
 
-def touchfile(filename,text):
+def touchFile(filename, text):
     """Touches a file and then writes some text into it, could be an empty string"""
     target = open(filename, "w")
     target.write(text)
@@ -89,20 +97,43 @@ def initcadirs(camode):
     else:
         raise Exception("Invalid mode of function call specified")
 
-    createdir(thedir)
+    createDirectory(thedir)
 
     # Common files and directories for all CAs
-    createdir(thedir + "/" + CA_DIR_CERTS)
-    createdir(thedir + "/" + CA_DIR_CRL)
-    createdir(thedir + "/" + CA_DIR_NEWCERTS)
-    createdir(thedir + "/" + CA_DIR_PRIVATE, 700)
-    touchfile(thedir + "/" + CA_FILE_INDEX, "")
-    touchfile(thedir + "/" + CA_FILE_SERIAL, "1000\n")
+    createDirectory(thedir
+                    + "/"
+                    + CA_DIR_CERTS)
+
+    createDirectory(thedir
+                    + "/"
+                    + CA_DIR_CRL)
+
+    createDirectory(thedir
+                    + "/"
+                    + CA_DIR_NEWCERTS)
+
+    createDirectory(thedir
+                    + "/"
+                    + CA_DIR_PRIVATE, 700)
+
+    touchFile(thedir
+              + "/"
+              + CA_FILE_INDEX, "")
+
+    touchFile(thedir
+              + "/"
+              + CA_FILE_SERIAL, "1000\n")
 
     # Only for intermediate CAs
     if camode == CAMODE.intermediate:
-        touchfile(thedir + "/" + CA_FILE_CRLNUMBER, "1000\n")
-        createdir(thedir + "/" + CA_DIR_CSR)
+
+        touchFile(thedir
+                  + "/"
+                  + CA_FILE_CRLNUMBER, "1000\n")
+
+        createDirectory(thedir
+                        + "/"
+                        + CA_DIR_CSR)
 
     return
 
@@ -119,18 +150,26 @@ def initcaconfig(camode):
         privkey = CA_KEY
         cert = CA_CERT
         crl = CA_CRL
-        cadefpolicy = cadefpolicy + "strict"
+        cadefpolicy = cadefpolicy \
+                      + "strict"
+
     elif camode == CAMODE.intermediate:
         thedir = INT_DIR
         privkey = INT_KEY
         cert = INT_CERT
         crl = INT_CRL
-        cadefpolicy = cadefpolicy + "loose"
+        cadefpolicy = cadefpolicy \
+                      + "loose"
+
     else:
         raise Exception("Invalid mode of function call specified")
 
-    cnffile = thedir + "/" + CA_FILE_CNF
+    # Set the Config file where the config will be written
+    cnffile = thedir \
+              + "/" \
+              + CA_FILE_CNF
 
+    # Create a config parser to setup the configurations
     config = ConfigParser.RawConfigParser()
 
     # Section ca
@@ -141,17 +180,45 @@ def initcaconfig(camode):
     # Section CA_Default
     currsec = "CA_default"
     config.add_section(currsec)
+
     config.set(currsec, "dir", thedir)
-    config.set(currsec, "certs", "$dir/" + CA_DIR_CERTS)
-    config.set(currsec, "crl_dir", "$dir/" + CA_DIR_CRL)
-    config.set(currsec, "newcerts_dir", "$dir/" + CA_DIR_NEWCERTS)
-    config.set(currsec, "database", "$dir/" + CA_FILE_INDEX)
-    config.set(currsec, "serial", "$dir/" + CA_FILE_SERIAL)
-    config.set(currsec, "RANDFILE", "$dir/" + CA_DIR_PRIVATE + "/" + ".rand")
-    config.set(currsec, "private_key", "$dir/" + CA_DIR_PRIVATE + "/" + privkey)
-    config.set(currsec, "certificate", "$dir/" + CA_DIR_CERTS + "/" + cert)
-    config.set(currsec, "crlnumber", "$dir/" + CA_FILE_CRLNUMBER)
-    config.set(currsec, "crl", "$dir/" + crl)
+
+    config.set(currsec, "certs", "$dir/"
+               + CA_DIR_CERTS)
+
+    config.set(currsec, "crl_dir", "$dir/"
+               + CA_DIR_CRL)
+
+    config.set(currsec, "newcerts_dir", "$dir/"
+               + CA_DIR_NEWCERTS)
+
+    config.set(currsec, "database", "$dir/"
+               + CA_FILE_INDEX)
+
+    config.set(currsec, "serial", "$dir/"
+               + CA_FILE_SERIAL)
+
+    config.set(currsec, "RANDFILE", "$dir/"
+               + CA_DIR_PRIVATE
+               + "/"
+               + ".rand")
+
+    config.set(currsec, "private_key", "$dir/"
+               + CA_DIR_PRIVATE
+               + "/"
+               + privkey)
+
+    config.set(currsec, "certificate", "$dir/"
+               + CA_DIR_CERTS
+               + "/"
+               + cert)
+
+    config.set(currsec, "crlnumber", "$dir/"
+               + CA_FILE_CRLNUMBER)
+
+    config.set(currsec, "crl", "$dir/"
+               + crl)
+
     config.set(currsec, "crl_extensions", "crl_ext")
     config.set(currsec, "default_crl_days", "30")
     config.set(currsec, "default_md", "sha256")
@@ -266,13 +333,9 @@ def initcaconfig(camode):
 
     return
 
-def getinp_helper_country():
-
-    return
-
 def getinp_interactive():
     """This function does the input in case of interactive mode."""
-    global CA_LOC, SUBJ_COUNTRY, SUBJ_EMAIL, SUBJ_STATEORPROVINCE, SUBJ_LOCALITY, SUBJ_ORGNAME, SUBJ_OU
+    global CA_LOC, SUBJ_COUNTRY, SUBJ_EMAIL, SUBJ_STATEORPROVINCE, SUBJ_LOCALITY, SUBJ_ORGNAME, SUBJ_OU, CA_CN, INT_CN
 
     print "Hi, lets get started : "
 
@@ -287,7 +350,11 @@ def getinp_interactive():
             CA_LOC = inp
             #print CA_LOC #test
         else:
-            print "**E " + inp + " needs to be a directory :("
+
+            print "**E " \
+                  + inp \
+                  + " needs to be a directory :("
+
             sys.exit(3)
 
     else:
@@ -300,7 +367,10 @@ def getinp_interactive():
     # Get the default country for the CA.
     ptn = re.compile("^[A-Z]{2}$")
     while True:
-        inp = raw_input("What is the CA's Country Code (2 Capital Letters) [" + SUBJ_COUNTRY + "] : ")
+
+        inp = raw_input("What is the CA's Country Code (2 Capital Letters) ["
+                        + SUBJ_COUNTRY
+                        + "] : ")
 
         if len(inp) == 0:
             break
@@ -310,31 +380,77 @@ def getinp_interactive():
             break
 
     # Get the default state or province
-    inp = raw_input("What is the CA's state or province [" + SUBJ_STATEORPROVINCE + "] : ")
+
+    inp = raw_input("What is the CA's state or province ["
+                    + SUBJ_STATEORPROVINCE
+                    + "] : ")
 
     if len(inp) > 0:
         SUBJ_STATEORPROVINCE = inp
 
     # Get the default Locality
-    inp = raw_input("What is the CA's Locality [" + SUBJ_LOCALITY + "] : ")
+
+    inp = raw_input("What is the CA's Locality ["
+                    + SUBJ_LOCALITY
+                    + "] : ")
 
     if len(inp) > 0:
         SUBJ_LOCALITY = inp
 
     # Get the default Org Name
-    inp = raw_input("What is the CA's Organization Name [" + SUBJ_ORGNAME + "] : ")
+    inp = raw_input("What is the CA's Organization Name ["
+                    + SUBJ_ORGNAME
+                    + "] : ")
 
     if len(inp) > 0:
         SUBJ_ORGNAME = inp
 
     # Get the default OU
-    inp = raw_input("Whats the CA's OU : [" + SUBJ_OU + "] : ")
+    inp = raw_input("What is the CA's OU : ["
+                    + SUBJ_OU
+                    + "] : ")
 
     if len(inp) > 0:
         SUBJ_OU = inp
 
     # Get the default email
+    ptn = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
 
+    while True:
+
+        inp = raw_input("What is the CS's email ID : ["
+                        + SUBJ_EMAIL
+                        + "] : ")
+
+        if len(inp) == 0:
+            break
+
+        if ptn.match(inp) != None:
+            SUBJ_EMAIL = inp
+            break
+
+    # Get the Root CA's CN :
+
+    inp = raw_input("What is the Root CA's Common Name(CN) : ["
+                    + CA_CN
+                    + "] : ")
+
+    if len(inp) > 0:
+        CA_CN = inp
+
+    # Get the Intermediate CA's CN
+
+    inp = raw_input("What is the Intermediate CA's Common Name(CN) ["
+                    + INT_CN
+                    + "] : ")
+
+    if len(inp) > 0:
+        INT_CN = inp
+
+    return
+
+def getinp_inscript():
+    print "Taking nessasary values as set in the script ... \n"
     return
 
 def getinp(inpmode):
@@ -354,9 +470,109 @@ def getinp(inpmode):
 
     return
 
+def createcacertpair(camode):
+    """Creates the ca pair for the root or intermediate CA."""
+
+    usermsg1 = "Generating CA pair for "
+    usermsg2 = "Please enter the passwords when prompted."
+
+    SUBJ_PRM = "/C=" \
+               + SUBJ_COUNTRY \
+               + "/ST=" \
+               + SUBJ_STATEORPROVINCE \
+               + "/L=" \
+               + SUBJ_LOCALITY \
+               + "/O=" \
+               + SUBJ_ORGNAME \
+               + "/OU=" \
+               + SUBJ_OU \
+               + "/CN="
+
+    thefile = ""
+
+    # Check invalid camode :
+    if camode != CAMODE.root and camode != CAMODE.intermediate:
+        raise Exception("Invalid method of function call.")
+
+    # Create the KEY
+
+    # 1. Init the cmd :
+    CMDKEY = ["openssl", "genrsa", "-aes256", "-out"]
+
+    # 2. Set up parameters
+    if camode == CAMODE.root:
+
+        print usermsg1 \
+              + "Root CA\n" \
+
+        thefile = CA_DIR \
+                  + "/" \
+                  + CA_DIR_PRIVATE \
+                  + CA_KEY
+
+    elif camode == CAMODE.intermediate:
+
+        print  usermsg1 \
+               + "Intermediate CA\n"
+
+        thefile = INT_DIR \
+                  + "/" \
+                  + CA_DIR_PRIVATE \
+                  + "/" + INT_KEY
+
+    print usermsg2 + "\n"
+
+    # 3. Append the values to cmd
+    CMDKEY.append(thefile)
+    CMDKEY.append("4096")
+
+    # 4. Execute cmd
+    print  CMDKEY # Test
+    #call(CMDKEY)
+
+    # Create the CSR (intermediate ONLY)
+    if camode == CAMODE.intermediate:
+
+        # 1. Init the cmd
+        CMDCSR = ["openssl", "req", "-config", INT_DIR
+                  + "/"
+                  + CA_FILE_CNF, "-new", "-sha256"]
+
+        # 2. Setup the parameters
+        CMDCSR.append("-key")
+
+        CMDCSR.append(INT_DIR
+                      + "/"
+                      + CA_DIR_PRIVATE
+                      + "/"
+                      + INT_KEY)
+        CMDCSR.append("-out")
+
+        CMDCSR.append(INT_DIR
+                      + "/"
+                      + CA_DIR_CSR
+                      + "/"
+                      + INT_CSR )
+
+        CMDCSR.append("-subj")
+        CMDCSR.append(SUBJ_PRM + INT_CN)
+
+        # 3. Run the cmd
+        print CMDCSR #test
+        #call(CMDCSR)
+
+    return
+
+# Usage function, displays if script was in appropriately used
 def usage():
-    print "\nUsage : " + sys.argv[0] + " [--in-script | -s | --interactive | -i | --args | -a] [PARAMS]"
-    print "         " + "PARAMS (if --args or -a specified) - [caroot] [city] [location]"
+
+    print "\nUsage : " \
+          + sys.argv[0] \
+          + " [--in-script | -s | --interactive | -i | --args | -a] [PARAMS]"
+
+    print "         " \
+          + "PARAMS (if --args or -a specified) - [caroot] [city] [location]"
+
     print "\n"
     sys.exit(2)
     return
@@ -372,8 +588,10 @@ def main():
     if len(sys.argv) < 2:
         usage()
 
+    # Get the mode of the script
     MD = sys.argv[1]
 
+    # Based on the mode, either get the
     if MD == "--in-script" or MD == "-s":
         getinp(INPMODE.inscript)
     elif MD == "--interactive" or MD == "-i":
@@ -390,16 +608,22 @@ def main():
     CA_LOC = os.path.abspath(CA_LOC)
 
     # Derived - Reassign
-    CA_DIR = CA_LOC + "/ca"
-    INT_DIR = CA_DIR + "/intermediate"
+
+    CA_DIR = CA_LOC \
+             + "/ca"
+
+    INT_DIR = CA_DIR \
+              + "/intermediate"
 
     # Set up root CA.
     initcadirs(CAMODE.root)
     initcaconfig(CAMODE.root)
+    createcacertpair(CAMODE.root)
 
     # Set up intermediate CA
     initcadirs(CAMODE.intermediate)
     initcaconfig(CAMODE.intermediate)
+    createcacertpair(CAMODE.intermediate)
 
     print  "\nOperation Completed\n"
     return
