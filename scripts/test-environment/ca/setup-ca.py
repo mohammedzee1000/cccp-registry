@@ -17,7 +17,7 @@ INT_CN = "CentOS Devcloud Intermediate CA"
 
 SUBJ_COUNTRY = "GB"
 SUBJ_STATEORPROVINCE = "England"
-SUBJ_LOCALITY = ""
+SUBJ_LOCALITY = "EMPTY"
 SUBJ_ORGNAME = "CentOS Devcloud"
 SUBJ_OU = "CCCP"
 SUBJ_EMAIL = "test@cccp.org"
@@ -64,7 +64,7 @@ class INPMODE(Enum):
     cmdargs = 2
     interactive = 3
 
-def createDirectory(path, mode=None):
+def create_directory(path, mode=None):
     """Checks if a specified path exists, if not, creates it."""
     if os.path.exists(path):
         print "DIRCREATE : Path " \
@@ -79,14 +79,14 @@ def createDirectory(path, mode=None):
             os.mkdir(path)
     return
 
-def touchFile(filename, text):
+def touch_file(filename, text):
     """Touches a file and then writes some text into it, could be an empty string"""
     target = open(filename, "w")
     target.write(text)
     target.close()
     return
 
-def initcadirs(camode):
+def inititialize_ca_directories(camode):
     """Does some initialization for the CA such as creating directories, creating some database files and so on."""
     thedir = ""
 
@@ -97,47 +97,47 @@ def initcadirs(camode):
     else:
         raise Exception("Invalid mode of function call specified")
 
-    createDirectory(thedir)
+    create_directory(thedir)
 
     # Common files and directories for all CAs
-    createDirectory(thedir
-                    + "/"
-                    + CA_DIR_CERTS)
+    create_directory(thedir
+                     + "/"
+                     + CA_DIR_CERTS)
 
-    createDirectory(thedir
-                    + "/"
-                    + CA_DIR_CRL)
+    create_directory(thedir
+                     + "/"
+                     + CA_DIR_CRL)
 
-    createDirectory(thedir
-                    + "/"
-                    + CA_DIR_NEWCERTS)
+    create_directory(thedir
+                     + "/"
+                     + CA_DIR_NEWCERTS)
 
-    createDirectory(thedir
-                    + "/"
-                    + CA_DIR_PRIVATE, 700)
+    create_directory(thedir
+                     + "/"
+                     + CA_DIR_PRIVATE, 700)
 
-    touchFile(thedir
-              + "/"
-              + CA_FILE_INDEX, "")
+    touch_file(thedir
+               + "/"
+               + CA_FILE_INDEX, "")
 
-    touchFile(thedir
-              + "/"
-              + CA_FILE_SERIAL, "1000\n")
+    touch_file(thedir
+               + "/"
+               + CA_FILE_SERIAL, "1000\n")
 
     # Only for intermediate CAs
     if camode == CAMODE.intermediate:
 
-        touchFile(thedir
-                  + "/"
-                  + CA_FILE_CRLNUMBER, "1000\n")
+        touch_file(thedir
+                   + "/"
+                   + CA_FILE_CRLNUMBER, "1000\n")
 
-        createDirectory(thedir
-                        + "/"
-                        + CA_DIR_CSR)
+        create_directory(thedir
+                         + "/"
+                         + CA_DIR_CSR)
 
     return
 
-def initcaconfig(camode):
+def initialize_ca_config(camode):
     """This function initializes the openssl.cnf files needed for certificate generation."""
     thedir = ""
     privkey = ""
@@ -171,6 +171,7 @@ def initcaconfig(camode):
 
     # Create a config parser to setup the configurations
     config = ConfigParser.RawConfigParser()
+    config.optionxform = str
 
     # Section ca
     currsec = "ca"
@@ -233,7 +234,7 @@ def initcaconfig(camode):
     config.add_section(currsec)
     config.set(currsec, "countryName", "match")
     config.set(currsec, "stateOrProvinceName", "match")
-    config.set(currsec, "organizationName", "match")
+    config.set(currsec, "OrganizationName", "match")
     config.set(currsec, "organizationalUnitName", "optional")
     config.set(currsec, "commonName", "supplied")
     config.set(currsec, "emailAddress", "optional")
@@ -279,7 +280,7 @@ def initcaconfig(camode):
     currsec = "v3_ca"
     config.add_section(currsec)
     config.set(currsec, "subjectKeyIdentifier", "hash")
-    config.set(currsec, "authorityKeyIdentifier", "keyid:always,issuer")
+    config.set(currsec, "authorityKeyIdentifier", "keyid:always, issuer")
     config.set(currsec, "basicConstraints", "critical, CA:true")
     config.set(currsec, "keyUsage", "critical, digitalSignature, cRLSign, keyCertSign")
 
@@ -287,7 +288,7 @@ def initcaconfig(camode):
     currsec = "v3_intermediate_ca"
     config.add_section(currsec)
     config.set(currsec, "subjectKeyIdentifier", "hash")
-    config.set(currsec, "authorityKeyIdentifier", "keyid:always,issuer")
+    config.set(currsec, "authorityKeyIdentifier", "keyid:always, issuer")
     config.set(currsec, "basicConstraints", "critical, CA:true, pathlen:0")
     config.set(currsec, "keyUsage", "critical, digitalSignature, cRLSign, keyCertSign")
 
@@ -298,7 +299,7 @@ def initcaconfig(camode):
     config.set(currsec, "nsCertType", "client, email")
     config.set(currsec, "nsComment", "\"OpenSSL Generated Client Certificate\"")
     config.set(currsec, "subjectKeyIdentifier", "hash")
-    config.set(currsec, "authorityKeyIdentifier", "keyid:always,issuer")
+    config.set(currsec, "authorityKeyIdentifier", "keyid:always, issuer")
     config.set(currsec, "keyUsage", "critical, nonRepudiation, digitalSignature, keyEncipherment")
     config.set(currsec, "extendedKeyUsage", "clientAuth, emailProtection")
 
@@ -309,7 +310,7 @@ def initcaconfig(camode):
     config.set(currsec, "nsCertType", "server")
     config.set(currsec, "nsComment", "\"OpenSSL Generated Server Certificate\"")
     config.set(currsec, "subjectKeyIdentifier", "hash")
-    config.set(currsec, "authorityKeyIdentifier", "keyid,issuer:always")
+    config.set(currsec, "authorityKeyIdentifier", "keyid, issuer:always")
     config.set(currsec, "keyUsage", "critical, digitalSignature, keyEncipherment")
     config.set(currsec, "extendedKeyUsage", "serverAuth")
 
@@ -323,7 +324,7 @@ def initcaconfig(camode):
     config.add_section(currsec)
     config.set(currsec, "basicConstraints", "CA:false")
     config.set(currsec, "subjectKeyIdentifier", "hash")
-    config.set(currsec, "authorityKeyIdentifier", "keyid,issuer")
+    config.set(currsec, "authorityKeyIdentifier", "keyid, issuer")
     config.set(currsec, "keyUsage", "critical, digitalSignature")
     config.set(currsec, "extendedKeyUsage", "OCSPSigning")
 
@@ -333,7 +334,7 @@ def initcaconfig(camode):
 
     return
 
-def getinp_interactive():
+def get_input_interactive():
     """This function does the input in case of interactive mode."""
     global CA_LOC, SUBJ_COUNTRY, SUBJ_EMAIL, SUBJ_STATEORPROVINCE, SUBJ_LOCALITY, SUBJ_ORGNAME, SUBJ_OU, CA_CN, INT_CN
 
@@ -449,18 +450,18 @@ def getinp_interactive():
 
     return
 
-def getinp_inscript():
+def get_input_inscript():
     print "Taking nessasary values as set in the script ... \n"
     return
 
-def getinp(inpmode):
+def get_input(inpmode):
     """This function takes the input mode and sets the parameters needed for the CA."""
     # FIXME : Finish this function
 
     if inpmode == INPMODE.cmdargs:
         print "test"
     elif inpmode == INPMODE.interactive:
-        getinp_interactive()
+        get_input_interactive()
     elif inpmode == INPMODE.inscript:
         print "test"
     else:
@@ -470,11 +471,11 @@ def getinp(inpmode):
 
     return
 
-def createcacertpair(camode):
+def create_ca_pair(camode):
     """Creates the ca pair for the root or intermediate CA."""
 
-    usermsg1 = "\nGenerating CA pair for "
-    usermsg2 = "Please enter the passwords when prompted."
+    usermsg1 = "\n* Generating CA pair for "
+    usermsg2 = "** Please enter the passwords when prompted."
 
     SUBJ_PRM = "/C=" \
                + SUBJ_COUNTRY \
@@ -528,11 +529,13 @@ def createcacertpair(camode):
     CMDKEY.append("4096")
 
     # 4. Execute cmd
-    print  CMDKEY # Test
-    #call(CMDKEY)
+    #print  CMDKEY # Test
+    call(CMDKEY)
 
     # Create the CSR (intermediate ONLY)
     if camode == CAMODE.intermediate:
+
+        print "*** Generating CSR for intermediate CA : \n"
 
         # 1. Init the cmd
         CMDCSR = ["openssl", "req", "-config", INT_DIR
@@ -547,6 +550,7 @@ def createcacertpair(camode):
                       + CA_DIR_PRIVATE
                       + "/"
                       + INT_KEY)
+
         CMDCSR.append("-out")
 
         CMDCSR.append(INT_DIR
@@ -559,8 +563,8 @@ def createcacertpair(camode):
         CMDCSR.append(SUBJ_PRM + INT_CN)
 
         # 3. Run the cmd
-        print CMDCSR #test
-        #call(CMDCSR)
+        #print CMDCSR #test
+        call(CMDCSR)
 
     # Create the CA cert
 
@@ -568,7 +572,65 @@ def createcacertpair(camode):
     CMDCERT = ["openssl", "req", "-config", CA_DIR + "/" + CA_FILE_CNF]
 
     # 2. Setup the parameters
+    if camode == CAMODE.root:
+        CMDCERT.append("-key")
+
+        CMDCERT.append(CA_DIR
+                       + "/"
+                       + CA_DIR_PRIVATE
+                       + "/"
+                       + CA_KEY)
+
+        CMDCERT.append("-new")
+        CMDCERT.append("-x509")
+        CMDCERT.append("-days")
+        CMDCERT.append("7300")
+        CMDCERT.append("-sha256")
+        CMDCERT.append("-extensions")
+        CMDCERT.append("v3_ca")
+        CMDCERT.append("-out")
+
+        CMDCERT.append(CA_DIR
+                       + "/"
+                       + CA_DIR_CERTS
+                       + "/"
+                       + CA_CERT)
+
+        CMDCERT.append("-subj")
+
+        CMDCERT.append(SUBJ_PRM
+                       + CA_CN)
+
+    elif camode == CAMODE.intermediate:
+        CMDCERT[1] = "ca"
+        CMDCERT.append("-extensions")
+        CMDCERT.append("v3_intermediate_ca")
+        CMDCERT.append("-days")
+        CMDCERT.append("3650")
+        CMDCERT.append("-notext")
+        CMDCERT.append("-md")
+        CMDCERT.append("sha256")
+        CMDCERT.append("-in")
+
+        CMDCERT.append(INT_DIR
+                       + "/"
+                       + CA_DIR_CSR
+                       + "/"
+                       + INT_CSR)
+
+        CMDCERT.append("-out")
+
+        CMDCERT.append(INT_DIR
+                       + "/"
+                       + CA_DIR_CERTS
+                       + "/"
+                       + INT_CERT)
+
+        print CMDCERT
+
     # 3. Execute the CMD
+    #print CMDCERT # TEST
+    call(CMDCERT)
 
     return
 
@@ -590,6 +652,12 @@ def usage():
 
 def main():
     """This is the main function of this script."""
+
+    # Check script run as root, if not run it as root
+    if not os.getuid() ==0:
+        sys.exit("\nOnly root can run this script.\n")
+
+
     # Globals :
     global CA_LOC, CA_DIR, INT_DIR
 
@@ -602,11 +670,11 @@ def main():
 
     # Based on the mode, either get the
     if MD == "--in-script" or MD == "-s":
-        getinp(INPMODE.inscript)
+        get_input(INPMODE.inscript)
     elif MD == "--interactive" or MD == "-i":
-        getinp(INPMODE.interactive)
+        get_input(INPMODE.interactive)
     elif MD == "--args" or MD == "-a":
-        getinp(INPMODE.cmdargs)
+        get_input(INPMODE.cmdargs)
     elif MD == "--help" or MD == "-h":
         usage()
     else:
@@ -625,14 +693,14 @@ def main():
               + "/intermediate"
 
     # Set up root CA.
-    initcadirs(CAMODE.root)
-    initcaconfig(CAMODE.root)
-    createcacertpair(CAMODE.root)
+    inititialize_ca_directories(CAMODE.root)
+    initialize_ca_config(CAMODE.root)
+    create_ca_pair(CAMODE.root)
 
     # Set up intermediate CA
-    initcadirs(CAMODE.intermediate)
-    initcaconfig(CAMODE.intermediate)
-    createcacertpair(CAMODE.intermediate)
+    inititialize_ca_directories(CAMODE.intermediate)
+    initialize_ca_config(CAMODE.intermediate)
+    create_ca_pair(CAMODE.intermediate)
 
     print  "\nOperation Completed\n"
     return
