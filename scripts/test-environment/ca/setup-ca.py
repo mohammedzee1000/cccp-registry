@@ -368,7 +368,7 @@ def create_ca_pair(camode):
 
         print usermsg1 \
               + "Root CA\n" \
- \
+ 
         thefile = CA_DIR \
                   + "/" \
                   + CA_DIR_PRIVATE + \
