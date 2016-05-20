@@ -11,7 +11,7 @@ class inp_mode(Enum):
     interactive = 1
     cmdline = 2
 
-class ar_config_params:
+class AtomicRegistryConfigParams:
     """Class contains the parameters used for customizing the atomic registry"""
 
     def __init__(self):
@@ -25,7 +25,7 @@ class ar_config_params:
 
         return
 
-class atomic_registry_setup:
+class AtomicRegistrySetup:
     """Class sets up the atomic registry"""
 
     def __init__(self, mode = "--interactive"):
@@ -43,7 +43,7 @@ class atomic_registry_setup:
             self.inp_mode = inp_mode.interactive
 
         # Config params
-        self.config_params = ar_config_params()
+        self.config_params = AtomicRegistryConfigParams()
 
         return
 
@@ -149,7 +149,7 @@ def main():
 
     print "\n Lets get started : \n"
 
-    setup = atomic_registry_setup()
+    setup = AtomicRegistrySetup()
 
     # Step 1 : Get the dn or ip
     print "\n * STEP 1 : Getting basic information needed to install atomic registry\n"
