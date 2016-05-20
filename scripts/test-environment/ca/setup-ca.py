@@ -540,12 +540,12 @@ def gen_scripts():
                + "/CN="
 
     SCRIPT_GENCERT_CONTENT = "#!/bin/bash\nif (( $EUID != 0 )); then\n\tsudo bash $0;\n\texit 0;\nfi\nTHEID=$1\n"
-    SCRIPT_GENCERT_CONTENT = SCRIPT_GENCERT_CONTENT + "openssl genrsa -out intermediate/private/${THEID}.key.pem 2048;\n"
-    SCRIPT_GENCERT_CONTENT = SCRIPT_GENCERT_CONTENT + "chmod 400 intermediate/private/${THEID}.key.pem 2048;\n"
-    SCRIPT_GENCERT_CONTENT = SCRIPT_GENCERT_CONTENT + "openssl req -config intermediate/openssl.cnf -key intermediate/private/${THEID}.key.pem -new -sha256 -out intermediate/csr/${THEID}.csr.pem -subj "
-    SCRIPT_GENCERT_CONTENT = SCRIPT_GENCERT_CONTENT + "\"" + SUBJ_PRM + "${THEID}\"\n"
-    SCRIPT_GENCERT_CONTENT = SCRIPT_GENCERT_CONTENT + "openssl ca -config intermediate/openssl.cnf -extensions server_cert -days 375 -notext -md sha256 -in intermediate/csr/${THEID}.csr.pem -out intermediate/certs/${THEID}.cert.pem;\n"
-    SCRIPT_GENCERT_CONTENT = SCRIPT_GENCERT_CONTENT + "chmod 444 intermediate/certs/${THEID}.cert.pem"
+    SCRIPT_GENCERT_CONTENT += "openssl genrsa -out intermediate/private/${THEID}.key.pem 2048;\n"
+    SCRIPT_GENCERT_CONTENT += "chmod 400 intermediate/private/${THEID}.key.pem 2048;\n"
+    SCRIPT_GENCERT_CONTENT += "openssl req -config intermediate/openssl.cnf -key intermediate/private/${THEID}.key.pem -new -sha256 -out intermediate/csr/${THEID}.csr.pem -subj "
+    SCRIPT_GENCERT_CONTENT += "\"" + SUBJ_PRM + "${THEID}\"\n"
+    SCRIPT_GENCERT_CONTENT += "openssl ca -config intermediate/openssl.cnf -extensions server_cert -days 375 -notext -md sha256 -in intermediate/csr/${THEID}.csr.pem -out intermediate/certs/${THEID}.cert.pem;\n"
+    SCRIPT_GENCERT_CONTENT += "chmod 444 intermediate/certs/${THEID}.cert.pem"
 
     touch_file(SCRIPT_GENCERT, SCRIPT_GENCERT_CONTENT, 755)
     print "DONE\n"
@@ -554,7 +554,30 @@ def gen_scripts():
 
     # FIXME : Finish generation of pubcerts.sh
 
-    SCRIPT_PUBCERT_CONTENT = "#!/bin/bash\nINTDIR=\"" + INT_DIR + "\";\nHTTPDIR=\"/var/www/html\"\n"
+    SCRIPT_PUBCERT_CONTENT = "#!/bin/bash\nINTDIR=\"" + INT_DIR + "\";\nHTTPDIR=\"/var/www/html\"\nCATRUST=\"ca-chain.cert.pem\";\n"
+    SCRIPT_PUBCERT_CONTENT += "INTKEY=\"intermediate.key.pem\";\nINTCERT=\"intermediate.cert.pem\";\n"
+    SCRIPT_PUBCERT_CONTENT += "CRTDIR=\"${INTDIR}/certs\";\nPRIVDIR=\"${INTDIR}/private\";\nHCERTSDIR=\"${HTTPDIR}/certs\";\n"
+    SCRIPT_PUBCERT_CONTENT += "HCADIR=\"${HCERTSDIR}/ca\";\nHCRTDIR=\"${HCERTSDIR}/crt\";\nHPRIVDIR=\"${HCERTSDIR}/tls/private\";\n"
+    SCRIPT_PUBCERT_CONTENT += "INDEXFILE=\"${HTTPDIR}/index.html\";\nPCADIR=\"certs/ca\";\nPCRTDIR=\"certs/crt\";\nPPRIVDIR=\"certs/tls/private\";\n"
+    SCRIPT_PUBCERT_CONTENT += "echo \"Initializing...\";\n"
+
+    SCRIPT_PUBCERT_CONTENT += "if [ ! -d ${HCERTSDIR} ]; then\n"
+    SCRIPT_PUBCERT_CONTENT += "\tmkdir -p ${HCERTSDIR};\n"
+    SCRIPT_PUBCERT_CONTENT += "f\n"
+
+    SCRIPT_PUBCERT_CONTENT += "if [ ! -d ${HCADIR} ]; then\n"
+    SCRIPT_PUBCERT_CONTENT += "\tmkdir -p ${HCADIR};\n"
+    SCRIPT_PUBCERT_CONTENT += "fi\n"
+
+    SCRIPT_PUBCERT_CONTENT += "if [ ! -d ${HCRTDIR} ]; then\n"
+    SCRIPT_PUBCERT_CONTENT += "\tmkdir -p ${HCRTDIR};\n"
+    SCRIPT_PUBCERT_CONTENT += "fi\n"
+
+    SCRIPT_PUBCERT_CONTENT += "if [ ! -d ${HPRIVDIR} ]; then\n"
+    SCRIPT_PUBCERT_CONTENT += "\tmkdir -p ${HPRIVDIR};\n"
+    SCRIPT_PUBCERT_CONTENT += "fi\n"
+
+    SCRIPT_GENCERT_CONTENT += "echo \"Exporting certs to http server : \";\n"
 
     touch_file(SCRIPT_PUBCERT, SCRIPT_PUBCERT_CONTENT, 755)
 
