@@ -11,10 +11,27 @@ class inp_mode(Enum):
     interactive = 1
     cmdline = 2
 
+class ar_config_params:
+    """Class contains the parameters used for customizing the atomic registry"""
+
+    def __init__(self):
+
+        # Certs
+        self.certs_cert = ""
+        self.certs_key = ""
+
+        # Storage
+        self.storepath = ""
+
+        return
+
 class atomic_registry_setup:
     """Class sets up the atomic registry"""
 
     def __init__(self, mode = "--interactive"):
+        """Initializes the objects by setting instance variables"""
+
+        # Constants
 
         self.container_image = "mohammedzee1000/centos-atomic-registry-quickstart" # The name of the container image
         # self.OC_MASTER_CONFIG = "/etc/origin/master/master-config.yaml"
@@ -25,26 +42,44 @@ class atomic_registry_setup:
         if mode == "--interactive" or mode == "-i":
             self.inp_mode = inp_mode.interactive
 
+        # Config params
+        self.config_params = ar_config_params()
+
         return
 
     def install_containers(self):
+        """Installs the atomic registry containers"""
 
-        CMD = ["sudo", "atomic", "install", self.container_image, self.dn_or_ip]
+        CMD = ["sudo"
+            , "atomic"
+            , "install"
+            , self.container_image
+            , self.dn_or_ip]
+
         print CMD #test
         #call(cmd)
 
         return
 
     def customize(self):
+        """Applying configuration changes to the atomic registry"""
 
         with open(self.oc_master_config) as ymlfile:
             self.config = yaml.load(ymlfile)
 
+        print self.config # Test
+
         return
 
     def run_containers(self):
+        """Runs the containers that have been installed"""
 
-        CMD = ["sudo", "atomic", "run", self.container_image, self.dn_or_ip]
+        CMD = ["sudo"
+            , "atomic"
+            , "run"
+            , self.container_image
+            , self.dn_or_ip]
+
         print CMD #test
         #call(CMD)
 
@@ -67,8 +102,8 @@ class atomic_registry_setup:
         return
 
 
-    def get_dn_or_ip(self):
-        """Gets the domain name or ip to be used to setup the atomic registry."""
+    def get_preinstall(self):
+        """Gets the domain name or ip to be used to setup the atomic registry.."""
         if self.inp_mode == inp_mode.interactive:
 
             inp = ""
@@ -92,7 +127,11 @@ class atomic_registry_setup:
                     doi = "IP Address"
                     defval = "127.0.0.1"
 
-                inp = raw_input(" ** What is the " + doi + " of the atomic registry service [" + defval + "] : ")
+                inp = raw_input(" ** What is the "
+                                + doi
+                                + " of the atomic registry service ["
+                                + defval
+                                + "] : ")
 
                 if len(inp) == 0:
                     self.dn_or_ip = defval
@@ -113,7 +152,8 @@ def main():
     setup = atomic_registry_setup()
 
     # Step 1 : Get the dn or ip
-    setup.get_dn_or_ip()
+    print "\n * STEP 1 : Getting basic information needed to install atomic registry\n"
+    setup.get_preinstall()
     print
 
     # Step 2 : Install the containers :
