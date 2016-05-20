@@ -1,21 +1,23 @@
 #!/bin/python
 
 import yaml
-import os, sys
+import os
+import sys
 from subprocess import call
 from enum import Enum
 import re
 
+
 # Globals Variables :
-class inp_mode(Enum):
+class InpMode(Enum):
     interactive = 1
     cmdline = 2
+
 
 class AtomicRegistryConfigParams:
     """Class contains the parameters used for customizing the atomic registry"""
 
     def __init__(self):
-
         # Certs
         self.certs_cert = ""
         self.certs_key = ""
@@ -25,22 +27,23 @@ class AtomicRegistryConfigParams:
 
         return
 
+
 class AtomicRegistrySetup:
     """Class sets up the atomic registry"""
 
-    def __init__(self, mode = "--interactive"):
+    def __init__(self, mode="--interactive"):
         """Initializes the objects by setting instance variables"""
 
         # Constants
 
-        self.container_image = "mohammedzee1000/centos-atomic-registry-quickstart" # The name of the container image
+        self.container_image = "mohammedzee1000/centos-atomic-registry-quickstart"  # The name of the container image
         # self.OC_MASTER_CONFIG = "/etc/origin/master/master-config.yaml"
-        self.oc_master_config = "test.yaml" # test
+        self.oc_master_config = "test.yaml"  # test
         self.dn_or_ip = "localhost"
         self.config = None
 
         if mode == "--interactive" or mode == "-i":
-            self.inp_mode = inp_mode.interactive
+            self.inp_mode = InpMode.interactive
 
         # Config params
         self.config_params = AtomicRegistryConfigParams()
@@ -50,14 +53,14 @@ class AtomicRegistrySetup:
     def install_containers(self):
         """Installs the atomic registry containers"""
 
-        CMD = ["sudo"
-            , "atomic"
-            , "install"
-            , self.container_image
-            , self.dn_or_ip]
+        cmd = ["sudo",
+               "atomic",
+               "install",
+               self.container_image,
+               self.dn_or_ip]
 
-        print CMD #test
-        #call(cmd)
+        print cmd  # test
+        # call(cmd)
 
         return
 
@@ -67,21 +70,21 @@ class AtomicRegistrySetup:
         with open(self.oc_master_config) as ymlfile:
             self.config = yaml.load(ymlfile)
 
-        print self.config # Test
+        print self.config  # Test
 
         return
 
     def run_containers(self):
         """Runs the containers that have been installed"""
 
-        CMD = ["sudo"
-            , "atomic"
-            , "run"
-            , self.container_image
-            , self.dn_or_ip]
+        cmd = ["sudo",
+               "atomic",
+               "run",
+               self.container_image,
+               self.dn_or_ip]
 
-        print CMD #test
-        #call(CMD)
+        print cmd  # test
+        # call(cmd)
 
         return
 
@@ -94,23 +97,28 @@ class AtomicRegistrySetup:
 
     def get_input(self):
 
-        if self.inp_mode == inp_mode.interactive:
+        if self.inp_mode == InpMode.interactive:
             self.get_input_interactive()
 
         # FIXME : Complete this
 
         return
 
-
     def get_preinstall(self):
         """Gets the domain name or ip to be used to setup the atomic registry.."""
-        if self.inp_mode == inp_mode.interactive:
+        if self.inp_mode == InpMode.interactive:
 
             inp = ""
             doi = ""
             defval = ""
-            ipr = re.compile("^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$")
-            dnr = re.compile("^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$")
+
+            ipr = re.compile(
+                "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}"
+                "([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$")
+
+            dnr = re.compile(
+                "^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*"
+                "([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$")
 
             while True:
 
@@ -127,11 +135,11 @@ class AtomicRegistrySetup:
                     doi = "IP Address"
                     defval = "127.0.0.1"
 
-                inp = raw_input(" ** What is the "
-                                + doi
-                                + " of the atomic registry service ["
-                                + defval
-                                + "] : ")
+                inp = raw_input(" ** What is the " +
+                                doi +
+                                " of the atomic registry service [" +
+                                defval +
+                                "] : ")
 
                 if len(inp) == 0:
                     self.dn_or_ip = defval
@@ -143,6 +151,7 @@ class AtomicRegistrySetup:
                 print " *E Invalid format of " + doi + ".\n"
 
         return
+
 
 def main():
     """This is the main method"""
@@ -161,7 +170,7 @@ def main():
     setup.install_containers()
 
     # Step 3 : Customizing the configurations (input)
-    print  "\n * STEP 3 : Reading parameters needed for configuring the registry\n"
+    print "\n * STEP 3 : Reading parameters needed for configuring the registry\n"
     setup.get_input()
 
     # Step 4 : Customize the configurations
@@ -175,6 +184,7 @@ def main():
     print
 
     return
+
 
 if __name__ == '__main__':
     main()
