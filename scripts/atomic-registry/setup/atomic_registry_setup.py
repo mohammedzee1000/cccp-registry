@@ -1,14 +1,11 @@
 #!/bin/python
 
 import yaml
-import json
 import os
 import sys
 from subprocess import call
 from enum import Enum
 import re
-from itertools import chain
-from collections import Set, Sequence
 
 class quoted(str): pass
 
@@ -20,7 +17,6 @@ yaml.add_representer(quoted, quoted_presenter)
 class InpMode(Enum):
     interactive = 1
     cmdline = 2
-
 
 class AtomicRegistryConfigManager:
     """Class contains the parameters used for customizing the atomic registry"""
