@@ -14,21 +14,61 @@ class InpMode(Enum):
     cmdline = 2
 
 
-class AtomicRegistryConfigParams:
+class AtomicRegistryConfigManager:
     """Class contains the parameters used for customizing the atomic registry"""
 
     def __init__(self):
-        # Certs
-        self.certs_cert = ""
-        self.certs_key = ""
 
-        # Storage
-        self.storepath = ""
+        # self.OC_MASTER_CONFIG = "/etc/origin/master/master-config.yaml"
+        self.oc_master_config = "test.yaml"  # test
+        self.oc_test_config = "temp.yaml"
+
+        with open(self.oc_master_config) as ymlfile:
+            self.config = yaml.load(ymlfile)
+
+        return
+
+    # All the configurable sections functions are located here.
+
+    # * Certs
+    def add_named_certs(self, certfile = None, keyfile = None):
+
+        thesection = self.config["assetConfig"]["servingInfo"]["namedCertificates"]
+
+        print thesection
 
         return
 
 
-class AtomicRegistrySetup:
+    # Section Ends
+
+
+    # Test functions
+    def test_print_config(self):
+        """Test function"""
+
+        print self.config
+
+        return
+
+
+    def test_finalize_config(self):
+
+        with open(self.oc_test_config, "w") as yamlfile:
+            yamlfile.write(yaml.dump(self.config))
+
+        return
+
+    # Finalize Function
+    def finalize_config(self):
+
+        with open(self.oc_master_config, "w") as ymlfile:
+            ymlfile.write(yaml.dump(self.config))
+
+        return
+
+
+class AtomicRegistryQuickstartSetup:
     """Class sets up the atomic registry"""
 
     def __init__(self, mode="--interactive"):
@@ -37,8 +77,6 @@ class AtomicRegistrySetup:
         # Constants
 
         self.container_image = "mohammedzee1000/centos-atomic-registry-quickstart"  # The name of the container image
-        # self.OC_MASTER_CONFIG = "/etc/origin/master/master-config.yaml"
-        self.oc_master_config = "test.yaml"  # test
         self.dn_or_ip = "localhost"
         self.config = None
 
@@ -46,7 +84,7 @@ class AtomicRegistrySetup:
             self.inp_mode = InpMode.interactive
 
         # Config params
-        self.config_params = AtomicRegistryConfigParams()
+        self.config_manager = None
 
         return
 
@@ -67,10 +105,18 @@ class AtomicRegistrySetup:
     def customize(self):
         """Applying configuration changes to the atomic registry"""
 
-        with open(self.oc_master_config) as ymlfile:
-            self.config = yaml.load(ymlfile)
+        self.config_manager = AtomicRegistryConfigManager()
 
-        print self.config  # Test
+
+        return
+
+    def test_customize(self):
+        """Applying configuration changes to the atomic registry test"""
+
+        self.config_manager = AtomicRegistryConfigManager()
+
+        #self.config_manager.test_print_config()  # Test
+        self.config_manager.test_finalize_config() # Test
 
         return
 
@@ -158,7 +204,7 @@ def main():
 
     print "\n Lets get started : \n"
 
-    setup = AtomicRegistrySetup()
+    setup = AtomicRegistryQuickstartSetup()
 
     # Step 1 : Get the dn or ip
     print "\n * STEP 1 : Getting basic information needed to install atomic registry\n"
@@ -169,16 +215,12 @@ def main():
     print "\n * STEP 2 : Installing the registry : \n"
     setup.install_containers()
 
-    # Step 3 : Customizing the configurations (input)
-    print "\n * STEP 3 : Reading parameters needed for configuring the registry\n"
-    setup.get_input()
+    # Step 3 : Customize the configurations
+    print "\n * STEP 3 : Customizing : \n"
+    setup.test_customize()
 
-    # Step 4 : Customize the configurations
-    print "\n * STEP 4 : Applying changes : \n"
-    setup.customize()
-
-    # Step 5 : Run the containers :
-    print "\n * STEP 5 : Running the registry : \n"
+    # Step 4 : Run the containers :
+    print "\n * STEP 4 : Running the registry : \n"
     setup.run_containers()
 
     print
