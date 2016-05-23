@@ -36,7 +36,7 @@ class AtomicRegistryConfigManager:
 
     # * Certs - All functions that handle certificate related configs
 
-    def add_named_certs(self, certfile = None, keyfile = None, names = None):
+    def add_named_certs(self, certfile, keyfile, names=None):
         """Function adds a named certificate to the config file."""
 
         # Get what is already present in the config section to modify
@@ -61,7 +61,7 @@ class AtomicRegistryConfigManager:
         toadd = None
 
         # If current section is emply, then set current content to list, otherwise, append it to existing certs config
-        if currcertsconfig == None:
+        if currcertsconfig is None:
             toadd = [content]
 
         else:
@@ -76,18 +76,12 @@ class AtomicRegistryConfigManager:
     # Section Ends
 
     # * Test functions - Handles testing of the functionality of code
-    def test_print_config(self):
-        """Test function - Print current config on screen"""
 
-        print self.config
-
-        return
-
-    def test_finalize_config(self):
+    def test_config(self):
         """Test the finalize config on a test yaml output file."""
 
         with open(self.oc_test_config, "w") as yamlfile:
-                yamlfile.write(yaml.dump(self.config,default_flow_style=False))
+                yamlfile.write(yaml.dump(self.config, default_flow_style=False))
         return
 
     # Finalize Function
@@ -152,8 +146,7 @@ class AtomicRegistryQuickstartSetup:
         self.config_manager.add_named_certs("test.crt", "test.key")
         self.config_manager.add_named_certs("test1.crt", "test1.key", ["google.com", "test.com"])
 
-        #self.config_manager.test_print_config()  # Test
-        self.config_manager.test_finalize_config() # Test
+        self.config_manager.test_config() # Test
 
         return
 
