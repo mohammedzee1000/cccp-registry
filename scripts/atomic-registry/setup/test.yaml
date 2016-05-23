@@ -22,6 +22,13 @@ assetConfig:
     maxRequestsInFlight: 0
     namedCertificates: null
     requestTimeoutSeconds: 0
+auditConfig:
+  enabled: false
+controllerConfig:
+  serviceServingCert:
+    signer:
+      certFile: service-signer.crt
+      keyFile: service-signer.key
 controllerLeaseTTL: 0
 controllers: '*'
 corsAllowedOrigins:
@@ -30,18 +37,18 @@ corsAllowedOrigins:
 - localhost.localdomain:8443
 disabledFeatures: null
 dnsConfig:
-  allowRecursiveQueries: false
-  bindAddress: 0.0.0.0:53
+  allowRecursiveQueries: true
+  bindAddress: 0.0.0.0:8053
   bindNetwork: tcp4
 etcdClientInfo:
   ca: ca.crt
   certFile: master.etcd-client.crt
   keyFile: master.etcd-client.key
   urls:
-  - https://192.168.121.190:4001
+  - https://192.168.121.19:4001
 etcdConfig:
-  address: 192.168.121.190:4001
-  peerAddress: 192.168.121.190:7001
+  address: 192.168.121.19:4001
+  peerAddress: 192.168.121.19:7001
   peerServingInfo:
     bindAddress: 0.0.0.0:7001
     bindNetwork: tcp4
@@ -70,6 +77,12 @@ imagePolicyConfig:
   maxImagesBulkImportedPerRepository: 5
   maxScheduledImageImportsPerMinute: 60
   scheduledImageImportMinimumIntervalSeconds: 900
+jenkinsPipelineConfig:
+  enabled: true
+  parameters: null
+  serviceName: jenkins
+  templateName: jenkins
+  templateNamespace: openshift
 kind: MasterConfig
 kubeletClientInfo:
   ca: ca.crt
@@ -84,13 +97,13 @@ kubernetesMasterConfig:
   controllerArguments: null
   disabledAPIGroupVersions: {}
   masterCount: 1
-  masterIP: 192.168.121.190
+  masterIP: 192.168.121.19
   podEvictionTimeout: 5m
   proxyClientInfo:
     certFile: master.proxy-client.crt
     keyFile: master.proxy-client.key
   schedulerConfigFile: ""
-  servicesNodePortRange: 80-32767
+  servicesNodePortRange: ${PORT_RANGE}
   servicesSubnet: 172.30.0.0/16
   staticNodeNames: null
 masterClients:
@@ -108,17 +121,19 @@ oauthConfig:
   assetPublicURL: https://localhost.localdomain:8443/console/
   grantConfig:
     method: auto
+    serviceAccountMethod: prompt
   identityProviders:
   - challenge: true
     login: true
     mappingMethod: claim
-    name: anypassword
+    name: htpasswdauth
     provider:
       apiVersion: v1
-      kind: AllowAllPasswordIdentityProvider
+      kind: HTPasswdPasswordIdentityProvider
+      file: /etc/origin/master/users.htpasswd
   masterCA: ca-bundle.crt
   masterPublicURL: https://localhost.localdomain:8443
-  masterURL: https://192.168.121.190:8443
+  masterURL: https://192.168.121.19:8443
   sessionConfig:
     sessionMaxAgeSeconds: 300
     sessionName: ssn
@@ -166,3 +181,5 @@ servingInfo:
   maxRequestsInFlight: 500
   namedCertificates: null
   requestTimeoutSeconds: 3600
+volumeConfig:
+  dynamicProvisioningEnabled: true
