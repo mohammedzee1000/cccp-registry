@@ -143,6 +143,10 @@ class AtomicRegistryQuickstartSetup:
 
         self.config_manager = AtomicRegistryConfigManager()
 
+        # FIXME : Finish this methed
+
+        self.config_manager.finalize_config()
+
         return
 
     def test_customize(self):
@@ -168,22 +172,6 @@ class AtomicRegistryQuickstartSetup:
 
         print cmd  # test
         # call(cmd)
-
-        return
-
-    def get_input_interactive(self):
-
-        inp = ""
-        # FIXME : Complete this
-
-        return
-
-    def get_input(self):
-
-        if self.inp_mode == InpMode.interactive:
-            self.get_input_interactive()
-
-        # FIXME : Complete this
 
         return
 
