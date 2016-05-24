@@ -24,11 +24,11 @@ class AtomicRegistryConfigManager:
     def __init__(self):
 
         # self.OC_MASTER_CONFIG = "/etc/origin/master/master-config.yaml"
-        self.oc_master_config = "test.yaml"  # test
-        self.oc_test_config = "temp.yaml"
+        self._oc_master_config = "test.yaml"  # test
+        self._oc_test_config = "temp.yaml"
 
-        with open(self.oc_master_config) as ymlfile:
-            self.config = yaml.load(ymlfile)
+        with open(self._oc_master_config) as ymlfile:
+            self._config = yaml.load(ymlfile)
 
         return
 
@@ -39,12 +39,12 @@ class AtomicRegistryConfigManager:
     # ** Named certs : Function related to configuring named certs
     def get_named_certs(self):
         """P : Returns the list of dictionaries representing named certs configured or None."""
-        return self.config["assetConfig"]["servingInfo"]["namedCertificates"]
+        return self._config["assetConfig"]["servingInfo"]["namedCertificates"]
 
     def set_named_certs(self, value):
         """I : Sets the named certs to specified value"""
 
-        self.config["assetConfig"]["servingInfo"]["namedCertificates"] = value
+        self._config["assetConfig"]["servingInfo"]["namedCertificates"] = value
 
         return
 
@@ -97,7 +97,12 @@ class AtomicRegistryConfigManager:
             if icertfile != certfile and ikeyfile != keyfile:
                 newconfig.append(item)
 
-        print " [CONFIGCHANGE] Deleting entry for named cert " + certfile + " and " + keyfile + "..."
+        print " [CONFIGCHANGE] Deleting entry for named cert "\
+              + certfile +\
+              " and " +\
+              keyfile +\
+              "..."
+
         self.set_named_certs(newconfig)
 
         return
@@ -108,15 +113,19 @@ class AtomicRegistryConfigManager:
 
     def get_default_cert(self):
         """I : Gets the default cert"""
-        return [self.config["assetConfig"]["servingInfo"]["certFile"], self.config["assetConfig"]["servingInfo"]["keyFile"]]
+        return [self._config["assetConfig"]["servingInfo"]["certFile"], self._config["assetConfig"]["servingInfo"]["keyFile"]]
 
     def set_default_cert(self, certfile, keyfile):
         """Sets the default certs"""
 
-        print " [CONFIGCHANGE] Altering default serving cert to " + certfile + " and " + keyfile + " ..."
+        print " [CONFIGCHANGE] Altering default serving cert to " + \
+              certfile +\
+              " and " +\
+              keyfile +\
+              " ..."
 
-        self.config["assetConfig"]["servingInfo"]["certFile"] = certfile
-        self.config["assetConfig"]["servingInfo"]["keyFile"] = keyfile
+        self._config["assetConfig"]["servingInfo"]["certFile"] = certfile
+        self._config["assetConfig"]["servingInfo"]["keyFile"] = keyfile
 
         return
 
@@ -128,12 +137,26 @@ class AtomicRegistryConfigManager:
 
     def get_identity_providers(self):
         """I : Gets the identity providers"""
-        return self.config["oauthConfig"]["identityProviders"]
+        return self._config["oauthConfig"]["identityProviders"]
 
-    def set_identity_providers(self, value):
+    def set_identity_providers(self, value, append=True):
         """I : Sets the identity providers"""
 
-        self.config["oauthConfig"]["identityProviders"] = value
+        newconfig = None
+
+        if append:
+
+            currconfig = self.get_identity_providers()
+
+            if currconfig is None:
+                newconfig = value
+
+            else:
+                newconfig = currconfig + value
+        else:
+            newconfig = value
+
+        self._config["oauthConfig"]["identityProviders"] = newconfig
 
         return
 
@@ -174,17 +197,13 @@ class AtomicRegistryConfigManager:
             }
         ]
 
-        currconfig = self.get_identity_providers()
-        newconfig = None
+        print " [CONFIGCHANGE] Adding htpasswd identity provider " +\
+              name +\
+              " referring database file " +\
+              file + \
+              " ..."
 
-        if currconfig is None:
-            newconfig = toadd
-
-        else:
-            newconfig = currconfig + toadd
-
-        print " [CONFIGCHANGE] Adding htpasswd identity provider " + name + " referring database file " + file + " ..."
-        self.set_identity_providers(newconfig)
+        self.set_identity_providers(toadd)
 
         return
 
@@ -209,7 +228,6 @@ class AtomicRegistryConfigManager:
             }
         ]
 
-
         if cafile is not None:
             toadd[0]["provider"]["ca"] = cafile
 
@@ -220,26 +238,65 @@ class AtomicRegistryConfigManager:
                 toadd[0]["provider"]["certFile"] = certfile
                 toadd[0]["provider"]["keyFile"] = keyfile
 
-        currconfig = self.get_identity_providers()
-        newconfig = None
-
-        if currconfig is None:
-            newconfig = toadd
-
-        else:
-            newconfig = currconfig + toadd
-
         print " [CONFIGCHANGE] Adding basic auth remote provider " + name + " at " + url + " ..."
-        self.set_identity_providers(newconfig)
+        self.set_identity_providers(toadd)
 
         return
 
-    def add_identityprovider_requestheader(self, apiversion="v1", challenge="true", login="true", mappingmethod="claim"):
+    def add_identityprovider_requestheader(self, name, challengeurl, loginurl,apiversion="v1", challenge="true", login="true", mappingmethod="claim"):
         """P: Add a request header identity provider."""
 
         if not self._validate_mappingmethod(mappingmethod):
             raise Exception("Invalid Mapping method.")
 
+        toadd = [
+            {
+                "name": name,
+                "challenge": challenge,
+                "login": login,
+                "mappingMethod": mappingmethod,
+                "provider":
+                    {
+                        "apiVersion": apiversion,
+                        "kind": "RequestHeaderIdentityProvider",
+                        "challengeURL": challengeurl,
+                        "loginURL": loginurl,
+                        "headers":
+                        [
+                            "X-Remote-User",
+                            "SSO-User"
+                        ],
+                        "emailHeaders":
+                        [
+                            "X-Remote-User-Email"
+                        ],
+                        "nameHeaders":
+                        [
+                            "X-Remote-User-Display-Name"
+                        ],
+                        "preferredUsernameHeaders":
+                        [
+                            "X-Remote-User-Login"
+                        ]
+                    }
+            }
+        ]
+
+        print " [CONFIGCHANGE] Adding request header auth provider " +\
+              name +\
+              " with challenge url : " +\
+              challengeurl +\
+              " and loginurl : " +\
+              loginurl +\
+              "..."
+
+        self.set_identity_providers(toadd)
+
+        return
+
+    def add_identityprovider_ldap(self):
+        """Add an ldap provider."""
+        # FIXME: Complete this method
         return
 
     def delete_identity_provider(self, name):
@@ -252,8 +309,11 @@ class AtomicRegistryConfigManager:
             if item["name"] != name:
                 newconfig.append(item)
 
-        print " [CONFIGCHANGE] Removing entry for auth provider " + name + " ..."
-        self.set_identity_providers(newconfig)
+        print " [CONFIGCHANGE] Removing entry for auth provider " +\
+              name +\
+              " ..."
+
+        self.set_identity_providers(newconfig, append=False)
 
         return
 
@@ -264,16 +324,16 @@ class AtomicRegistryConfigManager:
     def test_config(self):
         """Test the finalize config on a test yaml output file."""
 
-        with open(self.oc_test_config, "w") as yamlfile:
-                yamlfile.write(yaml.dump(self.config, default_flow_style=False))
+        with open(self._oc_test_config, "w") as yamlfile:
+                yamlfile.write(yaml.dump(self._config, default_flow_style=False))
         return
 
     # Finalize Function
     def finalize_config(self):
         """Writes the config back to config file, making it permanent"""
 
-        with open(self.oc_master_config, "w") as ymlfile:
-            ymlfile.write(yaml.dump(self.config, default_flow_style=False))
+        with open(self._oc_master_config, "w") as ymlfile:
+            ymlfile.write(yaml.dump(self._config, default_flow_style=False))
 
         return
 
@@ -286,15 +346,14 @@ class AtomicRegistryQuickstartSetup:
 
         # Constants
 
-        self.container_image = "mohammedzee1000/centos-atomic-registry-quickstart"  # The name of the container image
-        self.dn_or_ip = "localhost"
-        self.config = None
+        self._container_image = "mohammedzee1000/centos-atomic-registry-quickstart"  # The name of the container image
+        self._dn_or_ip = "localhost"
 
         if mode == "--interactive" or mode == "-i":
-            self.inp_mode = InpMode.interactive
+            self._inp_mode = InpMode.interactive
 
         # Config params
-        self.config_manager = None
+        self._config_manager = None
 
         return
 
@@ -304,8 +363,8 @@ class AtomicRegistryQuickstartSetup:
         cmd = ["sudo",
                "atomic",
                "install",
-               self.container_image,
-               self.dn_or_ip]
+               self._container_image,
+               self._dn_or_ip]
 
         print cmd  # test
         # call(cmd)
@@ -315,34 +374,35 @@ class AtomicRegistryQuickstartSetup:
     def customize(self):
         """Applying configuration changes to the atomic registry - based on user input"""
 
-        self.config_manager = AtomicRegistryConfigManager()
+        self._config_manager = AtomicRegistryConfigManager()
 
         # FIXME : Finish this methed
 
-        self.config_manager.finalize_config()
+        self._config_manager.finalize_config()
 
         return
 
     def test_customize(self):
         """Applying configuration changes to the atomic registry - testing"""
 
-        self.config_manager = AtomicRegistryConfigManager()
+        self._config_manager = AtomicRegistryConfigManager()
 
-        print self.config_manager.get_named_certs()
-        self.config_manager.add_named_cert("test.crt", "test.key")
-        self.config_manager.add_named_cert("test1.crt", "test1.key", ["google.com", "test.com"])
-        self.config_manager.add_named_cert("testdel.crt", "testdel.key")
-        self.config_manager.del_named_cert("testdel.crt", "testdel.key")
+        print self._config_manager.get_named_certs()
+        self._config_manager.add_named_cert("test.crt", "test.key")
+        self._config_manager.add_named_cert("test1.crt", "test1.key", ["google.com", "test.com"])
+        self._config_manager.add_named_cert("testdel.crt", "testdel.key")
+        self._config_manager.del_named_cert("testdel.crt", "testdel.key")
 
         print "\n Default serving cert : "
-        print self.config_manager.get_default_cert()
+        print self._config_manager.get_default_cert()
         print
 
-        self.config_manager.add_identityprovider_htpasswd("testprovider", "users.htpasswd")
-        self.config_manager.add_identityprovider_basicauth_remote("test", "test.com", "test.ca", "lala.crt", "lala.key")
-        self.config_manager.delete_identity_provider("test")
+        self._config_manager.add_identityprovider_htpasswd("testprovider", "users.htpasswd")
+        self._config_manager.add_identityprovider_basicauth_remote("test", "test.com", "test.ca", "lala.crt", "lala.key")
+        self._config_manager.add_identityprovider_requestheader("haha", "challenged.com", "login.com")
+        self._config_manager.delete_identity_provider("test")
 
-        self.config_manager.test_config()
+        self._config_manager.test_config()
 
         return
 
@@ -352,8 +412,8 @@ class AtomicRegistryQuickstartSetup:
         cmd = ["sudo",
                "atomic",
                "run",
-               self.container_image,
-               self.dn_or_ip]
+               self._container_image,
+               self._dn_or_ip]
 
         print cmd  # test
         # call(cmd)
@@ -362,7 +422,7 @@ class AtomicRegistryQuickstartSetup:
 
     def get_preinstall(self):
         """Gets the domain name or ip to be used to setup the atomic registry.."""
-        if self.inp_mode == InpMode.interactive:
+        if self._inp_mode == InpMode.interactive:
 
             inp = ""
             doi = ""
@@ -398,10 +458,10 @@ class AtomicRegistryQuickstartSetup:
                                 "] : ")
 
                 if len(inp) == 0:
-                    self.dn_or_ip = defval
+                    self._dn_or_ip = defval
                     break
                 elif (doi == "Domain Name" and dnr.match(inp)) or (doi == "IP Address" and ipr.match(inp)):
-                    self.dn_or_ip = inp
+                    self._dn_or_ip = inp
                     break
 
                 print " *E Invalid format of " + doi + ".\n"
@@ -412,8 +472,9 @@ class AtomicRegistryQuickstartSetup:
 def prereq():
 
     print "\n * IMPORTANT: The script runs with certain assumptions. Please make sure following prereq are met before proceeding ...\n"
+    print " - If you want to use a default username or password, please make sure the same are present in /root/cred"
     print " - If you plan to use your own serving certificates, please make sure the same are loaded into this machine and that"
-    print "   you have access to them. You need to provide the path of the certificate and it will be copied over."
+    print " you have access to them. You need to provide the path of the certificate and it will be copied over."
 
     while True:
         cnt = raw_input("\nAre you sure you wish to proceed (y/n) : ")
