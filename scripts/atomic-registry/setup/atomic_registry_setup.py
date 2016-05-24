@@ -243,7 +243,7 @@ class AtomicRegistryConfigManager:
 
         return
 
-    def add_identityprovider_requestheader(self, name, challengeurl, loginurl,apiversion="v1", challenge="true", login="true", mappingmethod="claim"):
+    def add_identityprovider_requestheader(self, name, challengeurl, loginurl, apiversion="v1", challenge="true", login="true", mappingmethod="claim"):
         """P: Add a request header identity provider."""
 
         if not self._validate_mappingmethod(mappingmethod):
