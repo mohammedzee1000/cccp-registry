@@ -36,13 +36,25 @@ class AtomicRegistryConfigManager:
 
     # * Certs - All functions that handle certificate related configs
 
-    def add_named_certs(self, certfile, keyfile, names=None):
-        """Function adds a named certificate to the config file."""
+    # ** Named certs : Function related to configuring named certs
+    def get_named_certs(self):
+        """P : Returns the list of dictionaries representing named certs configured or None."""
+        return self.config["assetConfig"]["servingInfo"]["namedCertificates"]
+
+    def set_named_certs(self, value):
+        """I : Sets the named certs to specified value"""
+
+        self.config["assetConfig"]["servingInfo"]["namedCertificates"] = value
+
+        return
+
+    def add_named_cert(self, certfile, keyfile, names=None):
+        """P : Function adds a named certificate to the config file."""
 
         # Get what is already present in the config section to modify
-        currcertsconfig = self.config["assetConfig"]["servingInfo"]["namedCertificates"]
+        currconfig = self.get_named_certs()
 
-        print "Appending entry for named cert " + certfile + " and " + keyfile + "..."
+        print " [CONFIGCHANGE] Appending entry for named cert " + certfile + " and " + keyfile + "..."
 
         # Add the cert file and key file to the content to be added to the section
         content = {"keyFile": keyfile, "certFile": certfile}
@@ -61,17 +73,113 @@ class AtomicRegistryConfigManager:
         toadd = None
 
         # If current section is emply, then set current content to list, otherwise, append it to existing certs config
-        if currcertsconfig is None:
+        if currconfig is None:
             toadd = [content]
 
         else:
-            temp = currcertsconfig
+            temp = currconfig
             toadd = temp + [content]
 
         # Update the section with appropriate changes.
-        self.config["assetConfig"]["servingInfo"]["namedCertificates"] = toadd
+        self.set_named_certs(toadd)
 
         return
+
+    def del_named_cert(self, certfile, keyfile):
+        """P : Deletes a specified named certs entry"""
+
+        print " [CONFIGCHANGE] Deleting entry for named cert " + certfile + " and " + keyfile + "..."
+
+        currconfig = self.get_named_certs()
+        newconfig = []
+
+        for item in currconfig:
+            icertfile = item.get("certFile")
+            ikeyfile = item.get("keyFile")
+
+            if icertfile != certfile and ikeyfile != keyfile:
+                newconfig.append(item)
+
+        self.set_named_certs(newconfig)
+
+        return
+
+    # ** Section ends
+
+    # * Default serving cert
+
+    def get_default_cert(self):
+        """I : Gets the default cert"""
+        return [self.config["assetConfig"]["servingInfo"]["certFile"], self.config["assetConfig"]["servingInfo"]["keyFile"]]
+
+    def set_default_cert(self, certfile, keyfile):
+        """Sets the default certs"""
+
+        print " [CONFIGCHANGE] Altering default serving cert to " + certfile + " and " + keyfile + " ..."
+
+        self.config["assetConfig"]["servingInfo"]["certFile"] = certfile
+        self.config["assetConfig"]["servingInfo"]["keyFile"] = keyfile
+
+        return
+
+    # ** Section ends
+
+    # * Section ends
+
+    # * Authentication - Handles all config changes related to authentication
+
+    def get_identity_providers(self):
+        """I : Gets the identity providers"""
+        return self.config["oauthConfig"]["identityProviders"]
+
+    def set_identity_providers(self, value):
+        """I : Sets the identity providers"""
+
+        self.config["oauthConfig"]["identityProviders"] = value
+
+        return
+
+    def get_mapping_methods(self):
+        """Gets a list of possible claim methods"""
+
+        mappingmethods = ["claim", "lookup", "generate", "add"]
+
+        return mappingmethods
+
+    def add_identityProvider_htpasswd(self, name, file, apiversion="v1", challenge="true", login="true", mappingmethod="claim"):
+        """Adds htpassword identity provider"""
+
+        print " [CONFIGCHANGE] Adding htpasswd identity provider " + name + " referring database file " + file + " ..."
+
+        toadd = [
+            {
+                "name": name,
+                "challenge": challenge,
+                "login": login,
+                "mappingMethod": mappingmethod,
+                "provider":
+                {
+                    "apiVersion": apiversion,
+                    "kind": "HTPasswdPasswordIdentityProvider",
+                    "file": file
+                }
+            }
+        ]
+
+        currconfig = self.get_identity_providers()
+        newconfig = None
+
+        if currconfig is None:
+            newconfig = toadd
+
+        else:
+            newconfig = currconfig + toadd
+
+        self.set_identity_providers(newconfig)
+
+        return
+
+    
 
     # Section Ends
 
@@ -143,10 +251,18 @@ class AtomicRegistryQuickstartSetup:
         """Applying configuration changes to the atomic registry - testing"""
 
         self.config_manager = AtomicRegistryConfigManager()
-        self.config_manager.add_named_certs("test.crt", "test.key")
-        self.config_manager.add_named_certs("test1.crt", "test1.key", ["google.com", "test.com"])
 
-        self.config_manager.test_config() # Test
+        print self.config_manager.get_named_certs()
+        self.config_manager.add_named_cert("test.crt", "test.key")
+        self.config_manager.add_named_cert("test1.crt", "test1.key", ["google.com", "test.com"])
+        self.config_manager.add_named_cert("testdel.crt", "testdel.key")
+        self.config_manager.del_named_cert("testdel.crt", "testdel.key")
+
+        print self.config_manager.get_default_cert()
+
+        self.config_manager.add_identityProvider_htpasswd("testprovider", "users.htpasswd")
+
+        self.config_manager.test_config()
 
         return
 
@@ -213,8 +329,28 @@ class AtomicRegistryQuickstartSetup:
         return
 
 
+def prereq():
+
+    print "\n * IMPORTANT: The script runs with certain assumptions. Please make sure following prereq are met before proceeding ...\n"
+    print " - If you plan to use your own serving certificates, please make sure the same are loaded into this machine and that"
+    print "   you have access to them. You need to provide the path of the certificate and it will be copied over."
+
+    while True:
+        cnt = raw_input("\nAre you sure you wish to proceed (y/n) : ")
+
+        if cnt == "y":
+            break
+
+        elif cnt == "n":
+            print
+            sys.exit(0)
+
+    return
+
 def main():
     """This is the main method"""
+
+    prereq()
 
     print "\n Lets get started : \n"
 
