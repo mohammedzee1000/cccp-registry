@@ -54,8 +54,6 @@ class AtomicRegistryConfigManager:
         # Get what is already present in the config section to modify
         currconfig = self.get_named_certs()
 
-        print " [CONFIGCHANGE] Appending entry for named cert " + certfile + " and " + keyfile + "..."
-
         # Add the cert file and key file to the content to be added to the section
         content = {"keyFile": keyfile, "certFile": certfile}
 
@@ -81,14 +79,13 @@ class AtomicRegistryConfigManager:
             toadd = temp + [content]
 
         # Update the section with appropriate changes.
+        print " [CONFIGCHANGE] Appending entry for named cert " + certfile + " and " + keyfile + "..."
         self.set_named_certs(toadd)
 
         return
 
     def del_named_cert(self, certfile, keyfile):
         """P : Deletes a specified named certs entry"""
-
-        print " [CONFIGCHANGE] Deleting entry for named cert " + certfile + " and " + keyfile + "..."
 
         currconfig = self.get_named_certs()
         newconfig = []
@@ -100,6 +97,7 @@ class AtomicRegistryConfigManager:
             if icertfile != certfile and ikeyfile != keyfile:
                 newconfig.append(item)
 
+        print " [CONFIGCHANGE] Deleting entry for named cert " + certfile + " and " + keyfile + "..."
         self.set_named_certs(newconfig)
 
         return
@@ -140,16 +138,15 @@ class AtomicRegistryConfigManager:
         return
 
     def get_mapping_methods(self):
-        """Gets a list of possible claim methods"""
+        """P : Gets a list of possible claim methods"""
 
         mappingmethods = ["claim", "lookup", "generate", "add"]
 
         return mappingmethods
 
-    def add_identityProvider_htpasswd(self, name, file, apiversion="v1", challenge="true", login="true", mappingmethod="claim"):
-        """Adds htpassword identity provider"""
+    def add_identityprovider_htpasswd(self, name, file, apiversion="v1", challenge="true", login="true", mappingmethod="claim"):
+        """P: Adds htpassword identity provider"""
 
-        print " [CONFIGCHANGE] Adding htpasswd identity provider " + name + " referring database file " + file + " ..."
 
         toadd = [
             {
@@ -175,11 +172,73 @@ class AtomicRegistryConfigManager:
         else:
             newconfig = currconfig + toadd
 
+        print " [CONFIGCHANGE] Adding htpasswd identity provider " + name + " referring database file " + file + " ..."
         self.set_identity_providers(newconfig)
 
         return
 
-    
+    def add_identityprovider_basicauth_remote(self, name, url, cafile=None, certfile=None, keyfile=None, apiversion="v1", challenge="true", login="true", mappingmethod="claim"):
+        """P: Adds a remote basic auth provider"""
+
+        toadd = [
+            {
+                "name": name,
+                "challenge": challenge,
+                "login": login,
+                "mappingMethod": mappingmethod,
+                "provider":
+                    {
+                        "apiVersion": apiversion,
+                        "kind": "BasicAuthPasswordIdentityProvider",
+                        "url": url
+                    }
+            }
+        ]
+
+
+        if cafile is not None:
+            toadd[0]["provider"]["ca"] = cafile
+
+        if certfile is not None:
+            if keyfile is None:
+                raise Exception("You need to provide certfile and keyfile together")
+            else:
+                toadd[0]["provider"]["certFile"] = certfile
+                toadd[0]["provider"]["keyFile"] = keyfile
+
+        currconfig = self.get_identity_providers()
+        newconfig = None
+
+        if currconfig is None:
+            newconfig = toadd
+
+        else:
+            newconfig = currconfig + toadd
+
+        print " [CONFIGCHANGE] Adding basic auth remote provider " + name + " at " + url + " ..."
+        self.set_identity_providers(newconfig)
+
+        return
+
+    def add_identityprovider_requestheader(self, apiversion="v1", challenge="true", login="true", mappingmethod="claim"):
+        """P: Add a request header identity provider."""
+
+        return
+
+    def delete_identity_provider(self, name):
+        """P: Deletes an identity provider based on name"""
+
+        currconfig = self.get_identity_providers()
+        newconfig = []
+
+        for item in currconfig:
+            if item["name"] != name:
+                newconfig.append(item)
+
+        print " [CONFIGCHANGE] Removing entry for auth provider " + name + " ..."
+        self.set_identity_providers(newconfig)
+
+        return
 
     # Section Ends
 
@@ -258,9 +317,13 @@ class AtomicRegistryQuickstartSetup:
         self.config_manager.add_named_cert("testdel.crt", "testdel.key")
         self.config_manager.del_named_cert("testdel.crt", "testdel.key")
 
+        print "\n Default serving cert : "
         print self.config_manager.get_default_cert()
+        print
 
-        self.config_manager.add_identityProvider_htpasswd("testprovider", "users.htpasswd")
+        self.config_manager.add_identityprovider_htpasswd("testprovider", "users.htpasswd")
+        self.config_manager.add_identityprovider_basicauth_remote("test", "test.com", "test.ca", "lala.crt", "lala.key")
+        self.config_manager.delete_identity_provider("test")
 
         self.config_manager.test_config()
 
