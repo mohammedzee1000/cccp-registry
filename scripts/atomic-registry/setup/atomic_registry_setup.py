@@ -346,7 +346,8 @@ class AtomicRegistryQuickstartSetup:
 
         # Constants
 
-        self._container_image = "mohammedzee1000/centos-atomic-registry-quickstart"  # The name of the container image
+        self._container_image = "projectatomic/atomic-registry-quickstart"  # The name of the container image
+        #self._container_image = "mohammedzee1000/centos-atomic-registry-quickstart" # Actual
         self._dn_or_ip = "localhost"
 
         if mode == "--interactive" or mode == "-i":
