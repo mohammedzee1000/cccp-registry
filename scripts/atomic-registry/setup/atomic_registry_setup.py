@@ -137,16 +137,27 @@ class AtomicRegistryConfigManager:
 
         return
 
-    def get_mapping_methods(self):
+    def get_mappingmethods(self):
         """P : Gets a list of possible claim methods"""
+        return ["claim", "lookup", "generate", "add"]
 
-        mappingmethods = ["claim", "lookup", "generate", "add"]
+    def _validate_mappingmethod(self, mappingmethod):
 
-        return mappingmethods
+        isvalid = False
+
+        validmappingmethods = self.get_mappingmethods();
+
+        for item in validmappingmethods:
+            if mappingmethod == item:
+                isvalid = True
+        
+        return isvalid
 
     def add_identityprovider_htpasswd(self, name, file, apiversion="v1", challenge="true", login="true", mappingmethod="claim"):
         """P: Adds htpassword identity provider"""
 
+        if not self._validate_mappingmethod(mappingmethod):
+            raise Exception("Invalid Mapping method.")
 
         toadd = [
             {
@@ -179,6 +190,9 @@ class AtomicRegistryConfigManager:
 
     def add_identityprovider_basicauth_remote(self, name, url, cafile=None, certfile=None, keyfile=None, apiversion="v1", challenge="true", login="true", mappingmethod="claim"):
         """P: Adds a remote basic auth provider"""
+
+        if not self._validate_mappingmethod(mappingmethod):
+            raise Exception("Invalid Mapping method.")
 
         toadd = [
             {
@@ -222,6 +236,9 @@ class AtomicRegistryConfigManager:
 
     def add_identityprovider_requestheader(self, apiversion="v1", challenge="true", login="true", mappingmethod="claim"):
         """P: Add a request header identity provider."""
+
+        if not self._validate_mappingmethod(mappingmethod):
+            raise Exception("Invalid Mapping method.")
 
         return
 
