@@ -13,13 +13,13 @@ DIRROOT=$1;
 PROJECT=$2;
 ORDERFILE=$4;
 CLEANUPAFTER=$3;
-LOGFILE="$HOME/dockerfilebuildtest.log";
-CLEANUPFILE="$HOME/builtimagelist";
-INSPECTDIR="$HOME/dockerfilebuildinspects";
+LOGFILE="${HOME}/dockerfilebuildtest.log";
+CLEANUPFILE="${HOME}/builtimagelist";
+INSPECTDIR="${HOME}/dockerfilebuildinspects";
 
 # Displays usage information for the command.
 function usage() {
-	echo "USAGE : $0 [DIRROOT] [PROJECTNAME] [CLEANUPAFTER] [ORDERFILE]";
+	echo "USAGE : ${0} [DIRROOT] [PROJECTNAME] [CLEANUPAFTER] [ORDERFILE]";
 	echo;
 	echo "*   DIRROOT - The folder which containes dockerfiles, remember only one Dockerfile per directory/subdirectory.";
 	echo "*   PROJECTNAME - Name you wish to assign to the project.";
@@ -36,7 +36,7 @@ function err() {
 	mode=$1;
 	errcode=1;
 
-	case $mode in
+	case ${mode} in
 		INVAL_USAGE)
 
 			usage;
@@ -44,7 +44,7 @@ function err() {
 		;;
 	esac
 
-	exit $errcode
+	exit ${errcode}
 }
 
 # Called only when user wants cleanup to happen, after the entire build process.
@@ -54,9 +54,9 @@ function cleanupafter() {
 
 	local ITEM;
 
-	for ITEM in `cat $CLEANUPFILE`; do
+	for ITEM in `cat ${CLEANUPFILE}`; do
 
-		docker rmi $ITEM &> /dev/null;
+		docker rmi ${ITEM} &> /dev/null;
 
 	done
 
@@ -68,10 +68,10 @@ function build_image() {
 	buildid=$1;
 
 	# Setup the inspectdir
-	INSPECTDIR_B="$INSPECTDIR/$buildid";
-	mkdir -p "$INSPECTDIR_B";
+	INSPECTDIR_B="${INSPECTDIR}/${buildid}";
+	mkdir -p "${INSPECTDIR_B}";
 
-	docker build -t $buildid . >> $LOGFILE 2>&1;
+	docker build -t ${buildid} . >> ${LOGFILE} 2>&1;
 
 	# If build failed, then state is failed.
         if [ $? -gt 0 ]; then
@@ -84,24 +84,24 @@ function build_image() {
         	state="success";
 
 		# If success and cleanupafter is set, skip cleaning up the image
-		if [ $CLEANUPAFTER == "true" ]; then
+		if [ ${CLEANUPAFTER} == "true" ]; then
 
 			echo "Skipping cleanup for now..";
-			echo $buildid >> $CLEANUPFILE;
+			echo ${buildid} >> ${CLEANUPFILE};
 
 		# Else clean up image immediately.
 		else
 							
-			echo "Cleaning up $buildid";
-                        docker rmi $buildid &> /dev/null;
+			echo "Cleaning up ${buildid}";
+                        docker rmi ${buildid} &> /dev/null;
 			
 		fi
 						
 	fi
 
-	docker inspect $buildid > "$INSPECTDIR_B/$buildid.inspect" 2>&1;
-	echo "Inspect available in $INSPECTDIR_B";
-	printf "\nInspect available at $INSPECTDIR_B\n" >> $LOGFILE;
+	docker inspect ${buildid} > "${INSPECTDIR_B}/${buildid}.inspect" 2>&1;
+	echo "Inspect available in ${INSPECTDIR_B}";
+	printf "\nInspect available at ${INSPECTDIR_B}\n" >> ${LOGFILE};
 }
 
 # Partially recursive function that does the actual building of images.
@@ -113,39 +113,39 @@ function build() {
 	local INSPECTDIR_B;
 
 	# Check if Orderfile has been specified.
-	if [ -f $ORDERFILE ]; then
+	if [ -f ${ORDERFILE} ]; then
 
 		# If so, time to start building dockerfiles in specified order.
-		printf "\nFound $ORDERFILE, reading...\n\n";
+		printf "\nFound ${ORDERFILE}, reading...\n\n";
 
 		# Read through entry in orderfile, one line at a time.
-		for ITEM in `cat $ORDERFILE`; do
+		for ITEM in `cat ${ORDERFILE}`; do
 
 			# Check if entry has a : indicating that an image name has been specified as well.
-			echo $ITEM | grep ":" &> /dev/null;
+			echo ${ITEM} | grep ":" &> /dev/null;
 
 			# If it exists, then split entry on :, first part is folder containing dockerfile and 
 			# second part is the image id.
 			if [ $? -eq 0 ]; then
 
 				#echo "Contains splitter" #TEST
-				FLDR=`echo $ITEM | cut -d ':' -f1`;
-				PRJID=`echo $ITEM | cut -d ':' -f2`;
+				FLDR=`echo ${ITEM} | cut -d ':' -f1`;
+				PRJID=`echo ${ITEM} | cut -d ':' -f2`;
 				#echo "$FLDR  ----  $PRJID"; #TEST
 
 			# Else, entire entry is path of the folder containing dockerfile.
 			else
 
-				FLDR=$ITEM;
+				FLDR=${ITEM};
 				PRJID="";
 
 			fi
 
 			# If the path specified is a directory and not a soft link.
-			if [ -d "$FLDR" -a ! -L "$FLDR" ]; then
+			if [ -d "${FLDR}" -a ! -L "${FLDR}" ]; then
 
 				# Check if directory contains Dockerfile.
-				ls ./$FLDR | grep -i Dockerfile &> /dev/null;
+				ls ./${FLDR} | grep -i Dockerfile &> /dev/null;
 
 				# If so, start building it.
 				if [ $? -eq 0 ]; then
@@ -154,31 +154,31 @@ function build() {
 					echo "* Found dockerfile at orderfile location $PWD/$FLDR...";
 				
 					# If an image id has been specifed, use it as the image buildid.
-					if [ ! -z $PRJID ]; then
+					if [ ! -z ${PRJID} ]; then
 		
-						buildid_t="$PRJID";
+						buildid_t="${PRJID}";
 
 					# Else construct one using project name/foldername.
 					else
 
-						buildid_t="$PROJECT/$FLDR";
+						buildid_t="${PROJECT}/${FLDR}";
 
 					fi					
 
 					# The image id must be all small characters.
-					buildid=`echo $buildid_t | tr '[:upper:]' '[:lower:]'`;
+					buildid=`echo ${buildid_t} | tr '[:upper:]' '[:lower:]'`;
 
-					printf "** Building as $buildid...\n";
-					printf "\n\nBuilding $PWD/$ITEM as $buildid\n\n" >> $LOGFILE;
+					printf "** Building as ${buildid}...\n";
+					printf "\n\nBuilding ${PWD}/${ITEM} as ${buildid}\n\n" >> ${LOGFILE};
 		
 					# Get into the directory and build the image
-					pushd $PWD/$FLDR &> /dev/null;
+					pushd ${PWD}/${FLDR} &> /dev/null;
 
-					build_image $buildid;
+					build_image ${buildid};
 
 					popd &> /dev/null;
-					printf "Build was $state\n\n";
-					printf "Build was $state\n\n" >> $LOGFILE;
+					printf "Build was ${state}\n\n";
+					printf "Build was ${state}\n\n" >> ${LOGFILE};
 
 				fi
 				echo;echo;
@@ -193,11 +193,11 @@ function build() {
 		for ITEM in `ls`; do
 			#echo $ITEM; #test
 			#If child file is directory and not a soft link, get into it.
-			if [ -d "./$ITEM" -a ! -L "./$ITEM" ]; then
+			if [ -d "./${ITEM}" -a ! -L "./${ITEM}" ]; then
 
 				#echo "$ITEM is directory" #test
 				#ls -l $ITEM; #test
-				pushd ./$ITEM &> /dev/null;
+				pushd ./${ITEM} &> /dev/null;
 				
 				# DFT here.
 				build $level;
