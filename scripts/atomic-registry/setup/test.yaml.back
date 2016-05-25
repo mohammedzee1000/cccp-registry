@@ -45,10 +45,10 @@ etcdClientInfo:
   certFile: master.etcd-client.crt
   keyFile: master.etcd-client.key
   urls:
-  - https://192.168.121.19:4001
+  - https://192.168.121.39:4001
 etcdConfig:
-  address: 192.168.121.19:4001
-  peerAddress: 192.168.121.19:7001
+  address: 192.168.121.39:4001
+  peerAddress: 192.168.121.39:7001
   peerServingInfo:
     bindAddress: 0.0.0.0:7001
     bindNetwork: tcp4
@@ -97,13 +97,13 @@ kubernetesMasterConfig:
   controllerArguments: null
   disabledAPIGroupVersions: {}
   masterCount: 1
-  masterIP: 192.168.121.19
+  masterIP: 192.168.121.39
   podEvictionTimeout: 5m
   proxyClientInfo:
     certFile: master.proxy-client.crt
     keyFile: master.proxy-client.key
   schedulerConfigFile: ""
-  servicesNodePortRange: ${PORT_RANGE}
+  servicesNodePortRange: 80-32767
   servicesSubnet: 172.30.0.0/16
   staticNodeNames: null
 masterClients:
@@ -121,19 +121,17 @@ oauthConfig:
   assetPublicURL: https://localhost.localdomain:8443/console/
   grantConfig:
     method: auto
-    serviceAccountMethod: prompt
   identityProviders:
   - challenge: true
     login: true
     mappingMethod: claim
-    name: htpasswdauth
+    name: anypassword
     provider:
       apiVersion: v1
-      kind: HTPasswdPasswordIdentityProvider
-      file: /etc/origin/master/users.htpasswd
+      kind: AllowAllPasswordIdentityProvider
   masterCA: ca-bundle.crt
   masterPublicURL: https://localhost.localdomain:8443
-  masterURL: https://192.168.121.19:8443
+  masterURL: https://192.168.121.39:8443
   sessionConfig:
     sessionMaxAgeSeconds: 300
     sessionName: ssn
@@ -155,7 +153,7 @@ policyConfig:
 projectConfig:
   defaultNodeSelector: ""
   projectRequestMessage: ""
-  projectRequestTemplate: ""
+  projectRequestTemplate: "default/registry-newproject-template-shared"
   securityAllocator:
     mcsAllocatorRange: s0:/2
     mcsLabelsPerProject: 5
