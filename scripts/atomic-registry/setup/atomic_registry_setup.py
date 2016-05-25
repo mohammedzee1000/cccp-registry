@@ -3,32 +3,37 @@
 import yaml
 import os
 import sys
-from subprocess import call
-from enum import Enum
+from subprocess import call, Popen, PIPE
 import re
+import pprint
+from shutil import copy2
 
-class quoted(str): pass
+class quoted(str):
+    pass
 
 def quoted_presenter(dumper, data):
     return dumper.represent_scalar('tag:yaml.org,2002:str', data, style='"')
-yaml.add_representer(quoted, quoted_presenter)
+#yaml.add_representer(quoted, quoted_presenter)
+
+pp = pprint.PrettyPrinter(indent=4)
 
 # Globals Variables :
-class InpMode(Enum):
+class InpMode():
     interactive = 1
     cmdline = 2
 
 class AtomicRegistryConfigManager:
     """Class contains the parameters used for customizing the atomic registry"""
 
-    def __init__(self):
+    def __init__(self, drycreate=False):
 
-        # self.OC_MASTER_CONFIG = "/etc/origin/master/master-config.yaml"
-        self._oc_master_config = "test.yaml"  # test
+        #self._oc_master_config  = "/etc/origin/master/master-config.yaml"
+        self._oc_master_config = "test.yaml"  # test FIXME: Set this up before shipping
         self._oc_test_config = "temp.yaml"
 
-        with open(self._oc_master_config) as ymlfile:
-            self._config = yaml.load(ymlfile)
+        if not drycreate:
+            with open(self._oc_master_config) as ymlfile:
+                self._config = yaml.load(ymlfile)
 
         return
 
@@ -165,6 +170,7 @@ class AtomicRegistryConfigManager:
         return ["claim", "lookup", "generate", "add"]
 
     def _validate_mappingmethod(self, mappingmethod):
+        """Validates mapping method."""
 
         isvalid = False
 
@@ -176,7 +182,7 @@ class AtomicRegistryConfigManager:
         
         return isvalid
 
-    def add_identityprovider_htpasswd(self, name, file, apiversion="v1", challenge="true", login="true", mappingmethod="claim"):
+    def add_identityprovider_htpasswd(self, name, file, apiversion="v1", challenge=True, login=True, mappingmethod="claim"):
         """P: Adds htpassword identity provider"""
 
         if not self._validate_mappingmethod(mappingmethod):
@@ -207,7 +213,7 @@ class AtomicRegistryConfigManager:
 
         return
 
-    def add_identityprovider_basicauth_remote(self, name, url, cafile=None, certfile=None, keyfile=None, apiversion="v1", challenge="true", login="true", mappingmethod="claim"):
+    def add_identityprovider_basicauth_remote(self, name, url, cafile=None, certfile=None, keyfile=None, apiversion="v1", challenge=True, login=True, mappingmethod="claim"):
         """P: Adds a remote basic auth provider"""
 
         if not self._validate_mappingmethod(mappingmethod):
@@ -243,7 +249,7 @@ class AtomicRegistryConfigManager:
 
         return
 
-    def add_identityprovider_requestheader(self, name, challengeurl, loginurl, apiversion="v1", challenge="true", login="true", mappingmethod="claim"):
+    def add_identityprovider_requestheader(self, name, challengeurl, loginurl, clientca = None, apiversion="v1", challenge=True, login=True, mappingmethod="claim"):
         """P: Add a request header identity provider."""
 
         if not self._validate_mappingmethod(mappingmethod):
@@ -282,6 +288,9 @@ class AtomicRegistryConfigManager:
             }
         ]
 
+        if clientca is not None:
+            toadd[0]["provider"]["clientCA"] = clientca
+
         print " [CONFIGCHANGE] Adding request header auth provider " +\
               name +\
               " with challenge url : " +\
@@ -294,7 +303,7 @@ class AtomicRegistryConfigManager:
 
         return
 
-    def add_identityprovider_ldap(self):
+    def add_identityprovider_ldap(self, apiversion="v1", challenge=True, login=True, mappingmethod="claim"):
         """Add an ldap provider."""
         # FIXME: Complete this method
         return
@@ -347,14 +356,16 @@ class AtomicRegistryQuickstartSetup:
         # Constants
 
         self._container_image = "projectatomic/atomic-registry-quickstart"  # The name of the container image
-        #self._container_image = "mohammedzee1000/centos-atomic-registry-quickstart" # Actual
+        #self._container_image = "mohammedzee1000/centos-atomic-registry-quickstart" # Actual FIXME: Set this up before shipping
         self._dn_or_ip = "localhost"
+        #self._path_files = "/etc/origin/master/"
+        self._path_files = os.path.abspath(".") # test FIXME : Set this up before shipping
 
         if mode == "--interactive" or mode == "-i":
             self._inp_mode = InpMode.interactive
 
         # Config params
-        self._config_manager = None
+        self._config_manager = AtomicRegistryConfigManager(drycreate=True)
 
         return
 
@@ -367,8 +378,132 @@ class AtomicRegistryQuickstartSetup:
                self._container_image,
                self._dn_or_ip]
 
-        print cmd  # test
-        # call(cmd)
+        print cmd  # test # FIXME : Change this before shipping
+        #call(cmd)
+
+        return
+
+    def _copy_file(self, src):
+        """Copies nessasary file to the atomic registry directory."""
+
+        print "** Copying over necessary files..."
+        copy2(src, self._path_files)
+
+        return self._path_files + "/" + os.path.basename(src)
+
+    def customize_interactive(self):
+
+        # FIXME : Finish this method
+
+        while True:
+
+            print "MAIN\n"
+            print "1. Customize Certificates"
+            print "2. Customize Authentication"
+            print "c. Commit configuration and continue"
+            ch = raw_input(" >> ")
+
+            if ch == "1":
+
+                while True:
+
+                    print "\nMAIN > CERTS\n"
+                    print "1. List named certificate"
+                    print "2. Add named certificate"
+                    print "3. Delete Named Certificate"
+                    print "4. Modify default serving certificate"
+                    print "b. Back"
+                    ch1 = raw_input(" >> ")
+
+                    if ch1 == "1":
+
+                        pp.pprint(self._config_manager.get_named_certs())
+
+                    elif ch1 == "2":
+
+                        print
+                        certfile = raw_input("Which is the cert file")
+
+                    elif ch1 == "3":
+
+                        print "c3"
+
+                    elif ch1 == "b":
+
+                        break
+
+                    else:
+
+                        print "\nInvalid choice"
+
+                    print "\n"
+
+            elif ch == "2":
+
+                while True:
+
+                    print "\nMAIN > AUTH\n"
+                    print "1. List Identity providers"
+                    print "2. Add htpasswd identity provider"
+                    print "3. Add Remote Basic Authentication identity provider"
+                    print "4. Add Request Header Identity provider"
+                    print "d. Delete Identity Provider"
+                    print "b. Back"
+                    ch2 = raw_input(" >> ")
+                    print
+
+                    if ch2 == "1":
+
+                        pp.pprint(self._config_manager.get_identity_providers())
+
+                    elif ch2 == "2":
+
+                        nm = ""
+                        while len(nm) < 4:
+                            nm = raw_input("* Name of the provider (atleast 4 characters) : ")
+
+                        htpasswdfile = raw_input("* Path of the htpasswd file : ")
+
+                        if not os.path.isabs(htpasswdfile):
+                            print "**E Please specify absolute path only, try again..."
+
+                        elif not os.path.isfile(htpasswdfile):
+                            print "**E File does not exists, try again..."
+
+                        else:
+                            print "** Copying over necessary files..."
+                            self._config_manager.add_identityprovider_htpasswd(nm, self._copy_file(htpasswdfile))
+
+                    elif ch2 == "3":
+
+                        print "a2"
+
+                    elif ch2 == "4":
+
+                        print "a3"
+
+                    elif ch2 == "d":
+
+                        nm = ""
+                        while len(nm) < 4:
+                            nm = raw_input("* Name of the provider (atleast 4 characters) : ")
+
+                    elif ch2 == "b":
+
+                        break
+
+                    else:
+
+                        print "\n Invalid choice"
+
+                    print "\n"
+
+            elif ch == "c":
+                break
+            else:
+                print "\nInvalid choice"
+
+            print "\n"
 
         return
 
@@ -379,6 +514,37 @@ class AtomicRegistryQuickstartSetup:
 
         # FIXME : Finish this methed
 
+        # Customize stuff based on user input
+        if self._inp_mode == InpMode.interactive:
+            self.customize_interactive()
+
+        # Add default account if /root/cred present
+        if os.path.exists("/root/cred"):
+            users = {}
+            default_htpasswd = self._path_files + "/" + "default.htpasswd"
+            with open("./cred") as credfile:
+                lineno = 0
+                for line in credfile:
+                    lineno += 1
+                    if lineno%2 != 0:
+                        uname = line.partition("=")[2]
+                        uname = uname.rstrip()
+                        users[uname] = None
+                    else:
+                        passwd = line.partition("=")[2]
+                        passwd = passwd.rstrip()
+                        users[uname] = passwd
+
+            with open(default_htpasswd, "w") as htpasswdfile:
+                for user in users.keys():
+                    thepass = users[user]
+                    cmd = ["openssl", "passwd", "-apr1", thepass]
+                    p = Popen(cmd, stdout=PIPE)
+                    out, err = p.communicate()
+                    htpasswdfile.write(user + ":" + out)
+            self._config_manager.delete_identity_provider("anypassword")
+            self._config_manager.add_identityprovider_htpasswd("system_default_auth", default_htpasswd)
+
         self._config_manager.finalize_config()
 
         return
@@ -388,20 +554,36 @@ class AtomicRegistryQuickstartSetup:
 
         self._config_manager = AtomicRegistryConfigManager()
 
-        print self._config_manager.get_named_certs()
-        self._config_manager.add_named_cert("test.crt", "test.key")
-        self._config_manager.add_named_cert("test1.crt", "test1.key", ["google.com", "test.com"])
-        self._config_manager.add_named_cert("testdel.crt", "testdel.key")
-        self._config_manager.del_named_cert("testdel.crt", "testdel.key")
+        # Customize stuff based on user input
+        if self._inp_mode == InpMode.interactive:
+            self.customize_interactive()
 
-        print "\n Default serving cert : "
-        print self._config_manager.get_default_cert()
-        print
+        # Add default account if /root/cred present
+        if os.path.exists("./cred"): # FIXME : Set path of cred file before shipping.
+            users = {}
+            default_htpasswd = self._path_files + "/" + "default.htpasswd"
+            with open("./cred") as credfile:
+                lineno = 0
+                for line in credfile:
+                    lineno += 1
+                    if lineno%2 != 0:
+                        uname = line.partition("=")[2]
+                        uname = uname.rstrip()
+                        users[uname] = None
+                    else:
+                        passwd = line.partition("=")[2]
+                        passwd = passwd.rstrip()
+                        users[uname] = passwd
 
-        self._config_manager.add_identityprovider_htpasswd("testprovider", "users.htpasswd")
-        self._config_manager.add_identityprovider_basicauth_remote("test", "test.com", "test.ca", "lala.crt", "lala.key")
-        self._config_manager.add_identityprovider_requestheader("haha", "challenged.com", "login.com")
-        self._config_manager.delete_identity_provider("test")
+            with open(default_htpasswd, "w") as htpasswdfile:
+                for user in users.keys():
+                    thepass = users[user]
+                    cmd = ["openssl", "passwd", "-apr1", thepass]
+                    p = Popen(cmd, stdout=PIPE)
+                    out, err = p.communicate()
+                    htpasswdfile.write(user + ":" + out)
+            self._config_manager.delete_identity_provider("anypassword")
+            self._config_manager.add_identityprovider_htpasswd("system_default_auth", default_htpasswd)
 
         self._config_manager.test_config()
 
@@ -416,8 +598,8 @@ class AtomicRegistryQuickstartSetup:
                self._container_image,
                self._dn_or_ip]
 
-        print cmd  # test
-        # call(cmd)
+        print cmd  # test # FIXME : Change this before shipping
+        #call(cmd)
 
         return
 
@@ -509,11 +691,13 @@ def main():
 
     # Step 3 : Customize the configurations
     print "\n * STEP 3 : Customizing : \n"
-    setup.test_customize()
+    setup.test_customize() # FIXME : Change to customize before shipping
 
     # Step 4 : Run the containers :
     print "\n * STEP 4 : Running the registry : \n"
     setup.run_containers()
+
+    print "\nA very good documentation is available at http://www.projectatomic.io/registry/ Please do got through the same."
 
     print
 
