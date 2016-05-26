@@ -22,8 +22,32 @@ class InpMode():
     interactive = 1
     cmdline = 2
 
+def is_valid_file(pth):
+    """Checks if a path is a valid file"""
+
+    valid_file = True
+
+    if not os.path.isabs(pth):
+
+        print " **E Please provide absolute path, try again..."
+        valid_file = False
+
+    elif not os.path.exists(pth):
+
+        print " **E The file path you provided does not exist, try again..."
+        valid_file = False
+
+    elif not os.path.isfile(pth):
+
+        print " **E Please provide the path of a file, try again..."
+        valid_file = False
+
+    return valid_file
+
 class AtomicRegistryConfigManager:
     """Class contains the parameters used for customizing the atomic registry"""
+
+    _configchange = " [\033[1;32mCONFIGCHANGE\033[0m] "
 
     def __init__(self, drycreate=False):
 
@@ -68,7 +92,7 @@ class AtomicRegistryConfigManager:
 
             # Go through the list and make every item quoted, so yaml dumper can handle it appropriately.
             for item in names:
-                nmlist.append(quoted(item))
+                nmlist.append(item)
 
             # Add the name list to the content to be written as 'names'
             content["names"] = nmlist
@@ -84,12 +108,12 @@ class AtomicRegistryConfigManager:
             toadd = temp + [content]
 
         # Update the section with appropriate changes.
-        print " [CONFIGCHANGE] Appending entry for named cert " + certfile + " and " + keyfile + "..."
+        print AtomicRegistryConfigManager._configchange + "Appending entry for named cert " + certfile + " and " + keyfile + "..."
         self.set_named_certs(toadd)
 
         return
 
-    def del_named_cert(self, certfile, keyfile):
+    def delete_named_cert(self, certfile, keyfile):
         """P : Deletes a specified named certs entry"""
 
         currconfig = self.get_named_certs()
@@ -102,7 +126,8 @@ class AtomicRegistryConfigManager:
             if icertfile != certfile and ikeyfile != keyfile:
                 newconfig.append(item)
 
-        print " [CONFIGCHANGE] Deleting entry for named cert "\
+        print AtomicRegistryConfigManager._configchange + \
+              "Deleting entry for named cert "\
               + certfile +\
               " and " +\
               keyfile +\
@@ -123,7 +148,8 @@ class AtomicRegistryConfigManager:
     def set_default_cert(self, certfile, keyfile):
         """Sets the default certs"""
 
-        print " [CONFIGCHANGE] Altering default serving cert to " + \
+        print AtomicRegistryConfigManager._configchange + \
+              "Altering default serving cert to " + \
               certfile +\
               " and " +\
               keyfile +\
@@ -203,7 +229,8 @@ class AtomicRegistryConfigManager:
             }
         ]
 
-        print " [CONFIGCHANGE] Adding htpasswd identity provider " +\
+        print AtomicRegistryConfigManager._configchange + \
+              "Adding htpasswd identity provider " +\
               name +\
               " referring database file " +\
               file + \
@@ -244,7 +271,8 @@ class AtomicRegistryConfigManager:
                 toadd[0]["provider"]["certFile"] = certfile
                 toadd[0]["provider"]["keyFile"] = keyfile
 
-        print " [CONFIGCHANGE] Adding basic auth remote provider " + name + " at " + url + " ..."
+        print AtomicRegistryConfigManager._configchange + \
+              "Adding basic auth remote provider " + name + " at " + url + " ..."
         self.set_identity_providers(toadd)
 
         return
@@ -318,7 +346,8 @@ class AtomicRegistryConfigManager:
             if item["name"] != name:
                 newconfig.append(item)
 
-        print " [CONFIGCHANGE] Removing entry for auth provider " +\
+        print AtomicRegistryConfigManager._configchange + \
+              "Removing entry for auth provider " +\
               name +\
               " ..."
 
@@ -384,12 +413,12 @@ class AtomicRegistryQuickstartSetup:
         return
 
     def _copy_file(self, src):
-        """Copies nessasary file to the atomic registry directory."""
+        """Copies necessary file to the atomic registry directory."""
 
-        print "** Copying over necessary files..."
+        print " ** Copying over necessary file..."
         copy2(src, self._path_files)
 
-        return self._path_files + "/" + os.path.basename(src)
+        return os.path.basename(src)
 
     def customize_interactive(self):
 
@@ -402,18 +431,21 @@ class AtomicRegistryQuickstartSetup:
             print "2. Customize Authentication"
             print "c. Commit configuration and continue"
             ch = raw_input(" >> ")
+            print
 
             if ch == "1":
 
                 while True:
 
-                    print "\nMAIN > CERTS\n"
+                    print "MAIN > CERTS\n"
                     print "1. List named certificate"
                     print "2. Add named certificate"
                     print "3. Delete Named Certificate"
-                    print "4. Modify default serving certificate"
+                    print "4. List current default serving certificate"
+                    print "5. Modify default serving certificate"
                     print "b. Back"
                     ch1 = raw_input(" >> ")
+                    print
 
                     if ch1 == "1":
 
@@ -421,16 +453,51 @@ class AtomicRegistryQuickstartSetup:
 
                     elif ch1 == "2":
 
-                        print
-                        certfile = raw_input("Which is the cert file")
+                        nckey = raw_input(" * Path of the key file : ")
+
+                        if is_valid_file(nckey):
+                            nccert = raw_input(" * Path of the cert file : ")
+
+                            if is_valid_file(nccert):
+
+                                ncnames = []
+
+                                inp = raw_input(" * Domain names to associate with this pair (comma separated list : Leave empty if nothing) : ")
+
+                                if len(inp) < 0:
+                                    ncnames = None
+
+                                else:
+
+                                    ncnames = inp.split(',')
+
+                                self._config_manager.add_named_cert(self._copy_file(nccert), self._copy_file(nckey), ncnames)
 
                     elif ch1 == "3":
 
-                        print "c3"
+                        # FIXME: Functional now make it cleaner
+                        nccert = raw_input(" * Name (only) of the name certificate file : ")
+                        nckey = raw_input(" * Name (only) of the corresponding name key file")
+
+                        self._config_manager.delete_named_cert(nccert, nckey)
+
+                    elif ch1 == "4":
+
+                        print self._config_manager.get_default_cert()
 
                     elif ch1 == "b":
 
                         break
+
+                    elif ch1 == "5":
+
+                        nckey = raw_input(" * Path of the key file : ")
+
+                        if is_valid_file(nckey):
+                            nccert = raw_input(" * Path of the cert file : ")
+
+                            if is_valid_file(nccert):
+                                self._config_manager.set_default_cert(self._copy_file(nccert), self._copy_file(nckey))
 
                     else:
 
@@ -442,7 +509,7 @@ class AtomicRegistryQuickstartSetup:
 
                 while True:
 
-                    print "\nMAIN > AUTH\n"
+                    print "MAIN > AUTH\n"
                     print "1. List Identity providers"
                     print "2. Add htpasswd identity provider"
                     print "3. Add Remote Basic Authentication identity provider"
@@ -460,18 +527,11 @@ class AtomicRegistryQuickstartSetup:
 
                         nm = ""
                         while len(nm) < 4:
-                            nm = raw_input("* Name of the provider (atleast 4 characters) : ")
+                            nm = raw_input(" * Name of the provider (atleast 4 characters) : ")
 
-                        htpasswdfile = raw_input("* Path of the htpasswd file : ")
+                        htpasswdfile = raw_input(" * Path of the htpasswd file : ")
 
-                        if not os.path.isabs(htpasswdfile):
-                            print "**E Please specify absolute path only, try again..."
-
-                        elif not os.path.isfile(htpasswdfile):
-                            print "**E File does not exists, try again..."
-
-                        else:
-                            print "** Copying over necessary files..."
+                        if is_valid_file(htpasswdfile):
                             self._config_manager.add_identityprovider_htpasswd(nm, self._copy_file(htpasswdfile))
 
                     elif ch2 == "3":
@@ -486,7 +546,7 @@ class AtomicRegistryQuickstartSetup:
 
                         nm = ""
                         while len(nm) < 4:
-                            nm = raw_input("* Name of the provider (atleast 4 characters) : ")
+                            nm = raw_input(" * Name of the provider (atleast 4 characters) : ")
 
                     elif ch2 == "b":
 
@@ -526,7 +586,7 @@ class AtomicRegistryQuickstartSetup:
                 lineno = 0
                 for line in credfile:
                     lineno += 1
-                    if lineno%2 != 0:
+                    if lineno % 2 != 0:
                         uname = line.partition("=")[2]
                         uname = uname.rstrip()
                         users[uname] = None
@@ -543,7 +603,7 @@ class AtomicRegistryQuickstartSetup:
                     out, err = p.communicate()
                     htpasswdfile.write(user + ":" + out)
             self._config_manager.delete_identity_provider("anypassword")
-            self._config_manager.add_identityprovider_htpasswd("system_default_auth", default_htpasswd)
+            self._config_manager.add_identityprovider_htpasswd("system_default_auth", os.path.basename(default_htpasswd))
 
         self._config_manager.finalize_config()
 
@@ -559,14 +619,14 @@ class AtomicRegistryQuickstartSetup:
             self.customize_interactive()
 
         # Add default account if /root/cred present
-        if os.path.exists("./cred"): # FIXME : Set path of cred file before shipping.
+        if os.path.exists("./cred"):  # FIXME : Set path of cred file before shipping.
             users = {}
             default_htpasswd = self._path_files + "/" + "default.htpasswd"
             with open("./cred") as credfile:
                 lineno = 0
                 for line in credfile:
                     lineno += 1
-                    if lineno%2 != 0:
+                    if lineno % 2 != 0:
                         uname = line.partition("=")[2]
                         uname = uname.rstrip()
                         users[uname] = None
@@ -583,7 +643,7 @@ class AtomicRegistryQuickstartSetup:
                     out, err = p.communicate()
                     htpasswdfile.write(user + ":" + out)
             self._config_manager.delete_identity_provider("anypassword")
-            self._config_manager.add_identityprovider_htpasswd("system_default_auth", default_htpasswd)
+            self._config_manager.add_identityprovider_htpasswd("system_default_auth", os.path.basename(default_htpasswd))
 
         self._config_manager.test_config()
 
@@ -654,10 +714,15 @@ class AtomicRegistryQuickstartSetup:
 
 def prereq():
 
-    print "\n * IMPORTANT: The script runs with certain assumptions. Please make sure following prereq are met before proceeding ...\n"
+    print "\033[1m"
+    print "* \033[35mIMPORTANT:The script runs with certain assumptions. Please make sure following prereq are met before proceeding ..."
+    print "\033[0m\033[1m"
     print " - If you want to use a default username or password, please make sure the same are present in /root/cred"
     print " - If you plan to use your own serving certificates, please make sure the same are loaded into this machine and that"
-    print " you have access to them. You need to provide the path of the certificate and it will be copied over."
+    print "   you have access to them. You need to provide the path of the certificate and it will be copied over."
+    print " - The cert files, key files, authfiles (such as htpasswd) file are valid. The only validation that the script"
+    print "   does against files is that they are actually files and and nothing more."
+    print "\033[0m"
 
     while True:
         cnt = raw_input("\nAre you sure you wish to proceed (y/n) : ")
@@ -691,7 +756,7 @@ def main():
 
     # Step 3 : Customize the configurations
     print "\n * STEP 3 : Customizing : \n"
-    setup.test_customize() # FIXME : Change to customize before shipping
+    setup.test_customize() # FIXME : Change to customize() before shipping
 
     # Step 4 : Run the containers :
     print "\n * STEP 4 : Running the registry : \n"
@@ -706,3 +771,6 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+# TODO : Check if all types for files are copied over and that only their names are being added in the config file
