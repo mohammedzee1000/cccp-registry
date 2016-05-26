@@ -7,13 +7,7 @@ from subprocess import call, Popen, PIPE
 import re
 import pprint
 from shutil import copy2
-
-class quoted(str):
-    pass
-
-def quoted_presenter(dumper, data):
-    return dumper.represent_scalar('tag:yaml.org,2002:str', data, style='"')
-#yaml.add_representer(quoted, quoted_presenter)
+from urlparse import urlparse
 
 pp = pprint.PrettyPrinter(indent=4)
 
@@ -22,27 +16,102 @@ class InpMode():
     interactive = 1
     cmdline = 2
 
-def is_valid_file(pth):
-    """Checks if a path is a valid file"""
 
-    valid_file = True
+class Validator:
 
-    if not os.path.isabs(pth):
+    def is_valid_file(pth):
+        """Checks if a path is a valid file"""
 
-        print " **E Please provide absolute path, try again..."
-        valid_file = False
+        valid_file = True
 
-    elif not os.path.exists(pth):
+        if not os.path.isabs(pth):
 
-        print " **E The file path you provided does not exist, try again..."
-        valid_file = False
+            print " **E Please provide absolute path, try again..."
+            valid_file = False
 
-    elif not os.path.isfile(pth):
+        elif not os.path.exists(pth):
 
-        print " **E Please provide the path of a file, try again..."
-        valid_file = False
+            print " **E The file path you provided does not exist, try again..."
+            valid_file = False
 
-    return valid_file
+        elif not os.path.isfile(pth):
+
+            print " **E Please provide the path of a file, try again..."
+            valid_file = False
+
+        return valid_file
+
+
+    def _is_valid_ip(ip):
+
+        ipr = re.compile(
+            "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}"
+            "([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(:[0-9].)?$")
+
+        retval = True
+
+        if ipr.match(ip) == None:
+            retval = False
+
+        return retval
+
+    def _is_matchable_ip(ip):
+
+        ipr = re.compile(
+            "^((([0-9])+\.){3}([0-9]+)([:][0-9]+)?)"
+        )
+
+        retval = True
+
+        if ipr.match(ip) == None:
+            retval = False
+
+        return retval
+
+    def _is_valid_dn(dn):
+
+        dnr = re.compile(
+            "^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*"
+            "([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])(:[0-9].)?$")
+
+        retval = True
+
+        if dnr.match(dn) == None:
+            retval = False
+
+        return retval
+
+    def is_valid_url(url, schemarequired=True):
+        """Checks if a specified url is valid"""
+
+        validurl = True
+
+        parsed_url = urlparse(url)
+        url_main = ""
+
+        while True:
+
+            if len(parsed_url.netloc) == 0 and len(parsed_url.path) == 0:
+                validurl = False
+                break
+
+            if schemarequired:
+                url_main = parsed_url.netloc
+                if not bool(parsed_url.scheme):
+                    validurl = False
+                    break
+            else:
+                url_main = parsed_url.path
+
+            if Validator._is_matchable_ip(url_main) and not Validator._is_valid_ip(url_main):
+                validurl = False
+                break
+
+            else:
+                break
+
+        return validurl
+
 
 class AtomicRegistryConfigManager:
     """Class contains the parameters used for customizing the atomic registry"""
@@ -455,10 +524,10 @@ class AtomicRegistryQuickstartSetup:
 
                         nckey = raw_input(" * Path of the key file : ")
 
-                        if is_valid_file(nckey):
+                        if Validator.is_valid_file(nckey):
                             nccert = raw_input(" * Path of the cert file : ")
 
-                            if is_valid_file(nccert):
+                            if Validator.is_valid_file(nccert):
 
                                 ncnames = []
 
@@ -493,10 +562,10 @@ class AtomicRegistryQuickstartSetup:
 
                         nckey = raw_input(" * Path of the key file : ")
 
-                        if is_valid_file(nckey):
+                        if Validator.is_valid_file(nckey):
                             nccert = raw_input(" * Path of the cert file : ")
 
-                            if is_valid_file(nccert):
+                            if Validator.is_valid_file(nccert):
                                 self._config_manager.set_default_cert(self._copy_file(nccert), self._copy_file(nckey))
 
                     else:
@@ -531,12 +600,19 @@ class AtomicRegistryQuickstartSetup:
 
                         htpasswdfile = raw_input(" * Path of the htpasswd file : ")
 
-                        if is_valid_file(htpasswdfile):
+                        if Validator.is_valid_file(htpasswdfile):
                             self._config_manager.add_identityprovider_htpasswd(nm, self._copy_file(htpasswdfile))
 
                     elif ch2 == "3":
 
-                        print "a2"
+                        # name, url, cafile, certfile, keyfile
+                        nm = ""
+                        while len(nm) < 4:
+                            nm = raw_input(" * Name of the provider (atleast 4 characters) : ")
+
+                        url = ""
+                        while not Validator.is_valid_url(url, schemarequired=True):
+                            url = raw_input(" * URL : ")
 
                     elif ch2 == "4":
 
@@ -547,6 +623,8 @@ class AtomicRegistryQuickstartSetup:
                         nm = ""
                         while len(nm) < 4:
                             nm = raw_input(" * Name of the provider (atleast 4 characters) : ")
+
+                        self._config_manager.delete_identity_provider(nm)
 
                     elif ch2 == "b":
 
@@ -663,37 +741,15 @@ class AtomicRegistryQuickstartSetup:
 
         return
 
-    def get_preinstall(self):
+    def preinstall(self):
         """Gets the domain name or ip to be used to setup the atomic registry.."""
         if self._inp_mode == InpMode.interactive:
 
             inp = ""
-            doi = ""
-            defval = ""
-
-            ipr = re.compile(
-                "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}"
-                "([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$")
-
-            dnr = re.compile(
-                "^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*"
-                "([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$")
+            defval = "localhost"
+            doi = "Domain Name or IP"
 
             while True:
-
-                while True:
-                    doi = raw_input("Domain or IP (D/I): ")
-
-                    if doi == "D" or doi == "I":
-                        break
-
-                if doi == "D":
-                    doi = "Domain Name"
-                    defval = "localhost"
-                elif doi == "I":
-                    doi = "IP Address"
-                    defval = "127.0.0.1"
-
                 inp = raw_input(" ** What is the " +
                                 doi +
                                 " of the atomic registry service [" +
@@ -703,14 +759,21 @@ class AtomicRegistryQuickstartSetup:
                 if len(inp) == 0:
                     self._dn_or_ip = defval
                     break
-                elif (doi == "Domain Name" and dnr.match(inp)) or (doi == "IP Address" and ipr.match(inp)):
+
+                elif Validator.is_valid_url(inp, schemarequired=False):
                     self._dn_or_ip = inp
                     break
 
-                print " *E Invalid format of " + doi + ".\n"
+                else:
+                    print " *E Invalid format of " + doi + ".\n"
 
         return
 
+    def preins(self):
+
+
+
+        return
 
 def prereq():
 
@@ -747,7 +810,7 @@ def main():
 
     # Step 1 : Get the dn or ip
     print "\n * STEP 1 : Getting basic information needed to install atomic registry\n"
-    setup.get_preinstall()
+    setup.preinstall()
     print
 
     # Step 2 : Install the containers :
