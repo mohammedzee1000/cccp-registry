@@ -168,8 +168,7 @@ class AtomicRegistryConfigManager:
 
     def __init__(self, drycreate=False):
 
-        #self._oc_master_config  = "/etc/origin/master/master-config.yaml"
-        self._oc_master_config = "test.yaml"  # test FIXME: Set this up before shipping
+        self._oc_master_config  = "/etc/origin/master/master-config.yaml"
         self._oc_test_config = "temp.yaml"
 
         if not drycreate:
@@ -253,11 +252,11 @@ class AtomicRegistryConfigManager:
                 newconfig.append(item)
 
         self._print_configchange(
-              "Deleting entry for named cert " +
-              certfile +
-              " and " +
-              keyfile +
-              "..."
+            "Deleting entry for named cert " +
+            certfile +
+            " and " +
+            keyfile +
+            "..."
         )
 
         self.set_named_certs(newconfig)
@@ -276,11 +275,11 @@ class AtomicRegistryConfigManager:
         """Sets the default certs"""
 
         self._print_configchange(
-              "Altering default serving cert to " +
-              certfile +
-              " and " +
-              keyfile +
-              " ..."
+            "Altering default serving cert to " +
+            certfile +
+            " and " +
+            keyfile +
+            " ..."
         )
 
         self._config["assetConfig"]["servingInfo"]["certFile"] = certfile
@@ -334,7 +333,7 @@ class AtomicRegistryConfigManager:
         for item in validmappingmethods:
             if mappingmethod == item:
                 isvalid = True
-        
+
         return isvalid
 
     def add_identityprovider_htpasswd(self, name, thehtpasswdfile, apiversion="v1", challenge=True, login=True, mappingmethod="claim"):
@@ -350,20 +349,20 @@ class AtomicRegistryConfigManager:
                 "login": login,
                 "mappingMethod": mappingmethod,
                 "provider":
-                {
-                    "apiVersion": apiversion,
-                    "kind": "HTPasswdPasswordIdentityProvider",
-                    "file": thehtpasswdfile
-                }
+                    {
+                        "apiVersion": apiversion,
+                        "kind": "HTPasswdPasswordIdentityProvider",
+                        "file": thehtpasswdfile
+                    }
             }
         ]
 
         self._print_configchange(
-              "Adding htpasswd identity provider " +
-              name +
-              " referring database file " +
-              thehtpasswdfile +
-              " ..."
+            "Adding htpasswd identity provider " +
+            name +
+            " referring database file " +
+            thehtpasswdfile +
+            " ..."
         )
 
         self.set_identity_providers(toadd)
@@ -402,11 +401,11 @@ class AtomicRegistryConfigManager:
                 toadd[0]["provider"]["keyFile"] = keyfile
 
         self._print_configchange(
-              "Adding basic auth remote provider " +
-              name +
-              " at " +
-              url +
-              " ..."
+            "Adding basic auth remote provider " +
+            name +
+            " at " +
+            url +
+            " ..."
         )
         self.set_identity_providers(toadd)
 
@@ -431,22 +430,22 @@ class AtomicRegistryConfigManager:
                         "challengeURL": challengeurl,
                         "loginURL": loginurl,
                         "headers":
-                        [
-                            "X-Remote-User",
-                            "SSO-User"
-                        ],
+                            [
+                                "X-Remote-User",
+                                "SSO-User"
+                            ],
                         "emailHeaders":
-                        [
-                            "X-Remote-User-Email"
-                        ],
+                            [
+                                "X-Remote-User-Email"
+                            ],
                         "nameHeaders":
-                        [
-                            "X-Remote-User-Display-Name"
-                        ],
+                            [
+                                "X-Remote-User-Display-Name"
+                            ],
                         "preferredUsernameHeaders":
-                        [
-                            "X-Remote-User-Login"
-                        ]
+                            [
+                                "X-Remote-User-Login"
+                            ]
                     }
             }
         ]
@@ -455,13 +454,13 @@ class AtomicRegistryConfigManager:
             toadd[0]["provider"]["clientCA"] = clientca
 
         self._print_configchange("Adding request header auth provider " +
-                                name +
-                                " with challenge url : " +
-                                challengeurl +
-                                " and loginurl : " +
-                                loginurl +
-                                "..."
-                            )
+                                 name +
+                                 " with challenge url : " +
+                                 challengeurl +
+                                 " and loginurl : " +
+                                 loginurl +
+                                 "..."
+                                 )
 
         self.set_identity_providers(toadd)
 
@@ -483,9 +482,9 @@ class AtomicRegistryConfigManager:
                 newconfig.append(item)
 
         self._print_configchange(
-              "Removing entry for auth provider " +
-              name +
-              " ..."
+            "Removing entry for auth provider " +
+            name +
+            " ..."
         )
 
         self.set_identity_providers(newconfig, append=False)
@@ -500,7 +499,7 @@ class AtomicRegistryConfigManager:
         """Test the finalize config on a test yaml output file."""
 
         with open(self._oc_test_config, "w") as yamlfile:
-                yamlfile.write(yaml.dump(self._config, default_flow_style=False))
+            yamlfile.write(yaml.dump(self._config, default_flow_style=False))
         return
 
     # Finalize Function
@@ -524,8 +523,8 @@ class AtomicRegistryQuickstartSetup:
         self._container_image = "projectatomic/atomic-registry-quickstart"  # The name of the container image
         #self._container_image = "mohammedzee1000/centos-atomic-registry-quickstart" # Actual FIXME: Set this up before shipping
         self._dn_or_ip = "localhost"
-        #self._path_files = "/etc/origin/master/"
-        self._path_files = os.path.abspath(".") # test FIXME : Set this up before shipping
+        self._path_files = "/etc/origin/master/"
+        #self._path_files = os.path.abspath(".") # test
 
         if mode == "--interactive" or mode == "-i":
             self._inp_mode = InpMode.interactive
@@ -544,8 +543,7 @@ class AtomicRegistryQuickstartSetup:
                self._container_image,
                self._dn_or_ip]
 
-        print cmd  # test # FIXME : Change this before shipping
-        #call(cmd)
+        call(cmd)
 
         return
 
@@ -812,46 +810,6 @@ class AtomicRegistryQuickstartSetup:
 
         return
 
-    def test_customize(self):
-        """Applying configuration changes to the atomic registry - testing"""
-
-        self._config_manager = AtomicRegistryConfigManager()
-
-        # Customize stuff based on user input
-        if self._inp_mode == InpMode.interactive:
-            self.customize_interactive()
-
-        # Add default account if /root/cred present
-        if os.path.exists("./cred"):  # FIXME : Set path of cred file before shipping.
-            users = {}
-            default_htpasswd = self._path_files + "/" + "default.htpasswd"
-            with open("./cred") as credfile:
-                lineno = 0
-                for line in credfile:
-                    lineno += 1
-                    if lineno % 2 != 0:
-                        uname = line.partition("=")[2]
-                        uname = uname.rstrip()
-                        users[uname] = None
-                    else:
-                        passwd = line.partition("=")[2]
-                        passwd = passwd.rstrip()
-                        users[uname] = passwd
-
-            with open(default_htpasswd, "w") as htpasswdfile:
-                for user in users.keys():
-                    thepass = users[user]
-                    cmd = ["openssl", "passwd", "-apr1", thepass]
-                    p = Popen(cmd, stdout=PIPE)
-                    out, err = p.communicate()
-                    htpasswdfile.write(user + ":" + out)
-            self._config_manager.delete_identity_provider("anypassword")
-            self._config_manager.add_identityprovider_htpasswd("system_default_auth", os.path.basename(default_htpasswd))
-
-        self._config_manager.test_config()
-
-        return
-
     def run_containers(self):
         """Runs the containers that have been installed"""
 
@@ -861,8 +819,7 @@ class AtomicRegistryQuickstartSetup:
                self._container_image,
                self._dn_or_ip]
 
-        print cmd  # test # FIXME : Change this before shipping
-        #call(cmd)
+        call(cmd)
 
         return
 
@@ -936,7 +893,7 @@ def main():
 
     # Step 3 : Customize the configurations
     print "\n * STEP 3 : Customizing : \n"
-    setup.test_customize() # FIXME : Change to customize() before shipping
+    setup.customize()
 
     # Step 4 : Run the containers :
     print "\n * STEP 4 : Running the registry : \n"
@@ -953,4 +910,4 @@ if __name__ == '__main__':
     main()
 
 
-# TODO : Check if all types for files are copied over and that only their names are being added in the config file
+    # TODO : Check if all types for files are copied over and that only their names are being added in the config file
