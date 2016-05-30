@@ -1000,9 +1000,14 @@ def main():
     print "\n * STEP 4 : Running the registry : \n"
     setup.run_containers()
 
+    # Wait for short duration for containers to come up:
+    print
+    for i in range(0, 180, 20):
+        print "Waiting for containers to come up (" + str(180-i) + " secs remaining)"
+        sleep(20)
+
     # Step 5: Post install
-    print "\nWaiting for containers to come up...\n"
-    sleep(35)
+    print "\n"
     print "\n * STEP 5 : Doing some post install ops : \n"
     setup.postinstall()
 

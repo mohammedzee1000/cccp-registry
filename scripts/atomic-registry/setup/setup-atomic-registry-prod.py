@@ -945,6 +945,9 @@ def prereq():
     print " - The cert files, key files, authfiles (such as htpasswd) file are valid. The only validation that the" \
           " script"
     print "   does against files is that they are actually files and and nothing more."
+    print " - Please ensure ports 443, 8443 and 5000 are open and can be accessed."
+    print " - Please ensure storage needed for containers, if any is mounted at /var/lib/origin. You can create the" \
+          " folders, if required, with mkdir -p /var/lib/origin"
     print "\033[0m"
 
     while True:
@@ -986,9 +989,14 @@ def main():
     print "\n * STEP 4 : Running the registry : \n"
     setup.run_containers()
 
+    # Wait for short duration for containers to come up:
+    print
+    for i in range(0, 180, 20):
+        print "Waiting for containers to come up (" + str(180-i) + " secs remaining)"
+        sleep(20)
+
     # Step 5: Post install
-    print "\nWaiting for containers to come up (about 2.5 mins)...\n"
-    sleep(180)
+    print "\n"
     print "\n * STEP 5 : Doing some post install ops : \n"
     setup.postinstall()
 
