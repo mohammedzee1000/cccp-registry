@@ -3,7 +3,7 @@
 import yaml
 import os
 import sys
-import  stat
+import stat
 from subprocess import call, Popen, PIPE
 from time import sleep
 import re
@@ -13,12 +13,14 @@ from urlparse import urlparse
 
 pp = pprint.PrettyPrinter(indent=4)
 
+
 # Globals Variables :
 
+
 class InpMode:
+    """Defines the input mode"""
 
     def __init__(self):
-
         return
 
     interactive = 1
@@ -26,6 +28,7 @@ class InpMode:
 
 
 class Validator:
+    """Handles validation tasks, such as url and file name validations"""
 
     def __init__(self):
 
@@ -158,7 +161,6 @@ class Validator:
                 break
 
         if not validurl:
-
             Validator.print_err(inval_reason + ", try again...\n")
 
         return validurl
@@ -169,7 +171,7 @@ class AtomicRegistryConfigManager:
 
     def __init__(self, drycreate=False):
 
-        #self._oc_master_config  = "/etc/origin/master/master-config.yaml"
+        # self._oc_master_config  = "/etc/origin/master/master-config.yaml"
         self._oc_master_config = "test.yaml"  # test FIXME: Set this up before shipping
         self._oc_test_config = "temp.yaml"
 
@@ -254,11 +256,11 @@ class AtomicRegistryConfigManager:
                 newconfig.append(item)
 
         self._print_configchange(
-              "Deleting entry for named cert " +
-              certfile +
-              " and " +
-              keyfile +
-              "..."
+            "Deleting entry for named cert " +
+            certfile +
+            " and " +
+            keyfile +
+            "..."
         )
 
         self.set_named_certs(newconfig)
@@ -271,17 +273,18 @@ class AtomicRegistryConfigManager:
 
     def get_default_cert(self):
         """I : Gets the default cert"""
-        return [self._config["assetConfig"]["servingInfo"]["certFile"], self._config["assetConfig"]["servingInfo"]["keyFile"]]
+        return [self._config["assetConfig"]["servingInfo"]["certFile"],
+                self._config["assetConfig"]["servingInfo"]["keyFile"]]
 
     def set_default_cert(self, certfile, keyfile):
         """Sets the default certs"""
 
         self._print_configchange(
-              "Altering default serving cert to " +
-              certfile +
-              " and " +
-              keyfile +
-              " ..."
+            "Altering default serving cert to " +
+            certfile +
+            " and " +
+            keyfile +
+            " ..."
         )
 
         self._config["assetConfig"]["servingInfo"]["certFile"] = certfile
@@ -335,10 +338,11 @@ class AtomicRegistryConfigManager:
         for item in validmappingmethods:
             if mappingmethod == item:
                 isvalid = True
-        
+
         return isvalid
 
-    def add_identityprovider_htpasswd(self, name, thehtpasswdfile, apiversion="v1", challenge=True, login=True, mappingmethod="claim"):
+    def add_identityprovider_htpasswd(self, name, thehtpasswdfile, apiversion="v1", challenge=True, login=True,
+                                      mappingmethod="claim"):
         """P: Adds htpassword identity provider"""
 
         if not self._validate_mappingmethod(mappingmethod):
@@ -351,27 +355,28 @@ class AtomicRegistryConfigManager:
                 "login": login,
                 "mappingMethod": mappingmethod,
                 "provider":
-                {
-                    "apiVersion": apiversion,
-                    "kind": "HTPasswdPasswordIdentityProvider",
-                    "file": thehtpasswdfile
-                }
+                    {
+                        "apiVersion": apiversion,
+                        "kind": "HTPasswdPasswordIdentityProvider",
+                        "file": thehtpasswdfile
+                    }
             }
         ]
 
         self._print_configchange(
-              "Adding htpasswd identity provider " +
-              name +
-              " referring database file " +
-              thehtpasswdfile +
-              " ..."
+            "Adding htpasswd identity provider " +
+            name +
+            " referring database file " +
+            thehtpasswdfile +
+            " ..."
         )
 
         self.set_identity_providers(toadd)
 
         return
 
-    def add_identityprovider_basicauth_remote(self, name, url, cafile=None, certfile=None, keyfile=None, apiversion="v1", challenge=True, login=True, mappingmethod="claim"):
+    def add_identityprovider_basicauth_remote(self, name, url, cafile=None, certfile=None, keyfile=None,
+                                              apiversion="v1", challenge=True, login=True, mappingmethod="claim"):
         """P: Adds a remote basic auth provider"""
 
         if not self._validate_mappingmethod(mappingmethod):
@@ -403,17 +408,18 @@ class AtomicRegistryConfigManager:
                 toadd[0]["provider"]["keyFile"] = keyfile
 
         self._print_configchange(
-              "Adding basic auth remote provider " +
-              name +
-              " at " +
-              url +
-              " ..."
+            "Adding basic auth remote provider " +
+            name +
+            " at " +
+            url +
+            " ..."
         )
         self.set_identity_providers(toadd)
 
         return
 
-    def add_identityprovider_requestheader(self, name, challengeurl, loginurl, clientca=None, apiversion="v1", challenge=True, login=True, mappingmethod="claim"):
+    def add_identityprovider_requestheader(self, name, challengeurl, loginurl, clientca=None, apiversion="v1",
+                                           challenge=True, login=True, mappingmethod="claim"):
         """P: Add a request header identity provider."""
 
         if not self._validate_mappingmethod(mappingmethod):
@@ -432,22 +438,22 @@ class AtomicRegistryConfigManager:
                         "challengeURL": challengeurl,
                         "loginURL": loginurl,
                         "headers":
-                        [
-                            "X-Remote-User",
-                            "SSO-User"
-                        ],
+                            [
+                                "X-Remote-User",
+                                "SSO-User"
+                            ],
                         "emailHeaders":
-                        [
-                            "X-Remote-User-Email"
-                        ],
+                            [
+                                "X-Remote-User-Email"
+                            ],
                         "nameHeaders":
-                        [
-                            "X-Remote-User-Display-Name"
-                        ],
+                            [
+                                "X-Remote-User-Display-Name"
+                            ],
                         "preferredUsernameHeaders":
-                        [
-                            "X-Remote-User-Login"
-                        ]
+                            [
+                                "X-Remote-User-Login"
+                            ]
                     }
             }
         ]
@@ -456,13 +462,13 @@ class AtomicRegistryConfigManager:
             toadd[0]["provider"]["clientCA"] = clientca
 
         self._print_configchange("Adding request header auth provider " +
-                                name +
-                                " with challenge url : " +
-                                challengeurl +
-                                " and loginurl : " +
-                                loginurl +
-                                "..."
-                            )
+                                 name +
+                                 " with challenge url : " +
+                                 challengeurl +
+                                 " and loginurl : " +
+                                 loginurl +
+                                 "..."
+                                 )
 
         self.set_identity_providers(toadd)
 
@@ -484,9 +490,9 @@ class AtomicRegistryConfigManager:
                 newconfig.append(item)
 
         self._print_configchange(
-              "Removing entry for auth provider " +
-              name +
-              " ..."
+            "Removing entry for auth provider " +
+            name +
+            " ..."
         )
 
         self.set_identity_providers(newconfig, append=False)
@@ -501,7 +507,7 @@ class AtomicRegistryConfigManager:
         """Test the finalize config on a test yaml output file."""
 
         with open(self._oc_test_config, "w") as yamlfile:
-                yamlfile.write(yaml.dump(self._config, default_flow_style=False))
+            yamlfile.write(yaml.dump(self._config, default_flow_style=False))
         return
 
     # Finalize Function
@@ -523,10 +529,10 @@ class AtomicRegistryQuickstartSetup:
         # Constants
 
         self._container_image = "projectatomic/atomic-registry-quickstart"  # The name of the container image
-        #self._container_image = "mohammedzee1000/centos-atomic-registry-quickstart" # Actual FIXME: Set this up before shipping
+        # self._container_image = "mohammedzee1000/centos-atomic-registry-quickstart" # Actual FIXME: Set this up before shipping
         self._dn_or_ip = "localhost"
-        #self._path_files = "/etc/origin/master/"
-        self._path_files = os.path.abspath(".") # test FIXME : Set this up before shipping
+        # self._path_files = "/etc/origin/master/"
+        self._path_files = os.path.abspath(".")  # test FIXME : Set this up before shipping
         self._default_user = None
 
         if mode == "--interactive" or mode == "-i":
@@ -547,7 +553,7 @@ class AtomicRegistryQuickstartSetup:
                self._dn_or_ip]
 
         print cmd  # test # FIXME : Change this before shipping
-        #call(cmd)
+        # call(cmd)
 
         return
 
@@ -560,6 +566,7 @@ class AtomicRegistryQuickstartSetup:
         return os.path.basename(src)
 
     def customize_interactive(self):
+        """Does customization of atomic registry interactively"""
 
         # FIXME : Finish this method
 
@@ -601,7 +608,8 @@ class AtomicRegistryQuickstartSetup:
 
                                 ncnames = []
 
-                                inp = raw_input(" * Domain names to associate with this pair (comma separated list : Leave empty if nothing) : ")
+                                inp = raw_input(
+                                    " * Domain names to associate with this pair (comma separated list : Leave empty if nothing) : ")
 
                                 if len(inp) < 0:
                                     ncnames = None
@@ -610,7 +618,8 @@ class AtomicRegistryQuickstartSetup:
 
                                     ncnames = inp.split(',')
 
-                                self._config_manager.add_named_cert(self._copy_file(nccert), self._copy_file(nckey), ncnames)
+                                self._config_manager.add_named_cert(self._copy_file(nccert), self._copy_file(nckey),
+                                                                    ncnames)
 
                     elif ch1 == "3":
 
@@ -687,7 +696,6 @@ class AtomicRegistryQuickstartSetup:
                             cafile = raw_input(" * CA File (Leave empty if none) : ")
 
                             if len(cafile) == 0:
-
                                 cafile = None
 
                             if cafile is None or (cafile is not None and Validator.is_valid_file(cafile)):
@@ -697,7 +705,8 @@ class AtomicRegistryQuickstartSetup:
                                 if len(nckey) == 0:
 
                                     print " * Assuming cert file is empty as well"
-                                    self._config_manager.add_identityprovider_basicauth_remote(nm, url, cafile, None, None)
+                                    self._config_manager.add_identityprovider_basicauth_remote(nm, url, cafile, None,
+                                                                                               None)
 
                                 elif Validator.is_valid_file(nckey):
 
@@ -706,15 +715,16 @@ class AtomicRegistryQuickstartSetup:
 
                                     if len(nccert) == 0:
 
-                                        Validator.print_err("You need to provide a cert file with a key file, try again")
+                                        Validator.print_err(
+                                            "You need to provide a cert file with a key file, try again")
 
                                     elif Validator.is_valid_file(nccert):
 
                                         if cafile is not None:
-
                                             cafile_tmp = self._copy_file(cafile)
 
-                                    self._config_manager.add_identityprovider_basicauth_remote(nm, url, cafile_tmp, nccert, nckey)
+                                    self._config_manager.add_identityprovider_basicauth_remote(nm, url, cafile_tmp,
+                                                                                               nccert, nckey)
 
                     elif ch2 == "4":
 
@@ -722,21 +732,21 @@ class AtomicRegistryQuickstartSetup:
                         nm = ""
                         cafile_tmp = None
                         while len(nm) < 4:
-
                             nm = raw_input(" * Name of the provider (atleast 4 characters) : ")
 
-                        challengeurl = raw_input(" * Challenge URL (https://www.example.com/challenging-proxy/oauth/authorize?${query}) : ")
+                        challengeurl = raw_input(
+                            " * Challenge URL (https://www.example.com/challenging-proxy/oauth/authorize?${query}) : ")
 
                         if Validator.is_valid_url(challengeurl, schemarequired=True):
 
-                            loginurl = raw_input(" * Login URL (https://www.example.com/login-proxy/oauth/authorize?${query}) : ")
+                            loginurl = raw_input(
+                                " * Login URL (https://www.example.com/login-proxy/oauth/authorize?${query}) : ")
 
                             if Validator.is_valid_url(loginurl):
 
                                 cafile = raw_input(" * Client CA File (Leave empty if none) : ")
 
                                 if len(cafile) == 0:
-
                                     cafile = None
 
                                 if cafile is None or (cafile is not None and Validator.is_valid_file(cafile)):
@@ -744,7 +754,8 @@ class AtomicRegistryQuickstartSetup:
                                     if cafile is not None:
                                         cafile_tmp = self._copy_file(cafile)
 
-                                    self._config_manager.add_identityprovider_requestheader(nm, challengeurl, loginurl, cafile_tmp)
+                                    self._config_manager.add_identityprovider_requestheader(nm, challengeurl, loginurl,
+                                                                                            cafile_tmp)
 
                     elif ch2 == "d":
 
@@ -774,6 +785,7 @@ class AtomicRegistryQuickstartSetup:
         return
 
     def _add_default_account(self):
+        """Adds a default account if the cred file is present"""
 
         if os.path.exists("./cred"):
             users = {}
@@ -806,11 +818,14 @@ class AtomicRegistryQuickstartSetup:
                     htpasswdfile.write(user + ":" + out)
 
             self._config_manager.delete_identity_provider("anypassword")
-            self._config_manager.add_identityprovider_htpasswd("system_default_auth", os.path.basename(default_htpasswd))
+            self._config_manager.add_identityprovider_htpasswd("system_default_auth",
+                                                               os.path.basename(default_htpasswd))
 
         return
 
-    def _create_scripts(self):
+    @staticmethod
+    def _create_scripts():
+        """Creates some scripts to be used after the install"""
 
         scriptspath = "/root"
 
@@ -878,7 +893,7 @@ class AtomicRegistryQuickstartSetup:
                self._dn_or_ip]
 
         print cmd  # test # FIXME : Change this before shipping
-        #call(cmd)
+        # call(cmd)
 
         return
 
@@ -888,7 +903,7 @@ class AtomicRegistryQuickstartSetup:
         if self._default_user is not None:
             cmd = ["sudo", "/root/ocm", "oadm policy add-cluster-role-to-user cluster-admin " + self._default_user]
             print cmd
-            #call(cmd) # FIXME Change this before ship
+            # call(cmd) # FIXME Change this before ship
 
         return
 
@@ -926,7 +941,6 @@ class AtomicRegistryQuickstartSetup:
 
 
 def check_prerequisites():
-
     usr = os.getenv("USER")
     sudo_usr = os.getenv("SUDO_USER")
 
@@ -959,6 +973,7 @@ def check_prerequisites():
 
     return
 
+
 def main():
     """This is the main method"""
 
@@ -979,7 +994,7 @@ def main():
 
     # Step 3 : Customize the configurations
     print "\n * STEP 3 : Customizing : \n"
-    setup.test_customize() # FIXME : Change to customize() before shipping
+    setup.test_customize()  # FIXME : Change to customize() before shipping
 
     # Step 4 : Run the containers :
     print "\n * STEP 4 : Running the registry : \n"
@@ -1001,5 +1016,4 @@ def main():
 if __name__ == '__main__':
     main()
 
-
-# TODO : Check if all types for files are copied over and that only their names are being added in the config file
+    # TODO : Check if all types for files are copied over and that only their names are being added in the config file

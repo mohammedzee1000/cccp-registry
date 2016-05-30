@@ -16,6 +16,7 @@ pp = pprint.PrettyPrinter(indent=4)
 
 
 class InpMode:
+    """Defines the input mode"""
 
     def __init__(self):
 
@@ -26,6 +27,7 @@ class InpMode:
 
 
 class Validator:
+    """Handles validation tasks, such as url and file name validations"""
 
     def __init__(self):
 
@@ -169,7 +171,7 @@ class AtomicRegistryConfigManager:
 
     def __init__(self, drycreate=False):
 
-        self._oc_master_config  = "/etc/origin/master/master-config.yaml"
+        self._oc_master_config = "/etc/origin/master/master-config.yaml"
         self._oc_test_config = "temp.yaml"
 
         if not drycreate:
@@ -270,7 +272,8 @@ class AtomicRegistryConfigManager:
 
     def get_default_cert(self):
         """I : Gets the default cert"""
-        return [self._config["assetConfig"]["servingInfo"]["certFile"], self._config["assetConfig"]["servingInfo"]["keyFile"]]
+        return [self._config["assetConfig"]["servingInfo"]["certFile"],
+                self._config["assetConfig"]["servingInfo"]["keyFile"]]
 
     def set_default_cert(self, certfile, keyfile):
         """Sets the default certs"""
@@ -337,7 +340,8 @@ class AtomicRegistryConfigManager:
 
         return isvalid
 
-    def add_identityprovider_htpasswd(self, name, thehtpasswdfile, apiversion="v1", challenge=True, login=True, mappingmethod="claim"):
+    def add_identityprovider_htpasswd(self, name, thehtpasswdfile, apiversion="v1", challenge=True, login=True,
+                                      mappingmethod="claim"):
         """P: Adds htpassword identity provider"""
 
         if not self._validate_mappingmethod(mappingmethod):
@@ -370,7 +374,8 @@ class AtomicRegistryConfigManager:
 
         return
 
-    def add_identityprovider_basicauth_remote(self, name, url, cafile=None, certfile=None, keyfile=None, apiversion="v1", challenge=True, login=True, mappingmethod="claim"):
+    def add_identityprovider_basicauth_remote(self, name, url, cafile=None, certfile=None, keyfile=None,
+                                              apiversion="v1", challenge=True, login=True, mappingmethod="claim"):
         """P: Adds a remote basic auth provider"""
 
         if not self._validate_mappingmethod(mappingmethod):
@@ -412,7 +417,8 @@ class AtomicRegistryConfigManager:
 
         return
 
-    def add_identityprovider_requestheader(self, name, challengeurl, loginurl, clientca=None, apiversion="v1", challenge=True, login=True, mappingmethod="claim"):
+    def add_identityprovider_requestheader(self, name, challengeurl, loginurl, clientca=None, apiversion="v1",
+                                           challenge=True, login=True, mappingmethod="claim"):
         """P: Add a request header identity provider."""
 
         if not self._validate_mappingmethod(mappingmethod):
@@ -522,7 +528,8 @@ class AtomicRegistryQuickstartSetup:
         # Constants
 
         self._container_image = "projectatomic/atomic-registry-quickstart"  # The name of the container image
-        #self._container_image = "mohammedzee1000/centos-atomic-registry-quickstart" # Actual FIXME: Set this up before shipping
+        # self._container_image = "mohammedzee1000/centos-atomic-registry-quickstart"
+        #  Actual FIXME: Set this up before shipping
         self._dn_or_ip = "localhost"
         self._path_files = "/etc/origin/master/"
         self._default_user = None
@@ -557,6 +564,7 @@ class AtomicRegistryQuickstartSetup:
         return os.path.basename(src)
 
     def customize_interactive(self):
+        """Does customization of atomic registry interactively"""
 
         # FIXME : Finish this method
 
@@ -598,7 +606,8 @@ class AtomicRegistryQuickstartSetup:
 
                                 ncnames = []
 
-                                inp = raw_input(" * Domain names to associate with this pair (comma separated list : Leave empty if nothing) : ")
+                                inp = raw_input(" * Domain names to associate with this pair (comma separated list :"
+                                                " Leave empty if nothing) : ")
 
                                 if len(inp) < 0:
                                     ncnames = None
@@ -607,7 +616,8 @@ class AtomicRegistryQuickstartSetup:
 
                                     ncnames = inp.split(',')
 
-                                self._config_manager.add_named_cert(self._copy_file(nccert), self._copy_file(nckey), ncnames)
+                                self._config_manager.add_named_cert(self._copy_file(nccert), self._copy_file(nckey),
+                                                                    ncnames)
 
                     elif ch1 == "3":
 
@@ -646,7 +656,8 @@ class AtomicRegistryQuickstartSetup:
                 while True:
 
                     print "MAIN > AUTH\n"
-                    print "README : http://docs.projectatomic.io/registry/latest/install_config/configuring_authentication.html\n"
+                    print "README : http://docs.projectatomic.io/registry/latest/install_config/" \
+                          "configuring_authentication.html\n"
                     print "1. List Identity providers"
                     print "2. Add htpasswd identity provider"
                     print "3. Add Remote Basic Authentication identity provider"
@@ -694,7 +705,8 @@ class AtomicRegistryQuickstartSetup:
                                 if len(nckey) == 0:
 
                                     print " * Assuming cert file is empty as well"
-                                    self._config_manager.add_identityprovider_basicauth_remote(nm, url, cafile, None, None)
+                                    self._config_manager.add_identityprovider_basicauth_remote(nm, url, cafile, None,
+                                                                                               None)
 
                                 elif Validator.is_valid_file(nckey):
 
@@ -703,7 +715,8 @@ class AtomicRegistryQuickstartSetup:
 
                                     if len(nccert) == 0:
 
-                                        Validator.print_err("You need to provide a cert file with a key file, try again")
+                                        Validator.print_err("You need to provide a cert file with a key file,"
+                                                            " try again")
 
                                     elif Validator.is_valid_file(nccert):
 
@@ -711,7 +724,8 @@ class AtomicRegistryQuickstartSetup:
 
                                             cafile_tmp = self._copy_file(cafile)
 
-                                    self._config_manager.add_identityprovider_basicauth_remote(nm, url, cafile_tmp, nccert, nckey)
+                                    self._config_manager.add_identityprovider_basicauth_remote(nm, url, cafile_tmp,
+                                                                                               nccert, nckey)
 
                     elif ch2 == "4":
 
@@ -722,11 +736,13 @@ class AtomicRegistryQuickstartSetup:
 
                             nm = raw_input(" * Name of the provider (atleast 4 characters) : ")
 
-                        challengeurl = raw_input(" * Challenge URL (https://www.example.com/challenging-proxy/oauth/authorize?${query}) : ")
+                        challengeurl = raw_input(" * Challenge URL (https://www.example.com/challenging-proxy/oauth/"
+                                                 "authorize?${query}) : ")
 
                         if Validator.is_valid_url(challengeurl, schemarequired=True):
 
-                            loginurl = raw_input(" * Login URL (https://www.example.com/login-proxy/oauth/authorize?${query}) : ")
+                            loginurl = raw_input(" * Login URL (https://www.example.com/login-proxy/oauth/"
+                                                 "authorize?${query}) : ")
 
                             if Validator.is_valid_url(loginurl):
 
@@ -741,7 +757,8 @@ class AtomicRegistryQuickstartSetup:
                                     if cafile is not None:
                                         cafile_tmp = self._copy_file(cafile)
 
-                                    self._config_manager.add_identityprovider_requestheader(nm, challengeurl, loginurl, cafile_tmp)
+                                    self._config_manager.add_identityprovider_requestheader(nm, challengeurl, loginurl,
+                                                                                            cafile_tmp)
 
                     elif ch2 == "d":
 
@@ -771,6 +788,7 @@ class AtomicRegistryQuickstartSetup:
         return
 
     def _add_default_account(self):
+        """Adds a default account if the cred file is present"""
 
         if os.path.exists("/root/cred"):
             users = {}
@@ -804,11 +822,14 @@ class AtomicRegistryQuickstartSetup:
                     htpasswdfile.write(user + ":" + out)
 
             self._config_manager.delete_identity_provider("anypassword")
-            self._config_manager.add_identityprovider_htpasswd("system_default_auth", os.path.basename(default_htpasswd))
+            self._config_manager.add_identityprovider_htpasswd("system_default_auth",
+                                                               os.path.basename(default_htpasswd))
 
         return
 
-    def _create_scripts(self):
+    @staticmethod
+    def _create_scripts():
+        """Creates some scripts to be used after the install"""
 
         scriptspath = "/root"
         ocmscript = scriptspath + "/" + "ocm"
@@ -864,7 +885,8 @@ class AtomicRegistryQuickstartSetup:
 
         if self._default_user is not None:
             print "Grant admin rights to user " + self._default_user + "\n"
-            cmd = ["sudo", "/root/ocm", "oadm", "policy", "add-cluster-role-to-user", "cluster-admin", self._default_user]
+            cmd = ["sudo", "/root/ocm", "oadm", "policy", "add-cluster-role-to-user", "cluster-admin",
+                   self._default_user]
             call(cmd)
 
         return
@@ -912,13 +934,16 @@ def prereq():
         sys.exit(1)
 
     print "\033[1m"
-    print "* \033[35mIMPORTANT:The script runs with certain assumptions. Please make sure following prereq are met before proceeding ..."
+    print "* \033[35mIMPORTANT:The script runs with certain assumptions. Please make sure following prereq are met" \
+          " before proceeding ..."
     print "\033[0m\033[1m"
     print " - If you want to use a default username or password, please make sure the same are present in /root/cred."
     print "   The first username is this file will automatically be granted full admin rights over the registry"
-    print " - If you plan to use your own serving certificates, please make sure the same are loaded into this machine and that"
+    print " - If you plan to use your own serving certificates, please make sure the same are loaded into this" \
+          " machine and that"
     print "   you have access to them. You need to provide the path of the certificate and it will be copied over."
-    print " - The cert files, key files, authfiles (such as htpasswd) file are valid. The only validation that the script"
+    print " - The cert files, key files, authfiles (such as htpasswd) file are valid. The only validation that the" \
+          " script"
     print "   does against files is that they are actually files and and nothing more."
     print "\033[0m"
 
@@ -933,6 +958,7 @@ def prereq():
             sys.exit(0)
 
     return
+
 
 def main():
     """This is the main method"""
@@ -966,7 +992,8 @@ def main():
     print "\n * STEP 5 : Doing some post install ops : \n"
     setup.postinstall()
 
-    print "\nA very good documentation is available at http://www.projectatomic.io/registry/ Please do got through the same."
+    print "\nA very good documentation is available at http://www.projectatomic.io/registry/" \
+          " Please do got through the same."
 
     print
 
@@ -975,6 +1002,5 @@ def main():
 
 if __name__ == '__main__':
     main()
-
 
     # TODO : Check if all types for files are copied over and that only their names are being added in the config file
