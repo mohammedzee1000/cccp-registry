@@ -12,6 +12,13 @@ from urlparse import urlparse
 
 pp = pprint.PrettyPrinter(indent=4)
 
+
+def quoted_presenter(dumper, data):
+    return dumper.represent_scalar('tag:yaml.org,2002:str', data, style='"')
+
+yaml.add_representer(str, quoted_presenter)
+
+
 # Globals Variables :
 
 
