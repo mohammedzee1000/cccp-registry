@@ -9,6 +9,7 @@ from time import sleep
 import pprint
 from shutil import copy2
 from urlparse import urlparse
+import copy
 
 pp = pprint.PrettyPrinter(indent=4)
 
@@ -209,7 +210,8 @@ class AtomicRegistryConfigManager:
         """I : Sets the named certs to specified value"""
 
         self._config["assetConfig"]["servingInfo"]["namedCertificates"] = value
-        self._config["servingInfo"]["namedCertificates"] = value
+        value1 = copy.deepcopy(value)
+        self._config["servingInfo"]["namedCertificates"] = value1
 
         return
 
