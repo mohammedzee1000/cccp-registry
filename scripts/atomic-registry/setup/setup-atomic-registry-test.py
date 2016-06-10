@@ -480,9 +480,70 @@ class AtomicRegistryConfigManager:
 
         return
 
-    def add_identityprovider_ldap(self, apiversion="v1", challenge=True, login=True, mappingmethod="claim"):
+    def add_identityprovider_ldap(self, name, url, apiversion="v1", challenge=True, login=True, mappingmethod="claim", ldapid=None, ldapemail=None, ldapname=None, ldapprefereduname=None, binddn=None, bindpasswd=None, cabundle=None, insecure=False):
         """Add an ldap provider."""
         # FIXME: Complete this method
+
+        if not self._validate_mappingmethod(mappingmethod):
+            raise Exception("Invalid Mapping method.")
+
+        if ldapid is None:
+            ldapid = [
+                "dn"
+            ]
+
+        if ldapemail is None:
+            ldapemail = [
+                "mail"
+            ]
+
+        if ldapname is None:
+            ldapname = [
+                "cn"
+            ]
+
+        if ldapprefereduname is None:
+            ldapprefereduname = [
+                "uid"
+            ]
+
+        toadd = [
+            {
+                "name": name,
+                "challenge": challenge,
+                "login": login,
+                "mappingMethod": mappingmethod,
+                "provider":
+                    {
+                        "apiVersion": apiversion,
+                        "kind": "LDAPPasswordIdentityProvider",
+                        "id": ldapid,
+                        "email": ldapemail,
+                        "name": ldapname,
+                        "preferredUsername": ldapprefereduname
+                    }
+            }
+        ]
+
+        if binddn is not None:
+            toadd["bindDN"] = binddn
+
+        if bindpasswd is not None:
+            toadd["bindPassword"] = bindpasswd
+
+        if cabundle is not None:
+            toadd["ca"] = cabundle
+
+        toadd["insecure"] = insecure
+        toadd["url"] = url
+
+        self._print_configchange("Adding LDAP auth provider " +
+                                 name +
+                                 " with url " +
+                                 url)
+
+        self.set_identity_providers(toadd)
+
         return
 
     def delete_identity_provider(self, name):

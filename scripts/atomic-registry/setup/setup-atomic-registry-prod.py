@@ -209,6 +209,7 @@ class AtomicRegistryConfigManager:
         """I : Sets the named certs to specified value"""
 
         self._config["assetConfig"]["servingInfo"]["namedCertificates"] = value
+        self._config["servingInfo"]["namedCertificates"] = value
 
         return
 
@@ -295,6 +296,9 @@ class AtomicRegistryConfigManager:
 
         self._config["assetConfig"]["servingInfo"]["certFile"] = certfile
         self._config["assetConfig"]["servingInfo"]["keyFile"] = keyfile
+
+        self._config["servingInfo"]["certFile"] = certfile
+        self._config["servingInfo"]["keyFile"] = keyfile
 
         return
 
