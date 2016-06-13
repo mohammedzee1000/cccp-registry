@@ -10,6 +10,7 @@ import pprint
 from shutil import copy2
 from urlparse import urlparse
 import copy
+import getpass
 
 pp = pprint.PrettyPrinter(indent=4)
 
@@ -554,6 +555,19 @@ class AtomicRegistryQuickstartSetup:
         # Config params
         self._config_manager = AtomicRegistryConfigManager(drycreate=True)
 
+        self._defaultAccounts = [
+            {
+                "username": "admin",
+                "password": "admin@123",
+                "isadmin": True
+            },
+            {
+                "username": "pulluser",
+                "password": "pulluser@123",
+                "isadmin": False
+            }
+        ]
+
         return
 
     def install_containers(self):
@@ -585,13 +599,76 @@ class AtomicRegistryQuickstartSetup:
         while True:
 
             print "MAIN\n"
-            print "1. Customize Certificates"
-            print "2. Customize Authentication"
+            print "1. Customize default accounts (will be overridden by /root/cred, if present)"
+            print "2. Customize Certificates"
+            print "3. Customize Authentication"
             print "c. Commit configuration and continue"
             ch = raw_input(" >> ")
             print
 
             if ch == "1":
+
+                print "MAIN > DEFAULT_ACCOUNTS\n"
+                print "1. List default accounts"
+                print "2. Add default account"
+                print "3. Update default account"
+                print "4. Delete default account"
+                print "b. Back"
+                ch1 = raw_input(" >> ")
+                print
+
+                if ch1 == "1":
+
+                    pp.pprint(self._defaultAccounts)
+
+                elif ch1 == "2":
+
+                    newuser = raw_input("Username : ")
+
+                    if len(newuser) > 0 and not any(d["username"] == newuser for d in self._defaultAccounts):
+
+                        newpasswd = getpass.getpass("Password : ")
+
+                        if len(newpasswd) > 4:
+
+                            newadmin = "x"
+
+                            while newadmin != "y" or newadmin != "n":
+                                newadmin = raw_input("Make Admin: (y/n)")
+
+                            if newadmin == "y":
+
+                                newadmin = True
+
+                            else:
+
+                                newadmin = False
+
+                            self._defaultAccounts.append({
+                                "username": newuser,
+                                "password": newpasswd,
+                                "isadmin": newadmin
+                            })
+
+                        else:
+
+                            Validator.print_err("Password must be atleast 4 characters long")
+
+                    else:
+
+                        print "User name is invalid or already exists, try again..."
+
+                elif ch1 == "b":
+
+                    break
+
+                else:
+
+                    Validator.print_err("\nInvalid choice")
+
+                print "\n"
+
+            elif ch == "2":
 
                 while True:
 
@@ -804,9 +881,10 @@ class AtomicRegistryQuickstartSetup:
     def _add_default_account(self):
         """Adds a default account if the cred file is present"""
 
+        default_htpasswd = self._path_files + "/" + "default.htpasswd"
+        users = {}
+
         if os.path.exists("/root/cred"):
-            users = {}
-            default_htpasswd = self._path_files + "/" + "default.htpasswd"
 
             with open("/root/cred") as credfile:
 
@@ -826,17 +904,24 @@ class AtomicRegistryQuickstartSetup:
 
             users["pulluser"] = "pulluser@123"
 
-            with open(default_htpasswd, "w") as htpasswdfile:
+        else:
 
-                for user in users.keys():
-                    thepass = users[user]
-                    cmd = ["openssl", "passwd", "-apr1", thepass]
-                    p = Popen(cmd, stdout=PIPE)
-                    out, err = p.communicate()
-                    htpasswdfile.write(user + ":" + out)
+            for userentry in self._defaultAccounts:
 
-            self._config_manager.delete_identity_provider("anypassword")
-            self._config_manager.add_identityprovider_htpasswd("system_default_auth",
+                uname = userentry["username"]
+                users[uname] = userentry["password"]
+
+        with open(default_htpasswd, "w") as htpasswdfile:
+
+            for user in users.keys():
+                thepass = users[user]
+                cmd = ["openssl", "passwd", "-apr1", thepass]
+                p = Popen(cmd, stdout=PIPE)
+                out, err = p.communicate()
+                htpasswdfile.write(user + ":" + out)
+
+        self._config_manager.delete_identity_provider("anypassword")
+        self._config_manager.add_identityprovider_htpasswd("system_default_auth",
                                                                os.path.basename(default_htpasswd))
 
         return
@@ -902,6 +987,18 @@ class AtomicRegistryQuickstartSetup:
             cmd = ["sudo", "/root/ocm", "oadm", "policy", "add-cluster-role-to-user", "cluster-admin",
                    self._default_user]
             call(cmd)
+
+        else:
+
+            for userentry in self._defaultAccounts:
+
+                if userentry["isadmin"]:
+
+                    print "Grant admin rights to user " + userentry["username"] + "\n"
+                    cmd = ["sudo", "/root/ocm", "oadm", "policy", "add-cluster-role-to-user", "cluster-admin",
+                           userentry["username"]]
+
+                    call(cmd)
 
         return
 
