@@ -608,65 +608,74 @@ class AtomicRegistryQuickstartSetup:
 
             if ch == "1":
 
-                print "MAIN > DEFAULT_ACCOUNTS\n"
-                print "1. List default accounts"
-                print "2. Add default account"
-                print "3. Update default account"
-                print "4. Delete default account"
-                print "b. Back"
-                ch1 = raw_input(" >> ")
-                print
+                while True:
 
-                if ch1 == "1":
+                    print "MAIN > DEFAULT_ACCOUNTS\n"
+                    print "1. List default accounts"
+                    print "2. Add default account"
+                    print "3. Update default account"
+                    print "4. Delete default account"
+                    print "b. Back"
+                    ch1 = raw_input(" >> ")
+                    print
 
-                    pp.pprint(self._defaultAccounts)
+                    if ch1 == "1":
 
-                elif ch1 == "2":
+                        pp.pprint(self._defaultAccounts)
 
-                    newuser = raw_input("Username : ")
+                    elif ch1 == "2":
 
-                    if len(newuser) > 0 and not any(d["username"] == newuser for d in self._defaultAccounts):
+                        newuser = raw_input("Username : ")
 
-                        newpasswd = getpass.getpass("Password : ")
+                        if len(newuser) > 0 and not any(d["username"] == newuser for d in self._defaultAccounts):
 
-                        if len(newpasswd) > 4:
+                            newpasswd = getpass.getpass("Password : ")
 
-                            newadmin = "x"
+                            if len(newpasswd) > 4:
 
-                            while newadmin != "y" or newadmin != "n":
-                                newadmin = raw_input("Make Admin: (y/n)")
+                                newadmin = "x"
 
-                            if newadmin == "y":
+                                while newadmin != "y" and newadmin != "n":
 
-                                newadmin = True
+                                    newadmin = raw_input("Make Admin: (y/n) : ")
+
+                                if newadmin == "y":
+
+                                    na = True
+
+                                else:
+
+                                    na = False
+
+                                self._defaultAccounts.append({
+                                    "username": newuser,
+                                    "password": newpasswd,
+                                    "isadmin": na
+                                })
 
                             else:
 
-                                newadmin = False
-
-                            self._defaultAccounts.append({
-                                "username": newuser,
-                                "password": newpasswd,
-                                "isadmin": newadmin
-                            })
+                                Validator.print_err("Password must be atleast 4 characters long")
 
                         else:
 
-                            Validator.print_err("Password must be atleast 4 characters long")
+                            print "User name is invalid or already exists, try again..."
+
+                    elif ch1 == "4":
+
+                        deluser = raw_input("Please specify the username of the user you wish to delete.")
+
+                        self._defaultAccounts = [x for x in self._defaultAccounts if not (deluser == x.get('id'))]
+
+                    elif ch1 == "b":
+
+                        break
 
                     else:
 
-                        print "User name is invalid or already exists, try again..."
+                        Validator.print_err("\nInvalid choice")
 
-                elif ch1 == "b":
-
-                    break
-
-                else:
-
-                    Validator.print_err("\nInvalid choice")
-
-                print "\n"
+                    print "\n"
 
             elif ch == "2":
 
