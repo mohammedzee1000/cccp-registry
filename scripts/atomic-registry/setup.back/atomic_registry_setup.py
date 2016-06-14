@@ -353,9 +353,9 @@ class AtomicRegistryQuickstartSetup:
         # Constants
 
         self._container_image = "projectatomic/atomic-registry-quickstart"  # The name of the container image
-        #self._container_image = "mohammedzee1000/centos-atomic-registry-quickstart" # Actual FIXME: Set this up before shipping
+        #self._containerImage = "mohammedzee1000/centos-atomic-registry-quickstart" # Actual FIXME: Set this up before shipping
         self._dn_or_ip = "localhost"
-        #self._path_files = "/etc/origin/master/"
+        #self._filesPath = "/etc/origin/master/"
         self._path_files = os.path.abspath(".") # test FIXME : Set this up before shipping
 
         if mode == "--interactive" or mode == "-i":

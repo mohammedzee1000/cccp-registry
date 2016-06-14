@@ -489,7 +489,12 @@ class AtomicRegistryConfigManager:
 
     def add_identityprovider_ldap(self, apiversion="v1", challenge=True, login=True, mappingmethod="claim"):
         """Add an ldap provider."""
+
+        if not self._validate_mappingmethod(mappingmethod):
+            raise Exception("Invalid Mapping method.")
+
         # FIXME: Complete this method
+
         return
 
     def delete_identity_provider(self, name):
@@ -541,21 +546,21 @@ class AtomicRegistryQuickstartSetup:
 
         # Constants
 
-        self._container_image = "projectatomic/atomic-registry-quickstart"  # The name of the container image
-        # self._container_image = "mohammedzee1000/centos-atomic-registry-quickstart"
-        # self._container_image = "registry.centos.org/mohammedzee1000/c7-atomic-registry-quickstart"
+        self._containerImage = "projectatomic/atomic-registry-quickstart"  # The name of the container image
+        # self._containerImage = "mohammedzee1000/centos-atomic-registry-quickstart"
+        # self._containerImage = "registry.centos.org/atomic-registry/c7-atomic-registry-quickstart"
         #  Actual FIXME: Set this up before shipping
-        self._dn_or_ip = "localhost"
-        self._path_files = "/etc/origin/master/"
-        self._default_user = None
+        self._dNOrIP = "localhost"
+        self._filesPath = "/etc/origin/master/"
+        self._defaultUser = None
 
         if mode == "--interactive" or mode == "-i":
-            self._inp_mode = InpMode.interactive
+            self._inpMode = InpMode.interactive
 
         # Config params
-        self._config_manager = AtomicRegistryConfigManager(drycreate=True)
+        self._configManager = AtomicRegistryConfigManager(drycreate=True)
 
-        self._defaultAccounts = [
+        self._default_users_menu = [
             {
                 "username": "admin",
                 "password": "admin@123",
@@ -576,8 +581,8 @@ class AtomicRegistryQuickstartSetup:
         cmd = ["sudo",
                "atomic",
                "install",
-               self._container_image,
-               self._dn_or_ip]
+               self._containerImage,
+               self._dNOrIP]
 
         call(cmd)
 
@@ -587,7 +592,7 @@ class AtomicRegistryQuickstartSetup:
         """Copies necessary file to the atomic registry directory."""
 
         print " ** Copying over necessary file..."
-        copy2(src, self._path_files)
+        copy2(src, self._filesPath)
 
         return os.path.basename(src)
 
@@ -606,6 +611,7 @@ class AtomicRegistryQuickstartSetup:
             ch = raw_input(" >> ")
             print
 
+            # Customize default accounts from menu (will be overridden if /root/cred present.
             if ch == "1":
 
                 while True:
@@ -619,15 +625,17 @@ class AtomicRegistryQuickstartSetup:
                     ch1 = raw_input(" >> ")
                     print
 
+                    # List current default accounts information
                     if ch1 == "1":
 
-                        pp.pprint(self._defaultAccounts)
+                        pp.pprint(self._default_users_menu)
 
+                    # Add a new default account
                     elif ch1 == "2":
 
                         newuser = raw_input("Username : ")
 
-                        if len(newuser) > 0 and not any(d["username"] == newuser for d in self._defaultAccounts):
+                        if len(newuser) > 0 and not any(d["username"] == newuser for d in self._default_users_menu):
 
                             newpasswd = getpass.getpass("Password : ")
 
@@ -647,7 +655,7 @@ class AtomicRegistryQuickstartSetup:
 
                                     na = False
 
-                                self._defaultAccounts.append({
+                                self._default_users_menu.append({
                                     "username": newuser,
                                     "password": newpasswd,
                                     "isadmin": na
@@ -661,11 +669,12 @@ class AtomicRegistryQuickstartSetup:
 
                             print "User name is invalid or already exists, try again..."
 
+                    # Delete a default account.
                     elif ch1 == "4":
 
                         deluser = raw_input("Please specify the username of the user you wish to delete.")
 
-                        self._defaultAccounts = [x for x in self._defaultAccounts if not (deluser == x.get('id'))]
+                        self._default_users_menu = [x for x in self._default_users_menu if not (deluser == x.get('id'))]
 
                     elif ch1 == "b":
 
@@ -693,7 +702,7 @@ class AtomicRegistryQuickstartSetup:
 
                     if ch1 == "1":
 
-                        pp.pprint(self._config_manager.get_named_certs())
+                        pp.pprint(self._configManager.get_named_certs())
 
                     elif ch1 == "2":
 
@@ -716,8 +725,8 @@ class AtomicRegistryQuickstartSetup:
 
                                     ncnames = inp.split(',')
 
-                                self._config_manager.add_named_cert(self._copy_file(nccert), self._copy_file(nckey),
-                                                                    ncnames)
+                                self._configManager.add_named_cert(self._copy_file(nccert), self._copy_file(nckey),
+                                                                   ncnames)
 
                     elif ch1 == "3":
 
@@ -725,11 +734,11 @@ class AtomicRegistryQuickstartSetup:
                         nccert = raw_input(" * Name (only) of the name certificate file : ")
                         nckey = raw_input(" * Name (only) of the corresponding name key file")
 
-                        self._config_manager.delete_named_cert(nccert, nckey)
+                        self._configManager.delete_named_cert(nccert, nckey)
 
                     elif ch1 == "4":
 
-                        print self._config_manager.get_default_cert()
+                        print self._configManager.get_default_cert()
 
                     elif ch1 == "b":
 
@@ -743,7 +752,7 @@ class AtomicRegistryQuickstartSetup:
                             nccert = raw_input(" * Path of the cert file : ")
 
                             if Validator.is_valid_file(nccert):
-                                self._config_manager.set_default_cert(self._copy_file(nccert), self._copy_file(nckey))
+                                self._configManager.set_default_cert(self._copy_file(nccert), self._copy_file(nckey))
 
                     else:
 
@@ -769,7 +778,7 @@ class AtomicRegistryQuickstartSetup:
 
                     if ch2 == "1":
 
-                        pp.pprint(self._config_manager.get_identity_providers())
+                        pp.pprint(self._configManager.get_identity_providers())
 
                     elif ch2 == "2":
 
@@ -780,7 +789,7 @@ class AtomicRegistryQuickstartSetup:
                         htpasswdfile = raw_input(" * Path of the htpasswd file : ")
 
                         if Validator.is_valid_file(htpasswdfile):
-                            self._config_manager.add_identityprovider_htpasswd(nm, self._copy_file(htpasswdfile))
+                            self._configManager.add_identityprovider_htpasswd(nm, self._copy_file(htpasswdfile))
 
                     elif ch2 == "3":
 
@@ -805,8 +814,8 @@ class AtomicRegistryQuickstartSetup:
                                 if len(nckey) == 0:
 
                                     print " * Assuming cert file is empty as well"
-                                    self._config_manager.add_identityprovider_basicauth_remote(nm, url, cafile, None,
-                                                                                               None)
+                                    self._configManager.add_identityprovider_basicauth_remote(nm, url, cafile, None,
+                                                                                              None)
 
                                 elif Validator.is_valid_file(nckey):
 
@@ -824,8 +833,8 @@ class AtomicRegistryQuickstartSetup:
 
                                             cafile_tmp = self._copy_file(cafile)
 
-                                    self._config_manager.add_identityprovider_basicauth_remote(nm, url, cafile_tmp,
-                                                                                               nccert, nckey)
+                                    self._configManager.add_identityprovider_basicauth_remote(nm, url, cafile_tmp,
+                                                                                              nccert, nckey)
 
                     elif ch2 == "4":
 
@@ -857,8 +866,8 @@ class AtomicRegistryQuickstartSetup:
                                     if cafile is not None:
                                         cafile_tmp = self._copy_file(cafile)
 
-                                    self._config_manager.add_identityprovider_requestheader(nm, challengeurl, loginurl,
-                                                                                            cafile_tmp)
+                                    self._configManager.add_identityprovider_requestheader(nm, challengeurl, loginurl,
+                                                                                           cafile_tmp)
 
                     elif ch2 == "d":
 
@@ -866,7 +875,7 @@ class AtomicRegistryQuickstartSetup:
                         while len(nm) < 4:
                             nm = raw_input(" * Name of the provider (atleast 4 characters) : ")
 
-                        self._config_manager.delete_identity_provider(nm)
+                        self._configManager.delete_identity_provider(nm)
 
                     elif ch2 == "b":
 
@@ -890,7 +899,7 @@ class AtomicRegistryQuickstartSetup:
     def _add_default_account(self):
         """Adds a default account if the cred file is present"""
 
-        default_htpasswd = self._path_files + "/" + "default.htpasswd"
+        default_htpasswd = self._filesPath + "/" + "default.htpasswd"
         users = {}
 
         if os.path.exists("/root/cred"):
@@ -905,7 +914,7 @@ class AtomicRegistryQuickstartSetup:
                         uname = line.partition("=")[2]
                         uname = uname.rstrip()
                         users[uname] = None
-                        self._default_user = uname
+                        self._defaultUser = uname
                     else:
                         passwd = line.partition("=")[2]
                         passwd = passwd.rstrip()
@@ -915,7 +924,7 @@ class AtomicRegistryQuickstartSetup:
 
         else:
 
-            for userentry in self._defaultAccounts:
+            for userentry in self._default_users_menu:
 
                 uname = userentry["username"]
                 users[uname] = userentry["password"]
@@ -929,9 +938,9 @@ class AtomicRegistryQuickstartSetup:
                 out, err = p.communicate()
                 htpasswdfile.write(user + ":" + out)
 
-        self._config_manager.delete_identity_provider("anypassword")
-        self._config_manager.add_identityprovider_htpasswd("system_default_auth",
-                                                               os.path.basename(default_htpasswd))
+        self._configManager.delete_identity_provider("anypassword")
+        self._configManager.add_identityprovider_htpasswd("system_default_auth",
+                                                          os.path.basename(default_htpasswd))
 
         return
 
@@ -957,12 +966,12 @@ class AtomicRegistryQuickstartSetup:
     def customize(self):
         """Applying configuration changes to the atomic registry - based on user input"""
 
-        self._config_manager = AtomicRegistryConfigManager()
+        self._configManager = AtomicRegistryConfigManager()
 
         # FIXME : Finish this methed
 
         # Customize stuff based on user input
-        if self._inp_mode == InpMode.interactive:
+        if self._inpMode == InpMode.interactive:
             self.customize_interactive()
 
         # Add default account if /root/cred present
@@ -971,7 +980,7 @@ class AtomicRegistryQuickstartSetup:
         # Create some scripts to ease users pain of managing origin container.
         self._create_scripts()
 
-        self._config_manager.finalize_config()
+        self._configManager.finalize_config()
 
         return
 
@@ -981,8 +990,8 @@ class AtomicRegistryQuickstartSetup:
         cmd = ["sudo",
                "atomic",
                "run",
-               self._container_image,
-               self._dn_or_ip]
+               self._containerImage,
+               self._dNOrIP]
 
         call(cmd)
 
@@ -991,15 +1000,15 @@ class AtomicRegistryQuickstartSetup:
     def _default_user_grantadminrights(self):
         """Grants default user, admin rights"""
 
-        if self._default_user is not None:
-            print "Grant admin rights to user " + self._default_user + "\n"
+        if self._defaultUser is not None:
+            print "Grant admin rights to user " + self._defaultUser + "\n"
             cmd = ["sudo", "/root/ocm", "oadm", "policy", "add-cluster-role-to-user", "cluster-admin",
-                   self._default_user]
+                   self._defaultUser]
             call(cmd)
 
         else:
 
-            for userentry in self._defaultAccounts:
+            for userentry in self._default_users_menu:
 
                 if userentry["isadmin"]:
 
@@ -1020,7 +1029,7 @@ class AtomicRegistryQuickstartSetup:
 
     def preinstall(self):
         """Gets the domain name or ip to be used to setup the atomic registry.."""
-        if self._inp_mode == InpMode.interactive:
+        if self._inpMode == InpMode.interactive:
 
             inp = ""
             defval = "localhost"
@@ -1034,11 +1043,11 @@ class AtomicRegistryQuickstartSetup:
                                 "] : ")
 
                 if len(inp) == 0:
-                    self._dn_or_ip = defval
+                    self._dNOrIP = defval
                     break
 
                 elif Validator.is_valid_url(inp, schemarequired=False):
-                    self._dn_or_ip = inp
+                    self._dNOrIP = inp
                     break
 
         return
