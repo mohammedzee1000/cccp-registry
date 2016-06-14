@@ -546,9 +546,9 @@ class AtomicRegistryQuickstartSetup:
 
         # Constants
 
-        self._containerImage = "projectatomic/atomic-registry-quickstart"  # The name of the container image
+        # self._containerImage = "projectatomic/atomic-registry-quickstart"  # The name of the container image
         # self._containerImage = "mohammedzee1000/centos-atomic-registry-quickstart"
-        # self._containerImage = "registry.centos.org/atomic-registry/c7-atomic-registry-quickstart"
+        self._containerImage = "registry.centos.org/atomic-registry/c7-atomic-registry-quickstart"
         #  Actual FIXME: Set this up before shipping
         self._dNOrIP = "localhost"
         self._filesPath = "/etc/origin/master/"
