@@ -1,0 +1,20 @@
+Reservations:
+
+        - appid:
+
+                - "openshift"
+                - "openshift1"
+
+          id:
+
+                - 1
+                - 2
+
+        - appid:
+
+                - "re=^centos$"
+
+          id:
+
+                - 3
+                - 4
