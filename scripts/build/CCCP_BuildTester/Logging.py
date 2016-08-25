@@ -26,16 +26,16 @@ class BuildLogger:
         return
 
     @staticmethod
-    def _generateRandomString(size=6, chars=string.ascii_uppercase + string.digits):
+    def _generaterandomstring(size=6, chars=string.ascii_uppercase + string.digits):
         return ''.join(random.choice(chars) for _ in range(size))
 
-    def addSuccessBuild(self, dockerfilePath):
+    def addsuccessbuild(self, dockerfilePath):
 
         self._builtContainers["success"].append(dockerfilePath)
 
         return
 
-    def addFailedBuild(self, dockerfilePath):
+    def addfailedbuild(self, dockerfilePath):
 
         self._builtContainers["failure"].append(dockerfilePath)
 
@@ -43,7 +43,7 @@ class BuildLogger:
 
     def generateBuildLogFile(self, dockerfilePath, logFileName=None):
 
-        flname = os.path.basename(dockerfilePath) + BuildLogger._generateRandomString()
+        flname = os.path.basename(dockerfilePath) + BuildLogger._generaterandomstring()
 
         if logFileName is not None:
 
