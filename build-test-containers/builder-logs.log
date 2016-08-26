@@ -1,1296 +1,0 @@
-Sending build context to Docker daemon 5.632 kB
-Step 1 : FROM centos:centos7
- ---> 970633036444
-Step 2 : RUN INSTALL_PKGS="which git tar wget hostname sysvinit-tools util-linux bsdtar centos-release-openshift-origin         socat ethtool device-mapper iptables e2fsprogs xfsprogs" &&     yum install -y $INSTALL_PKGS &&     rpm -V $INSTALL_PKGS &&     yum clean all
- ---> Running in 2dd98f1a5e5f
-Loaded plugins: fastestmirror, ovl
-Determining fastest mirrors
- * base: centos.webwerks.com
- * extras: centos.webwerks.com
- * updates: centos.mirror.net.in
-Package 2:tar-1.26-29.el7.x86_64 already installed and latest version
-Package hostname-3.13-3.el7.x86_64 already installed and latest version
-Package 7:device-mapper-1.02.107-5.el7_2.5.x86_64 already installed and latest version
-Resolving Dependencies
---> Running transaction check
----> Package bsdtar.x86_64 0:3.1.2-7.el7 will be installed
---> Processing Dependency: libarchive = 3.1.2-7.el7 for package: bsdtar-3.1.2-7.el7.x86_64
---> Processing Dependency: liblzo2.so.2()(64bit) for package: bsdtar-3.1.2-7.el7.x86_64
---> Processing Dependency: libarchive.so.13()(64bit) for package: bsdtar-3.1.2-7.el7.x86_64
----> Package centos-release-openshift-origin.noarch 0:1-1.el7.centos will be installed
---> Processing Dependency: centos-release-paas-common for package: centos-release-openshift-origin-1-1.el7.centos.noarch
----> Package e2fsprogs.x86_64 0:1.42.9-7.el7 will be installed
---> Processing Dependency: e2fsprogs-libs(x86-64) = 1.42.9-7.el7 for package: e2fsprogs-1.42.9-7.el7.x86_64
---> Processing Dependency: libext2fs.so.2()(64bit) for package: e2fsprogs-1.42.9-7.el7.x86_64
---> Processing Dependency: libe2p.so.2()(64bit) for package: e2fsprogs-1.42.9-7.el7.x86_64
----> Package ethtool.x86_64 2:3.15-2.el7 will be installed
----> Package git.x86_64 0:1.8.3.1-6.el7_2.1 will be installed
---> Processing Dependency: perl-Git = 1.8.3.1-6.el7_2.1 for package: git-1.8.3.1-6.el7_2.1.x86_64
---> Processing Dependency: perl >= 5.008 for package: git-1.8.3.1-6.el7_2.1.x86_64
---> Processing Dependency: rsync for package: git-1.8.3.1-6.el7_2.1.x86_64
---> Processing Dependency: perl(warnings) for package: git-1.8.3.1-6.el7_2.1.x86_64
---> Processing Dependency: perl(vars) for package: git-1.8.3.1-6.el7_2.1.x86_64
---> Processing Dependency: perl(strict) for package: git-1.8.3.1-6.el7_2.1.x86_64
---> Processing Dependency: perl(lib) for package: git-1.8.3.1-6.el7_2.1.x86_64
---> Processing Dependency: perl(Term::ReadKey) for package: git-1.8.3.1-6.el7_2.1.x86_64
---> Processing Dependency: perl(Git) for package: git-1.8.3.1-6.el7_2.1.x86_64
---> Processing Dependency: perl(Getopt::Long) for package: git-1.8.3.1-6.el7_2.1.x86_64
---> Processing Dependency: perl(File::stat) for package: git-1.8.3.1-6.el7_2.1.x86_64
---> Processing Dependency: perl(File::Temp) for package: git-1.8.3.1-6.el7_2.1.x86_64
---> Processing Dependency: perl(File::Spec) for package: git-1.8.3.1-6.el7_2.1.x86_64
---> Processing Dependency: perl(File::Path) for package: git-1.8.3.1-6.el7_2.1.x86_64
---> Processing Dependency: perl(File::Find) for package: git-1.8.3.1-6.el7_2.1.x86_64
---> Processing Dependency: perl(File::Copy) for package: git-1.8.3.1-6.el7_2.1.x86_64
---> Processing Dependency: perl(File::Basename) for package: git-1.8.3.1-6.el7_2.1.x86_64
---> Processing Dependency: perl(Exporter) for package: git-1.8.3.1-6.el7_2.1.x86_64
---> Processing Dependency: perl(Error) for package: git-1.8.3.1-6.el7_2.1.x86_64
---> Processing Dependency: openssh-clients for package: git-1.8.3.1-6.el7_2.1.x86_64
---> Processing Dependency: less for package: git-1.8.3.1-6.el7_2.1.x86_64
---> Processing Dependency: /usr/bin/perl for package: git-1.8.3.1-6.el7_2.1.x86_64
---> Processing Dependency: libgnome-keyring.so.0()(64bit) for package: git-1.8.3.1-6.el7_2.1.x86_64
----> Package iptables.x86_64 0:1.4.21-16.el7 will be installed
---> Processing Dependency: libnfnetlink.so.0()(64bit) for package: iptables-1.4.21-16.el7.x86_64
---> Processing Dependency: libnetfilter_conntrack.so.3()(64bit) for package: iptables-1.4.21-16.el7.x86_64
----> Package socat.x86_64 0:1.7.2.2-5.el7 will be installed
----> Package sysvinit-tools.x86_64 0:2.88-14.dsf.el7 will be installed
----> Package util-linux.x86_64 0:2.23.2-26.el7_2.2 will be updated
----> Package util-linux.x86_64 0:2.23.2-26.el7_2.3 will be an update
---> Processing Dependency: libuuid = 2.23.2-26.el7_2.3 for package: util-linux-2.23.2-26.el7_2.3.x86_64
---> Processing Dependency: libmount = 2.23.2-26.el7_2.3 for package: util-linux-2.23.2-26.el7_2.3.x86_64
---> Processing Dependency: libblkid = 2.23.2-26.el7_2.3 for package: util-linux-2.23.2-26.el7_2.3.x86_64
----> Package wget.x86_64 0:1.14-10.el7_0.1 will be installed
----> Package which.x86_64 0:2.20-7.el7 will be installed
----> Package xfsprogs.x86_64 0:3.2.2-2.el7 will be installed
---> Running transaction check
----> Package centos-release-paas-common.noarch 0:1-1.el7.centos will be installed
----> Package e2fsprogs-libs.x86_64 0:1.42.9-7.el7 will be installed
----> Package less.x86_64 0:458-9.el7 will be installed
---> Processing Dependency: groff-base for package: less-458-9.el7.x86_64
----> Package libarchive.x86_64 0:3.1.2-7.el7 will be installed
----> Package libblkid.x86_64 0:2.23.2-26.el7_2.2 will be updated
----> Package libblkid.x86_64 0:2.23.2-26.el7_2.3 will be an update
----> Package libgnome-keyring.x86_64 0:3.8.0-3.el7 will be installed
----> Package libmount.x86_64 0:2.23.2-26.el7_2.2 will be updated
----> Package libmount.x86_64 0:2.23.2-26.el7_2.3 will be an update
----> Package libnetfilter_conntrack.x86_64 0:1.0.4-2.el7 will be installed
---> Processing Dependency: libmnl.so.0(LIBMNL_1.1)(64bit) for package: libnetfilter_conntrack-1.0.4-2.el7.x86_64
---> Processing Dependency: libmnl.so.0(LIBMNL_1.0)(64bit) for package: libnetfilter_conntrack-1.0.4-2.el7.x86_64
---> Processing Dependency: libmnl.so.0()(64bit) for package: libnetfilter_conntrack-1.0.4-2.el7.x86_64
----> Package libnfnetlink.x86_64 0:1.0.1-4.el7 will be installed
----> Package libuuid.x86_64 0:2.23.2-26.el7_2.2 will be updated
----> Package libuuid.x86_64 0:2.23.2-26.el7_2.3 will be an update
----> Package lzo.x86_64 0:2.06-8.el7 will be installed
----> Package openssh-clients.x86_64 0:6.6.1p1-25.el7_2 will be installed
---> Processing Dependency: openssh = 6.6.1p1-25.el7_2 for package: openssh-clients-6.6.1p1-25.el7_2.x86_64
---> Processing Dependency: fipscheck-lib(x86-64) >= 1.3.0 for package: openssh-clients-6.6.1p1-25.el7_2.x86_64
---> Processing Dependency: libfipscheck.so.1()(64bit) for package: openssh-clients-6.6.1p1-25.el7_2.x86_64
---> Processing Dependency: libedit.so.0()(64bit) for package: openssh-clients-6.6.1p1-25.el7_2.x86_64
----> Package perl.x86_64 4:5.16.3-286.el7 will be installed
---> Processing Dependency: perl-libs = 4:5.16.3-286.el7 for package: 4:perl-5.16.3-286.el7.x86_64
---> Processing Dependency: perl(Socket) >= 1.3 for package: 4:perl-5.16.3-286.el7.x86_64
---> Processing Dependency: perl(Scalar::Util) >= 1.10 for package: 4:perl-5.16.3-286.el7.x86_64
---> Processing Dependency: perl-macros for package: 4:perl-5.16.3-286.el7.x86_64
---> Processing Dependency: perl-libs for package: 4:perl-5.16.3-286.el7.x86_64
---> Processing Dependency: perl(threads::shared) for package: 4:perl-5.16.3-286.el7.x86_64
---> Processing Dependency: perl(threads) for package: 4:perl-5.16.3-286.el7.x86_64
---> Processing Dependency: perl(constant) for package: 4:perl-5.16.3-286.el7.x86_64
---> Processing Dependency: perl(Time::Local) for package: 4:perl-5.16.3-286.el7.x86_64
---> Processing Dependency: perl(Time::HiRes) for package: 4:perl-5.16.3-286.el7.x86_64
---> Processing Dependency: perl(Storable) for package: 4:perl-5.16.3-286.el7.x86_64
---> Processing Dependency: perl(Socket) for package: 4:perl-5.16.3-286.el7.x86_64
---> Processing Dependency: perl(Scalar::Util) for package: 4:perl-5.16.3-286.el7.x86_64
---> Processing Dependency: perl(Pod::Simple::XHTML) for package: 4:perl-5.16.3-286.el7.x86_64
---> Processing Dependency: perl(Pod::Simple::Search) for package: 4:perl-5.16.3-286.el7.x86_64
---> Processing Dependency: perl(Filter::Util::Call) for package: 4:perl-5.16.3-286.el7.x86_64
---> Processing Dependency: perl(Carp) for package: 4:perl-5.16.3-286.el7.x86_64
---> Processing Dependency: libperl.so()(64bit) for package: 4:perl-5.16.3-286.el7.x86_64
----> Package perl-Error.noarch 1:0.17020-2.el7 will be installed
----> Package perl-Exporter.noarch 0:5.68-3.el7 will be installed
----> Package perl-File-Path.noarch 0:2.09-2.el7 will be installed
----> Package perl-File-Temp.noarch 0:0.23.01-3.el7 will be installed
----> Package perl-Getopt-Long.noarch 0:2.40-2.el7 will be installed
---> Processing Dependency: perl(Pod::Usage) >= 1.14 for package: perl-Getopt-Long-2.40-2.el7.noarch
---> Processing Dependency: perl(Text::ParseWords) for package: perl-Getopt-Long-2.40-2.el7.noarch
----> Package perl-Git.noarch 0:1.8.3.1-6.el7_2.1 will be installed
----> Package perl-PathTools.x86_64 0:3.40-5.el7 will be installed
----> Package perl-TermReadKey.x86_64 0:2.30-20.el7 will be installed
----> Package rsync.x86_64 0:3.0.9-17.el7 will be installed
---> Running transaction check
----> Package fipscheck-lib.x86_64 0:1.4.1-5.el7 will be installed
---> Processing Dependency: /usr/bin/fipscheck for package: fipscheck-lib-1.4.1-5.el7.x86_64
----> Package groff-base.x86_64 0:1.22.2-8.el7 will be installed
----> Package libedit.x86_64 0:3.0-12.20121213cvs.el7 will be installed
----> Package libmnl.x86_64 0:1.0.3-7.el7 will be installed
----> Package openssh.x86_64 0:6.6.1p1-25.el7_2 will be installed
----> Package perl-Carp.noarch 0:1.26-244.el7 will be installed
----> Package perl-Filter.x86_64 0:1.49-3.el7 will be installed
----> Package perl-Pod-Simple.noarch 1:3.28-4.el7 will be installed
---> Processing Dependency: perl(Pod::Escapes) >= 1.04 for package: 1:perl-Pod-Simple-3.28-4.el7.noarch
---> Processing Dependency: perl(Encode) for package: 1:perl-Pod-Simple-3.28-4.el7.noarch
----> Package perl-Pod-Usage.noarch 0:1.63-3.el7 will be installed
---> Processing Dependency: perl(Pod::Text) >= 3.15 for package: perl-Pod-Usage-1.63-3.el7.noarch
---> Processing Dependency: perl-Pod-Perldoc for package: perl-Pod-Usage-1.63-3.el7.noarch
----> Package perl-Scalar-List-Utils.x86_64 0:1.27-248.el7 will be installed
----> Package perl-Socket.x86_64 0:2.010-3.el7 will be installed
----> Package perl-Storable.x86_64 0:2.45-3.el7 will be installed
----> Package perl-Text-ParseWords.noarch 0:3.29-4.el7 will be installed
----> Package perl-Time-HiRes.x86_64 4:1.9725-3.el7 will be installed
----> Package perl-Time-Local.noarch 0:1.2300-2.el7 will be installed
----> Package perl-constant.noarch 0:1.27-2.el7 will be installed
----> Package perl-libs.x86_64 4:5.16.3-286.el7 will be installed
----> Package perl-macros.x86_64 4:5.16.3-286.el7 will be installed
----> Package perl-threads.x86_64 0:1.87-4.el7 will be installed
----> Package perl-threads-shared.x86_64 0:1.43-6.el7 will be installed
---> Running transaction check
----> Package fipscheck.x86_64 0:1.4.1-5.el7 will be installed
----> Package perl-Encode.x86_64 0:2.51-7.el7 will be installed
----> Package perl-Pod-Escapes.noarch 1:1.04-286.el7 will be installed
----> Package perl-Pod-Perldoc.noarch 0:3.20-4.el7 will be installed
---> Processing Dependency: perl(parent) for package: perl-Pod-Perldoc-3.20-4.el7.noarch
---> Processing Dependency: perl(HTTP::Tiny) for package: perl-Pod-Perldoc-3.20-4.el7.noarch
----> Package perl-podlators.noarch 0:2.5.1-3.el7 will be installed
---> Running transaction check
----> Package perl-HTTP-Tiny.noarch 0:0.033-3.el7 will be installed
----> Package perl-parent.noarch 1:0.225-244.el7 will be installed
---> Finished Dependency Resolution
-
-Dependencies Resolved
-
-================================================================================
- Package                         Arch   Version                   Repository
-                                                                           Size
-================================================================================
-Installing:
- bsdtar                          x86_64 3.1.2-7.el7               base     55 k
- centos-release-openshift-origin noarch 1-1.el7.centos            extras   11 k
- e2fsprogs                       x86_64 1.42.9-7.el7              base    697 k
- ethtool                         x86_64 2:3.15-2.el7              base    113 k
- git                             x86_64 1.8.3.1-6.el7_2.1         updates 4.4 M
- iptables                        x86_64 1.4.21-16.el7             base    424 k
- socat                           x86_64 1.7.2.2-5.el7             base    255 k
- sysvinit-tools                  x86_64 2.88-14.dsf.el7           base     63 k
- wget                            x86_64 1.14-10.el7_0.1           base    545 k
- which                           x86_64 2.20-7.el7                base     41 k
- xfsprogs                        x86_64 3.2.2-2.el7               base    863 k
-Updating:
- util-linux                      x86_64 2.23.2-26.el7_2.3         updates 1.9 M
-Installing for dependencies:
- centos-release-paas-common      noarch 1-1.el7.centos            extras   11 k
- e2fsprogs-libs                  x86_64 1.42.9-7.el7              base    165 k
- fipscheck                       x86_64 1.4.1-5.el7               base     21 k
- fipscheck-lib                   x86_64 1.4.1-5.el7               base     11 k
- groff-base                      x86_64 1.22.2-8.el7              base    942 k
- less                            x86_64 458-9.el7                 base    120 k
- libarchive                      x86_64 3.1.2-7.el7               base    317 k
- libedit                         x86_64 3.0-12.20121213cvs.el7    base     92 k
- libgnome-keyring                x86_64 3.8.0-3.el7               base    109 k
- libmnl                          x86_64 1.0.3-7.el7               base     23 k
- libnetfilter_conntrack          x86_64 1.0.4-2.el7               base     53 k
- libnfnetlink                    x86_64 1.0.1-4.el7               base     26 k
- lzo                             x86_64 2.06-8.el7                base     59 k
- openssh                         x86_64 6.6.1p1-25.el7_2          updates 435 k
- openssh-clients                 x86_64 6.6.1p1-25.el7_2          updates 639 k
- perl                            x86_64 4:5.16.3-286.el7          base    8.0 M
- perl-Carp                       noarch 1.26-244.el7              base     19 k
- perl-Encode                     x86_64 2.51-7.el7                base    1.5 M
- perl-Error                      noarch 1:0.17020-2.el7           base     32 k
- perl-Exporter                   noarch 5.68-3.el7                base     28 k
- perl-File-Path                  noarch 2.09-2.el7                base     26 k
- perl-File-Temp                  noarch 0.23.01-3.el7             base     56 k
- perl-Filter                     x86_64 1.49-3.el7                base     76 k
- perl-Getopt-Long                noarch 2.40-2.el7                base     56 k
- perl-Git                        noarch 1.8.3.1-6.el7_2.1         updates  53 k
- perl-HTTP-Tiny                  noarch 0.033-3.el7               base     38 k
- perl-PathTools                  x86_64 3.40-5.el7                base     82 k
- perl-Pod-Escapes                noarch 1:1.04-286.el7            base     50 k
- perl-Pod-Perldoc                noarch 3.20-4.el7                base     87 k
- perl-Pod-Simple                 noarch 1:3.28-4.el7              base    216 k
- perl-Pod-Usage                  noarch 1.63-3.el7                base     27 k
- perl-Scalar-List-Utils          x86_64 1.27-248.el7              base     36 k
- perl-Socket                     x86_64 2.010-3.el7               base     49 k
- perl-Storable                   x86_64 2.45-3.el7                base     77 k
- perl-TermReadKey                x86_64 2.30-20.el7               base     31 k
- perl-Text-ParseWords            noarch 3.29-4.el7                base     14 k
- perl-Time-HiRes                 x86_64 4:1.9725-3.el7            base     45 k
- perl-Time-Local                 noarch 1.2300-2.el7              base     24 k
- perl-constant                   noarch 1.27-2.el7                base     19 k
- perl-libs                       x86_64 4:5.16.3-286.el7          base    687 k
- perl-macros                     x86_64 4:5.16.3-286.el7          base     43 k
- perl-parent                     noarch 1:0.225-244.el7           base     12 k
- perl-podlators                  noarch 2.5.1-3.el7               base    112 k
- perl-threads                    x86_64 1.87-4.el7                base     49 k
- perl-threads-shared             x86_64 1.43-6.el7                base     39 k
- rsync                           x86_64 3.0.9-17.el7              base    360 k
-Updating for dependencies:
- libblkid                        x86_64 2.23.2-26.el7_2.3         updates 167 k
- libmount                        x86_64 2.23.2-26.el7_2.3         updates 169 k
- libuuid                         x86_64 2.23.2-26.el7_2.3         updates  74 k
-
-Transaction Summary
-================================================================================
-Install  11 Packages (+46 Dependent packages)
-Upgrade   1 Package  (+ 3 Dependent packages)
-
-Total download size: 24 M
-Downloading packages:
-Delta RPMs disabled because /usr/bin/applydeltarpm not installed.
-[91mwarning: /var/cache/yum/x86_64/7/base/packages/bsdtar-3.1.2-7.el7.x86_64.rpm: Header V3 RSA/SHA256 Signature, key ID f4a80eb5: NOKEY
-[0mPublic key for bsdtar-3.1.2-7.el7.x86_64.rpm is not installed
-Public key for centos-release-paas-common-1-1.el7.centos.noarch.rpm is not installed
-Public key for libblkid-2.23.2-26.el7_2.3.x86_64.rpm is not installed
---------------------------------------------------------------------------------
-Total                                              887 kB/s |  24 MB  00:28     
-Retrieving key from file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
-[91mImporting GPG key 0xF4A80EB5:
- Userid     : "CentOS-7 Key (CentOS 7 Official Signing Key) <security@centos.org>"
- Fingerprint: 6341 ab27 53d7 8a78 a7c2 7bb1 24c6 a8a7 f4a8 0eb5
- Package    : centos-release-7-2.1511.el7.centos.2.10.x86_64 (@CentOS)
- From       : /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
-[0mRunning transaction check
-Running transaction test
-Transaction test succeeded
-Running transaction
-  Updating   : libuuid-2.23.2-26.el7_2.3.x86_64                            1/65 
-  Updating   : libblkid-2.23.2-26.el7_2.3.x86_64                           2/65 
-  Installing : libnfnetlink-1.0.1-4.el7.x86_64                             3/65 
-  Installing : lzo-2.06-8.el7.x86_64                                       4/65 
-  Installing : groff-base-1.22.2-8.el7.x86_64                              5/65 
-  Installing : 1:perl-parent-0.225-244.el7.noarch                          6/65 
-  Installing : perl-HTTP-Tiny-0.033-3.el7.noarch                           7/65 
-  Installing : perl-podlators-2.5.1-3.el7.noarch                           8/65 
-  Installing : perl-Pod-Perldoc-3.20-4.el7.noarch                          9/65 
-  Installing : 1:perl-Pod-Escapes-1.04-286.el7.noarch                     10/65 
-  Installing : perl-Encode-2.51-7.el7.x86_64                              11/65 
-  Installing : perl-Text-ParseWords-3.29-4.el7.noarch                     12/65 
-  Installing : perl-Pod-Usage-1.63-3.el7.noarch                           13/65 
-  Installing : 4:perl-libs-5.16.3-286.el7.x86_64                          14/65 
-  Installing : 4:perl-macros-5.16.3-286.el7.x86_64                        15/65 
-  Installing : perl-threads-1.87-4.el7.x86_64                             16/65 
-  Installing : 4:perl-Time-HiRes-1.9725-3.el7.x86_64                      17/65 
-  Installing : perl-Exporter-5.68-3.el7.noarch                            18/65 
-  Installing : perl-Carp-1.26-244.el7.noarch                              19/65 
-  Installing : perl-Storable-2.45-3.el7.x86_64                            20/65 
-  Installing : perl-threads-shared-1.43-6.el7.x86_64                      21/65 
-  Installing : perl-PathTools-3.40-5.el7.x86_64                           22/65 
-  Installing : perl-Scalar-List-Utils-1.27-248.el7.x86_64                 23/65 
-  Installing : perl-Time-Local-1.2300-2.el7.noarch                        24/65 
-  Installing : perl-constant-1.27-2.el7.noarch                            25/65 
-  Installing : perl-File-Temp-0.23.01-3.el7.noarch                        26/65 
-  Installing : perl-File-Path-2.09-2.el7.noarch                           27/65 
-  Installing : perl-Socket-2.010-3.el7.x86_64                             28/65 
-  Installing : perl-Filter-1.49-3.el7.x86_64                              29/65 
-  Installing : 1:perl-Pod-Simple-3.28-4.el7.noarch                        30/65 
-  Installing : perl-Getopt-Long-2.40-2.el7.noarch                         31/65 
-  Installing : 4:perl-5.16.3-286.el7.x86_64                               32/65 
-  Installing : 1:perl-Error-0.17020-2.el7.noarch                          33/65 
-  Installing : perl-TermReadKey-2.30-20.el7.x86_64                        34/65 
-  Installing : less-458-9.el7.x86_64                                      35/65 
-  Installing : libarchive-3.1.2-7.el7.x86_64                              36/65 
-  Updating   : libmount-2.23.2-26.el7_2.3.x86_64                          37/65 
-  Updating   : util-linux-2.23.2-26.el7_2.3.x86_64                        38/65 
-  Installing : fipscheck-lib-1.4.1-5.el7.x86_64                           39/65 
-  Installing : fipscheck-1.4.1-5.el7.x86_64                               40/65 
-  Installing : openssh-6.6.1p1-25.el7_2.x86_64                            41/65 
-  Installing : rsync-3.0.9-17.el7.x86_64                                  42/65 
-  Installing : centos-release-paas-common-1-1.el7.centos.noarch           43/65 
-  Installing : libgnome-keyring-3.8.0-3.el7.x86_64                        44/65 
-  Installing : e2fsprogs-libs-1.42.9-7.el7.x86_64                         45/65 
-  Installing : libedit-3.0-12.20121213cvs.el7.x86_64                      46/65 
-  Installing : openssh-clients-6.6.1p1-25.el7_2.x86_64                    47/65 
-  Installing : perl-Git-1.8.3.1-6.el7_2.1.noarch                          48/65 
-  Installing : git-1.8.3.1-6.el7_2.1.x86_64                               49/65 
-  Installing : libmnl-1.0.3-7.el7.x86_64                                  50/65 
-  Installing : libnetfilter_conntrack-1.0.4-2.el7.x86_64                  51/65 
-  Installing : iptables-1.4.21-16.el7.x86_64                              52/65 
-  Installing : e2fsprogs-1.42.9-7.el7.x86_64                              53/65 
-  Installing : centos-release-openshift-origin-1-1.el7.centos.noarch      54/65 
-  Installing : bsdtar-3.1.2-7.el7.x86_64                                  55/65 
-  Installing : xfsprogs-3.2.2-2.el7.x86_64                                56/65 
-  Installing : wget-1.14-10.el7_0.1.x86_64                                57/65 
-install-info: No such file or directory for /usr/share/info/wget.info.gz
-  Installing : socat-1.7.2.2-5.el7.x86_64                                 58/65 
-  Installing : which-2.20-7.el7.x86_64                                    59/65 
-install-info: No such file or directory for /usr/share/info/which.info.gz
-  Installing : sysvinit-tools-2.88-14.dsf.el7.x86_64                      60/65 
-  Installing : 2:ethtool-3.15-2.el7.x86_64                                61/65 
-  Cleanup    : util-linux-2.23.2-26.el7_2.2.x86_64                        62/65 
-  Cleanup    : libmount-2.23.2-26.el7_2.2.x86_64                          63/65 
-  Cleanup    : libblkid-2.23.2-26.el7_2.2.x86_64                          64/65 
-  Cleanup    : libuuid-2.23.2-26.el7_2.2.x86_64                           65/65 
-  Verifying  : libuuid-2.23.2-26.el7_2.3.x86_64                            1/65 
-  Verifying  : libmnl-1.0.3-7.el7.x86_64                                   2/65 
-  Verifying  : perl-HTTP-Tiny-0.033-3.el7.noarch                           3/65 
-  Verifying  : 2:ethtool-3.15-2.el7.x86_64                                 4/65 
-  Verifying  : libnetfilter_conntrack-1.0.4-2.el7.x86_64                   5/65 
-  Verifying  : perl-threads-shared-1.43-6.el7.x86_64                       6/65 
-  Verifying  : 4:perl-Time-HiRes-1.9725-3.el7.x86_64                       7/65 
-  Verifying  : 4:perl-libs-5.16.3-286.el7.x86_64                           8/65 
-  Verifying  : perl-threads-1.87-4.el7.x86_64                              9/65 
-  Verifying  : perl-Exporter-5.68-3.el7.noarch                            10/65 
-  Verifying  : sysvinit-tools-2.88-14.dsf.el7.x86_64                      11/65 
-  Verifying  : perl-PathTools-3.40-5.el7.x86_64                           12/65 
-  Verifying  : xfsprogs-3.2.2-2.el7.x86_64                                13/65 
-  Verifying  : 4:perl-macros-5.16.3-286.el7.x86_64                        14/65 
-  Verifying  : fipscheck-1.4.1-5.el7.x86_64                               15/65 
-  Verifying  : 1:perl-Pod-Escapes-1.04-286.el7.noarch                     16/65 
-  Verifying  : libedit-3.0-12.20121213cvs.el7.x86_64                      17/65 
-  Verifying  : 1:perl-parent-0.225-244.el7.noarch                         18/65 
-  Verifying  : perl-TermReadKey-2.30-20.el7.x86_64                        19/65 
-  Verifying  : 4:perl-5.16.3-286.el7.x86_64                               20/65 
-  Verifying  : which-2.20-7.el7.x86_64                                    21/65 
-  Verifying  : bsdtar-3.1.2-7.el7.x86_64                                  22/65 
-  Verifying  : groff-base-1.22.2-8.el7.x86_64                             23/65 
-  Verifying  : perl-File-Temp-0.23.01-3.el7.noarch                        24/65 
-  Verifying  : util-linux-2.23.2-26.el7_2.3.x86_64                        25/65 
-  Verifying  : perl-Time-Local-1.2300-2.el7.noarch                        26/65 
-  Verifying  : socat-1.7.2.2-5.el7.x86_64                                 27/65 
-  Verifying  : e2fsprogs-1.42.9-7.el7.x86_64                              28/65 
-  Verifying  : 1:perl-Error-0.17020-2.el7.noarch                          29/65 
-  Verifying  : lzo-2.06-8.el7.x86_64                                      30/65 
-  Verifying  : e2fsprogs-libs-1.42.9-7.el7.x86_64                         31/65 
-  Verifying  : perl-Encode-2.51-7.el7.x86_64                              32/65 
-  Verifying  : openssh-6.6.1p1-25.el7_2.x86_64                            33/65 
-  Verifying  : perl-Carp-1.26-244.el7.noarch                              34/65 
-  Verifying  : perl-Git-1.8.3.1-6.el7_2.1.noarch                          35/65 
-  Verifying  : git-1.8.3.1-6.el7_2.1.x86_64                               36/65 
-  Verifying  : perl-Storable-2.45-3.el7.x86_64                            37/65 
-  Verifying  : perl-Scalar-List-Utils-1.27-248.el7.x86_64                 38/65 
-  Verifying  : fipscheck-lib-1.4.1-5.el7.x86_64                           39/65 
-  Verifying  : wget-1.14-10.el7_0.1.x86_64                                40/65 
-  Verifying  : libgnome-keyring-3.8.0-3.el7.x86_64                        41/65 
-  Verifying  : perl-Pod-Usage-1.63-3.el7.noarch                           42/65 
-  Verifying  : libblkid-2.23.2-26.el7_2.3.x86_64                          43/65 
-  Verifying  : iptables-1.4.21-16.el7.x86_64                              44/65 
-  Verifying  : libnfnetlink-1.0.1-4.el7.x86_64                            45/65 
-  Verifying  : perl-podlators-2.5.1-3.el7.noarch                          46/65 
-  Verifying  : perl-Getopt-Long-2.40-2.el7.noarch                         47/65 
-  Verifying  : perl-constant-1.27-2.el7.noarch                            48/65 
-  Verifying  : perl-File-Path-2.09-2.el7.noarch                           49/65 
-  Verifying  : openssh-clients-6.6.1p1-25.el7_2.x86_64                    50/65 
-  Verifying  : libarchive-3.1.2-7.el7.x86_64                              51/65 
-  Verifying  : perl-Socket-2.010-3.el7.x86_64                             52/65 
-  Verifying  : 1:perl-Pod-Simple-3.28-4.el7.noarch                        53/65 
-  Verifying  : centos-release-paas-common-1-1.el7.centos.noarch           54/65 
-  Verifying  : perl-Pod-Perldoc-3.20-4.el7.noarch                         55/65 
-  Verifying  : perl-Text-ParseWords-3.29-4.el7.noarch                     56/65 
-  Verifying  : libmount-2.23.2-26.el7_2.3.x86_64                          57/65 
-  Verifying  : centos-release-openshift-origin-1-1.el7.centos.noarch      58/65 
-  Verifying  : rsync-3.0.9-17.el7.x86_64                                  59/65 
-  Verifying  : perl-Filter-1.49-3.el7.x86_64                              60/65 
-  Verifying  : less-458-9.el7.x86_64                                      61/65 
-  Verifying  : libblkid-2.23.2-26.el7_2.2.x86_64                          62/65 
-  Verifying  : libuuid-2.23.2-26.el7_2.2.x86_64                           63/65 
-  Verifying  : libmount-2.23.2-26.el7_2.2.x86_64                          64/65 
-  Verifying  : util-linux-2.23.2-26.el7_2.2.x86_64                        65/65 
-
-Installed:
-  bsdtar.x86_64 0:3.1.2-7.el7                                                   
-  centos-release-openshift-origin.noarch 0:1-1.el7.centos                       
-  e2fsprogs.x86_64 0:1.42.9-7.el7                                               
-  ethtool.x86_64 2:3.15-2.el7                                                   
-  git.x86_64 0:1.8.3.1-6.el7_2.1                                                
-  iptables.x86_64 0:1.4.21-16.el7                                               
-  socat.x86_64 0:1.7.2.2-5.el7                                                  
-  sysvinit-tools.x86_64 0:2.88-14.dsf.el7                                       
-  wget.x86_64 0:1.14-10.el7_0.1                                                 
-  which.x86_64 0:2.20-7.el7                                                     
-  xfsprogs.x86_64 0:3.2.2-2.el7                                                 
-
-Dependency Installed:
-  centos-release-paas-common.noarch 0:1-1.el7.centos                            
-  e2fsprogs-libs.x86_64 0:1.42.9-7.el7                                          
-  fipscheck.x86_64 0:1.4.1-5.el7                                                
-  fipscheck-lib.x86_64 0:1.4.1-5.el7                                            
-  groff-base.x86_64 0:1.22.2-8.el7                                              
-  less.x86_64 0:458-9.el7                                                       
-  libarchive.x86_64 0:3.1.2-7.el7                                               
-  libedit.x86_64 0:3.0-12.20121213cvs.el7                                       
-  libgnome-keyring.x86_64 0:3.8.0-3.el7                                         
-  libmnl.x86_64 0:1.0.3-7.el7                                                   
-  libnetfilter_conntrack.x86_64 0:1.0.4-2.el7                                   
-  libnfnetlink.x86_64 0:1.0.1-4.el7                                             
-  lzo.x86_64 0:2.06-8.el7                                                       
-  openssh.x86_64 0:6.6.1p1-25.el7_2                                             
-  openssh-clients.x86_64 0:6.6.1p1-25.el7_2                                     
-  perl.x86_64 4:5.16.3-286.el7                                                  
-  perl-Carp.noarch 0:1.26-244.el7                                               
-  perl-Encode.x86_64 0:2.51-7.el7                                               
-  perl-Error.noarch 1:0.17020-2.el7                                             
-  perl-Exporter.noarch 0:5.68-3.el7                                             
-  perl-File-Path.noarch 0:2.09-2.el7                                            
-  perl-File-Temp.noarch 0:0.23.01-3.el7                                         
-  perl-Filter.x86_64 0:1.49-3.el7                                               
-  perl-Getopt-Long.noarch 0:2.40-2.el7                                          
-  perl-Git.noarch 0:1.8.3.1-6.el7_2.1                                           
-  perl-HTTP-Tiny.noarch 0:0.033-3.el7                                           
-  perl-PathTools.x86_64 0:3.40-5.el7                                            
-  perl-Pod-Escapes.noarch 1:1.04-286.el7                                        
-  perl-Pod-Perldoc.noarch 0:3.20-4.el7                                          
-  perl-Pod-Simple.noarch 1:3.28-4.el7                                           
-  perl-Pod-Usage.noarch 0:1.63-3.el7                                            
-  perl-Scalar-List-Utils.x86_64 0:1.27-248.el7                                  
-  perl-Socket.x86_64 0:2.010-3.el7                                              
-  perl-Storable.x86_64 0:2.45-3.el7                                             
-  perl-TermReadKey.x86_64 0:2.30-20.el7                                         
-  perl-Text-ParseWords.noarch 0:3.29-4.el7                                      
-  perl-Time-HiRes.x86_64 4:1.9725-3.el7                                         
-  perl-Time-Local.noarch 0:1.2300-2.el7                                         
-  perl-constant.noarch 0:1.27-2.el7                                             
-  perl-libs.x86_64 4:5.16.3-286.el7                                             
-  perl-macros.x86_64 4:5.16.3-286.el7                                           
-  perl-parent.noarch 1:0.225-244.el7                                            
-  perl-podlators.noarch 0:2.5.1-3.el7                                           
-  perl-threads.x86_64 0:1.87-4.el7                                              
-  perl-threads-shared.x86_64 0:1.43-6.el7                                       
-  rsync.x86_64 0:3.0.9-17.el7                                                   
-
-Updated:
-  util-linux.x86_64 0:2.23.2-26.el7_2.3                                         
-
-Dependency Updated:
-  libblkid.x86_64 0:2.23.2-26.el7_2.3    libmount.x86_64 0:2.23.2-26.el7_2.3   
-  libuuid.x86_64 0:2.23.2-26.el7_2.3    
-
-Complete!
-Loaded plugins: fastestmirror, ovl
-Cleaning repos: base centos-openshift-origin extras updates
-Cleaning up everything
-Cleaning up list of fastest mirrors
- ---> 8fef9ad23015
-Removing intermediate container 2dd98f1a5e5f
-Successfully built 8fef9ad23015
-Sending build context to Docker daemon  7.68 kB
-Step 1 : FROM openshift/origin-base
-Trying to pull repository docker.io/openshift/origin-base ... 
-latest: Pulling from docker.io/openshift/origin-base
-3d8673bd162a: Already exists
-0ee6aca1959d: Pulling fs layer
-0ee6aca1959d: Verifying Checksum
-0ee6aca1959d: Download complete
-0ee6aca1959d: Pull complete
-0ee6aca1959d: Pull complete
-Digest: sha256:053972968ab492f60179cffdc29652c07e7d4d052b85ac9196c91d1e3af05056
-Status: Downloaded newer image for docker.io/openshift/origin-base:latest
- ---> 7870a22fd5cb
-Step 2 : RUN INSTALL_PKGS="gettext automake make docker" &&     yum install -y --enablerepo=centosplus $INSTALL_PKGS &&     rpm -V $INSTALL_PKGS &&     yum clean all
- ---> Running in e4abfd34232c
-Loaded plugins: fastestmirror, ovl
-[91mhttp://ftp.cuhk.edu.hk/pub/linux/fedora-epel/7/x86_64/repodata/ca0dfc7219488a0f4725af1b0eba8d25f621aa25a830dd2fcc45ddd79c23599f-primary.sqlite.xz: [Errno 14] HTTP Error 404 - Not Found
-[0m[91mTrying other mirror.
-[0m[91mTo address this issue please refer to the below knowledge base article 
-
-https://access.redhat.com/articles/1320623
-
-If above article doesn't help to resolve this issue please create a bug on https://bugs.centos.org/
-
-[0mDetermining fastest mirrors
- * base: centos.webwerks.com
- * centosplus: centos.excellmedia.net
- * epel: epel.mirror.net.in
- * extras: centos.webwerks.com
- * updates: centos.excellmedia.net
-Resolving Dependencies
---> Running transaction check
----> Package automake.noarch 0:1.13.4-3.el7 will be installed
---> Processing Dependency: autoconf >= 2.65 for package: automake-1.13.4-3.el7.noarch
---> Processing Dependency: perl(Thread::Queue) for package: automake-1.13.4-3.el7.noarch
---> Processing Dependency: perl(TAP::Parser) for package: automake-1.13.4-3.el7.noarch
----> Package docker.x86_64 0:1.10.3-46.el7.centos.10 will be installed
---> Processing Dependency: docker-common = 1.10.3-46.el7.centos.10 for package: docker-1.10.3-46.el7.centos.10.x86_64
---> Processing Dependency: selinux-policy >= 3.13.1-23 for package: docker-1.10.3-46.el7.centos.10.x86_64
---> Processing Dependency: oci-systemd-hook >= 1:0.1.4-4 for package: docker-1.10.3-46.el7.centos.10.x86_64
---> Processing Dependency: oci-register-machine >= 1:0-1.7 for package: docker-1.10.3-46.el7.centos.10.x86_64
---> Processing Dependency: lvm2 >= 2.02.112 for package: docker-1.10.3-46.el7.centos.10.x86_64
---> Processing Dependency: docker-selinux >= 1.10.3-46.el7.centos.10 for package: docker-1.10.3-46.el7.centos.10.x86_64
---> Processing Dependency: libseccomp.so.2()(64bit) for package: docker-1.10.3-46.el7.centos.10.x86_64
----> Package gettext.x86_64 0:0.18.2.1-4.el7 will be installed
---> Processing Dependency: libgomp.so.1(GOMP_1.0)(64bit) for package: gettext-0.18.2.1-4.el7.x86_64
---> Processing Dependency: libunistring.so.0()(64bit) for package: gettext-0.18.2.1-4.el7.x86_64
---> Processing Dependency: libgomp.so.1()(64bit) for package: gettext-0.18.2.1-4.el7.x86_64
---> Processing Dependency: libgettextsrc-0.18.2.so()(64bit) for package: gettext-0.18.2.1-4.el7.x86_64
---> Processing Dependency: libgettextlib-0.18.2.so()(64bit) for package: gettext-0.18.2.1-4.el7.x86_64
---> Processing Dependency: libcroco-0.6.so.3()(64bit) for package: gettext-0.18.2.1-4.el7.x86_64
----> Package make.x86_64 1:3.82-21.el7 will be installed
---> Running transaction check
----> Package autoconf.noarch 0:2.69-11.el7 will be installed
---> Processing Dependency: m4 >= 1.4.14 for package: autoconf-2.69-11.el7.noarch
---> Processing Dependency: perl(Data::Dumper) for package: autoconf-2.69-11.el7.noarch
----> Package docker-common.x86_64 0:1.10.3-46.el7.centos.10 will be installed
----> Package docker-selinux.x86_64 0:1.10.3-46.el7.centos.10 will be installed
---> Processing Dependency: selinux-policy-targeted >= 3.13.1-23 for package: docker-selinux-1.10.3-46.el7.centos.10.x86_64
---> Processing Dependency: selinux-policy-base >= 3.13.1-23 for package: docker-selinux-1.10.3-46.el7.centos.10.x86_64
---> Processing Dependency: policycoreutils-python for package: docker-selinux-1.10.3-46.el7.centos.10.x86_64
---> Processing Dependency: policycoreutils for package: docker-selinux-1.10.3-46.el7.centos.10.x86_64
---> Processing Dependency: libselinux-utils for package: docker-selinux-1.10.3-46.el7.centos.10.x86_64
----> Package gettext-libs.x86_64 0:0.18.2.1-4.el7 will be installed
----> Package libcroco.x86_64 0:0.6.8-5.el7 will be installed
----> Package libgomp.x86_64 0:4.8.5-4.el7 will be installed
----> Package libseccomp.x86_64 0:2.2.1-1.el7 will be installed
----> Package libunistring.x86_64 0:0.9.3-9.el7 will be installed
----> Package lvm2.x86_64 7:2.02.130-5.el7_2.5 will be installed
---> Processing Dependency: lvm2-libs = 7:2.02.130-5.el7_2.5 for package: 7:lvm2-2.02.130-5.el7_2.5.x86_64
---> Processing Dependency: device-mapper-persistent-data >= 0.5.5-1 for package: 7:lvm2-2.02.130-5.el7_2.5.x86_64
---> Processing Dependency: liblvm2app.so.2.2(Base)(64bit) for package: 7:lvm2-2.02.130-5.el7_2.5.x86_64
---> Processing Dependency: libdevmapper-event.so.1.02(Base)(64bit) for package: 7:lvm2-2.02.130-5.el7_2.5.x86_64
---> Processing Dependency: liblvm2app.so.2.2()(64bit) for package: 7:lvm2-2.02.130-5.el7_2.5.x86_64
---> Processing Dependency: libdevmapper-event.so.1.02()(64bit) for package: 7:lvm2-2.02.130-5.el7_2.5.x86_64
----> Package oci-register-machine.x86_64 1:0-1.7.git31bbcd2.el7 will be installed
----> Package oci-systemd-hook.x86_64 1:0.1.4-4.git41491a3.el7 will be installed
---> Processing Dependency: libyajl.so.2()(64bit) for package: 1:oci-systemd-hook-0.1.4-4.git41491a3.el7.x86_64
----> Package perl-Test-Harness.noarch 0:3.28-3.el7 will be installed
----> Package perl-Thread-Queue.noarch 0:3.02-2.el7 will be installed
----> Package selinux-policy.noarch 0:3.13.1-60.el7_2.7 will be installed
---> Running transaction check
----> Package device-mapper-event-libs.x86_64 7:1.02.107-5.el7_2.5 will be installed
----> Package device-mapper-persistent-data.x86_64 0:0.6.2-1.el7_2 will be installed
---> Processing Dependency: libaio.so.1(LIBAIO_0.4)(64bit) for package: device-mapper-persistent-data-0.6.2-1.el7_2.x86_64
---> Processing Dependency: libaio.so.1(LIBAIO_0.1)(64bit) for package: device-mapper-persistent-data-0.6.2-1.el7_2.x86_64
---> Processing Dependency: libaio.so.1()(64bit) for package: device-mapper-persistent-data-0.6.2-1.el7_2.x86_64
----> Package libselinux-utils.x86_64 0:2.2.2-6.el7 will be installed
----> Package lvm2-libs.x86_64 7:2.02.130-5.el7_2.5 will be installed
---> Processing Dependency: device-mapper-event = 7:1.02.107-5.el7_2.5 for package: 7:lvm2-libs-2.02.130-5.el7_2.5.x86_64
----> Package m4.x86_64 0:1.4.16-10.el7 will be installed
----> Package perl-Data-Dumper.x86_64 0:2.145-3.el7 will be installed
----> Package policycoreutils.x86_64 0:2.2.5-20.el7 will be installed
----> Package policycoreutils-python.x86_64 0:2.2.5-20.el7 will be installed
---> Processing Dependency: libsemanage-python >= 2.1.10-1 for package: policycoreutils-python-2.2.5-20.el7.x86_64
---> Processing Dependency: audit-libs-python >= 2.1.3-4 for package: policycoreutils-python-2.2.5-20.el7.x86_64
---> Processing Dependency: python-IPy for package: policycoreutils-python-2.2.5-20.el7.x86_64
---> Processing Dependency: libselinux-python for package: policycoreutils-python-2.2.5-20.el7.x86_64
---> Processing Dependency: libqpol.so.1(VERS_1.4)(64bit) for package: policycoreutils-python-2.2.5-20.el7.x86_64
---> Processing Dependency: libqpol.so.1(VERS_1.2)(64bit) for package: policycoreutils-python-2.2.5-20.el7.x86_64
---> Processing Dependency: libcgroup for package: policycoreutils-python-2.2.5-20.el7.x86_64
---> Processing Dependency: libapol.so.4(VERS_4.0)(64bit) for package: policycoreutils-python-2.2.5-20.el7.x86_64
---> Processing Dependency: checkpolicy for package: policycoreutils-python-2.2.5-20.el7.x86_64
---> Processing Dependency: libqpol.so.1()(64bit) for package: policycoreutils-python-2.2.5-20.el7.x86_64
---> Processing Dependency: libapol.so.4()(64bit) for package: policycoreutils-python-2.2.5-20.el7.x86_64
----> Package selinux-policy-targeted.noarch 0:3.13.1-60.el7_2.7 will be installed
----> Package yajl.x86_64 0:2.0.4-4.el7 will be installed
---> Running transaction check
----> Package audit-libs-python.x86_64 0:2.4.1-5.el7 will be installed
----> Package checkpolicy.x86_64 0:2.1.12-6.el7 will be installed
----> Package device-mapper-event.x86_64 7:1.02.107-5.el7_2.5 will be installed
----> Package libaio.x86_64 0:0.3.109-13.el7 will be installed
----> Package libcgroup.x86_64 0:0.41-8.el7 will be installed
----> Package libselinux-python.x86_64 0:2.2.2-6.el7 will be installed
----> Package libsemanage-python.x86_64 0:2.1.10-18.el7 will be installed
----> Package python-IPy.noarch 0:0.75-6.el7 will be installed
----> Package setools-libs.x86_64 0:3.3.7-46.el7 will be installed
---> Finished Dependency Resolution
-
-Dependencies Resolved
-
-================================================================================
- Package                       Arch   Version                     Repository
-                                                                           Size
-================================================================================
-Installing:
- automake                      noarch 1.13.4-3.el7                base    679 k
- docker                        x86_64 1.10.3-46.el7.centos.10     extras  9.5 M
- gettext                       x86_64 0.18.2.1-4.el7              base    959 k
- make                          x86_64 1:3.82-21.el7               base    420 k
-Installing for dependencies:
- audit-libs-python             x86_64 2.4.1-5.el7                 base     69 k
- autoconf                      noarch 2.69-11.el7                 base    701 k
- checkpolicy                   x86_64 2.1.12-6.el7                base    247 k
- device-mapper-event           x86_64 7:1.02.107-5.el7_2.5        updates 167 k
- device-mapper-event-libs      x86_64 7:1.02.107-5.el7_2.5        updates 169 k
- device-mapper-persistent-data x86_64 0.6.2-1.el7_2               updates 366 k
- docker-common                 x86_64 1.10.3-46.el7.centos.10     extras   61 k
- docker-selinux                x86_64 1.10.3-46.el7.centos.10     extras   78 k
- gettext-libs                  x86_64 0.18.2.1-4.el7              base    435 k
- libaio                        x86_64 0.3.109-13.el7              base     24 k
- libcgroup                     x86_64 0.41-8.el7                  base     64 k
- libcroco                      x86_64 0.6.8-5.el7                 base    104 k
- libgomp                       x86_64 4.8.5-4.el7                 base    130 k
- libseccomp                    x86_64 2.2.1-1.el7                 base     49 k
- libselinux-python             x86_64 2.2.2-6.el7                 base    247 k
- libselinux-utils              x86_64 2.2.2-6.el7                 base    135 k
- libsemanage-python            x86_64 2.1.10-18.el7               base     94 k
- libunistring                  x86_64 0.9.3-9.el7                 base    293 k
- lvm2                          x86_64 7:2.02.130-5.el7_2.5        updates 1.0 M
- lvm2-libs                     x86_64 7:2.02.130-5.el7_2.5        updates 873 k
- m4                            x86_64 1.4.16-10.el7               base    256 k
- oci-register-machine          x86_64 1:0-1.7.git31bbcd2.el7      extras  929 k
- oci-systemd-hook              x86_64 1:0.1.4-4.git41491a3.el7    extras   27 k
- perl-Data-Dumper              x86_64 2.145-3.el7                 base     47 k
- perl-Test-Harness             noarch 3.28-3.el7                  base    302 k
- perl-Thread-Queue             noarch 3.02-2.el7                  base     17 k
- policycoreutils               x86_64 2.2.5-20.el7                base    803 k
- policycoreutils-python        x86_64 2.2.5-20.el7                base    435 k
- python-IPy                    noarch 0.75-6.el7                  base     32 k
- selinux-policy                noarch 3.13.1-60.el7_2.7           updates 376 k
- selinux-policy-targeted       noarch 3.13.1-60.el7_2.7           updates 3.9 M
- setools-libs                  x86_64 3.3.7-46.el7                base    485 k
- yajl                          x86_64 2.0.4-4.el7                 base     39 k
-
-Transaction Summary
-================================================================================
-Install  4 Packages (+33 Dependent packages)
-
-Total download size: 24 M
-Installed size: 87 M
-Downloading packages:
-[91mhttp://mirror.digistar.vn/centos/7.2.1511/updates/x86_64/Packages/selinux-policy-targeted-3.13.1-60.el7_2.7.noarch.rpm: [Errno 14] curl#56 - "Recv failure: Connection reset by peer"
-[0m[91mTrying other mirror.
-[0m--------------------------------------------------------------------------------
-Total                                              772 kB/s |  24 MB  00:32     
-Running transaction check
-Running transaction test
-Transaction test succeeded
-Running transaction
-  Installing : 7:device-mapper-event-libs-1.02.107-5.el7_2.5.x86_64        1/37 
-  Installing : libgomp-4.8.5-4.el7.x86_64                                  2/37 
-  Installing : libselinux-utils-2.2.2-6.el7.x86_64                         3/37 
-  Installing : policycoreutils-2.2.5-20.el7.x86_64                         4/37 
-  Installing : selinux-policy-3.13.1-60.el7_2.7.noarch                     5/37 
-  Installing : libunistring-0.9.3-9.el7.x86_64                             6/37 
-  Installing : libcroco-0.6.8-5.el7.x86_64                                 7/37 
-  Installing : gettext-libs-0.18.2.1-4.el7.x86_64                          8/37 
-  Installing : selinux-policy-targeted-3.13.1-60.el7_2.7.noarch            9/37 
-  Installing : 7:device-mapper-event-1.02.107-5.el7_2.5.x86_64            10/37 
-Failed to get D-Bus connection: Operation not permitted
-  Installing : 7:lvm2-libs-2.02.130-5.el7_2.5.x86_64                      11/37 
-  Installing : libsemanage-python-2.1.10-18.el7.x86_64                    12/37 
-  Installing : checkpolicy-2.1.12-6.el7.x86_64                            13/37 
-  Installing : libselinux-python-2.2.2-6.el7.x86_64                       14/37 
-  Installing : audit-libs-python-2.4.1-5.el7.x86_64                       15/37 
-  Installing : 1:oci-register-machine-0-1.7.git31bbcd2.el7.x86_64         16/37 
-  Installing : yajl-2.0.4-4.el7.x86_64                                    17/37 
-  Installing : 1:oci-systemd-hook-0.1.4-4.git41491a3.el7.x86_64           18/37 
-  Installing : libseccomp-2.2.1-1.el7.x86_64                              19/37 
-  Installing : perl-Data-Dumper-2.145-3.el7.x86_64                        20/37 
-  Installing : libcgroup-0.41-8.el7.x86_64                                21/37 
-  Installing : libaio-0.3.109-13.el7.x86_64                               22/37 
-  Installing : device-mapper-persistent-data-0.6.2-1.el7_2.x86_64         23/37 
-  Installing : 7:lvm2-2.02.130-5.el7_2.5.x86_64                           24/37 
-Failed to get D-Bus connection: Operation not permitted
-Failed to get D-Bus connection: Operation not permitted
-Created symlink from /etc/systemd/system/sysinit.target.wants/lvm2-lvmpolld.socket to /usr/lib/systemd/system/lvm2-lvmpolld.socket.
-Failed to get D-Bus connection: Operation not permitted
-warning: %post(lvm2-7:2.02.130-5.el7_2.5.x86_64) scriptlet failed, exit status 1
-[91mNon-fatal POSTIN scriptlet failure in rpm package 7:lvm2-2.02.130-5.el7_2.5.x86_64[0m[91m
-[0m  Installing : perl-Thread-Queue-3.02-2.el7.noarch                        25/37 
-  Installing : perl-Test-Harness-3.28-3.el7.noarch                        26/37 
-  Installing : python-IPy-0.75-6.el7.noarch                               27/37 
-  Installing : setools-libs-3.3.7-46.el7.x86_64                           28/37 
-  Installing : policycoreutils-python-2.2.5-20.el7.x86_64                 29/37 
-  Installing : docker-selinux-1.10.3-46.el7.centos.10.x86_64              30/37 
-  Installing : docker-common-1.10.3-46.el7.centos.10.x86_64               31/37 
-  Installing : m4-1.4.16-10.el7.x86_64                                    32/37 
-  Installing : autoconf-2.69-11.el7.noarch                                33/37 
-install-info: No such file or directory for /usr/share/info/autoconf.info
-  Installing : automake-1.13.4-3.el7.noarch                               34/37 
-install-info: No such file or directory for /usr/share/info/automake.info.gz
-  Installing : docker-1.10.3-46.el7.centos.10.x86_64                      35/37 
-  Installing : gettext-0.18.2.1-4.el7.x86_64                              36/37 
-install-info: No such file or directory for /usr/share/info/gettext.info.gz
-  Installing : 1:make-3.82-21.el7.x86_64                                  37/37 
-  Verifying  : libcroco-0.6.8-5.el7.x86_64                                 1/37 
-  Verifying  : libunistring-0.9.3-9.el7.x86_64                             2/37 
-  Verifying  : 1:make-3.82-21.el7.x86_64                                   3/37 
-  Verifying  : automake-1.13.4-3.el7.noarch                                4/37 
-  Verifying  : m4-1.4.16-10.el7.x86_64                                     5/37 
-  Verifying  : docker-common-1.10.3-46.el7.centos.10.x86_64                6/37 
-  Verifying  : device-mapper-persistent-data-0.6.2-1.el7_2.x86_64          7/37 
-  Verifying  : setools-libs-3.3.7-46.el7.x86_64                            8/37 
-  Verifying  : gettext-libs-0.18.2.1-4.el7.x86_64                          9/37 
-  Verifying  : python-IPy-0.75-6.el7.noarch                               10/37 
-  Verifying  : perl-Test-Harness-3.28-3.el7.noarch                        11/37 
-  Verifying  : docker-1.10.3-46.el7.centos.10.x86_64                      12/37 
-  Verifying  : selinux-policy-3.13.1-60.el7_2.7.noarch                    13/37 
-  Verifying  : perl-Thread-Queue-3.02-2.el7.noarch                        14/37 
-  Verifying  : 7:lvm2-libs-2.02.130-5.el7_2.5.x86_64                      15/37 
-  Verifying  : 7:device-mapper-event-libs-1.02.107-5.el7_2.5.x86_64       16/37 
-  Verifying  : libaio-0.3.109-13.el7.x86_64                               17/37 
-  Verifying  : libselinux-utils-2.2.2-6.el7.x86_64                        18/37 
-  Verifying  : libcgroup-0.41-8.el7.x86_64                                19/37 
-  Verifying  : perl-Data-Dumper-2.145-3.el7.x86_64                        20/37 
-  Verifying  : 1:oci-systemd-hook-0.1.4-4.git41491a3.el7.x86_64           21/37 
-  Verifying  : 7:lvm2-2.02.130-5.el7_2.5.x86_64                           22/37 
-  Verifying  : libseccomp-2.2.1-1.el7.x86_64                              23/37 
-  Verifying  : yajl-2.0.4-4.el7.x86_64                                    24/37 
-  Verifying  : 7:device-mapper-event-1.02.107-5.el7_2.5.x86_64            25/37 
-  Verifying  : 1:oci-register-machine-0-1.7.git31bbcd2.el7.x86_64         26/37 
-  Verifying  : audit-libs-python-2.4.1-5.el7.x86_64                       27/37 
-  Verifying  : autoconf-2.69-11.el7.noarch                                28/37 
-  Verifying  : libselinux-python-2.2.2-6.el7.x86_64                       29/37 
-  Verifying  : libgomp-4.8.5-4.el7.x86_64                                 30/37 
-  Verifying  : checkpolicy-2.1.12-6.el7.x86_64                            31/37 
-  Verifying  : selinux-policy-targeted-3.13.1-60.el7_2.7.noarch           32/37 
-  Verifying  : policycoreutils-2.2.5-20.el7.x86_64                        33/37 
-  Verifying  : gettext-0.18.2.1-4.el7.x86_64                              34/37 
-  Verifying  : docker-selinux-1.10.3-46.el7.centos.10.x86_64              35/37 
-  Verifying  : policycoreutils-python-2.2.5-20.el7.x86_64                 36/37 
-  Verifying  : libsemanage-python-2.1.10-18.el7.x86_64                    37/37 
-
-Installed:
-  automake.noarch 0:1.13.4-3.el7     docker.x86_64 0:1.10.3-46.el7.centos.10   
-  gettext.x86_64 0:0.18.2.1-4.el7    make.x86_64 1:3.82-21.el7                 
-
-Dependency Installed:
-  audit-libs-python.x86_64 0:2.4.1-5.el7                                        
-  autoconf.noarch 0:2.69-11.el7                                                 
-  checkpolicy.x86_64 0:2.1.12-6.el7                                             
-  device-mapper-event.x86_64 7:1.02.107-5.el7_2.5                               
-  device-mapper-event-libs.x86_64 7:1.02.107-5.el7_2.5                          
-  device-mapper-persistent-data.x86_64 0:0.6.2-1.el7_2                          
-  docker-common.x86_64 0:1.10.3-46.el7.centos.10                                
-  docker-selinux.x86_64 0:1.10.3-46.el7.centos.10                               
-  gettext-libs.x86_64 0:0.18.2.1-4.el7                                          
-  libaio.x86_64 0:0.3.109-13.el7                                                
-  libcgroup.x86_64 0:0.41-8.el7                                                 
-  libcroco.x86_64 0:0.6.8-5.el7                                                 
-  libgomp.x86_64 0:4.8.5-4.el7                                                  
-  libseccomp.x86_64 0:2.2.1-1.el7                                               
-  libselinux-python.x86_64 0:2.2.2-6.el7                                        
-  libselinux-utils.x86_64 0:2.2.2-6.el7                                         
-  libsemanage-python.x86_64 0:2.1.10-18.el7                                     
-  libunistring.x86_64 0:0.9.3-9.el7                                             
-  lvm2.x86_64 7:2.02.130-5.el7_2.5                                              
-  lvm2-libs.x86_64 7:2.02.130-5.el7_2.5                                         
-  m4.x86_64 0:1.4.16-10.el7                                                     
-  oci-register-machine.x86_64 1:0-1.7.git31bbcd2.el7                            
-  oci-systemd-hook.x86_64 1:0.1.4-4.git41491a3.el7                              
-  perl-Data-Dumper.x86_64 0:2.145-3.el7                                         
-  perl-Test-Harness.noarch 0:3.28-3.el7                                         
-  perl-Thread-Queue.noarch 0:3.02-2.el7                                         
-  policycoreutils.x86_64 0:2.2.5-20.el7                                         
-  policycoreutils-python.x86_64 0:2.2.5-20.el7                                  
-  python-IPy.noarch 0:0.75-6.el7                                                
-  selinux-policy.noarch 0:3.13.1-60.el7_2.7                                     
-  selinux-policy-targeted.noarch 0:3.13.1-60.el7_2.7                            
-  setools-libs.x86_64 0:3.3.7-46.el7                                            
-  yajl.x86_64 0:2.0.4-4.el7                                                     
-
-Complete!
-Loaded plugins: fastestmirror, ovl
-Cleaning repos: base epel extras updates
-Cleaning up everything
-Cleaning up list of fastest mirrors
- ---> e4f7555ab0df
-Removing intermediate container e4abfd34232c
-Step 3 : ENV HOME /root
- ---> Running in 9bee8f4df826
- ---> f4d3c3b5e7a2
-Removing intermediate container 9bee8f4df826
-Step 4 : ADD ./build.sh /tmp/build.sh
- ---> 9f5b3f3b86be
-Removing intermediate container 925a08061729
-Step 5 : CMD /tmp/build.sh
- ---> Running in c029b1672c1e
- ---> 92a58d507fb1
-Removing intermediate container c029b1672c1e
-Successfully built 92a58d507fb1
-Sending build context to Docker daemon 7.168 kB
-Step 1 : FROM openshift/origin-base
- ---> 7870a22fd5cb
-Step 2 : RUN INSTALL_PKGS="haproxy iptables lsof" &&     yum install -y $INSTALL_PKGS &&     rpm -V $INSTALL_PKGS &&     mkdir -p /var/lib/containers/router/{certs,cacerts} &&     mkdir -p /var/lib/haproxy/{conf,run,bin,log} &&     touch /var/lib/haproxy/conf/{{os_http_be,os_edge_http_be,os_tcp_be,os_sni_passthrough,os_reencrypt,os_edge_http_expose,os_edge_http_redirect}.map,haproxy.config} &&     chmod -R 777 /var &&     yum clean all
- ---> Running in 7123bfce040f
-Loaded plugins: fastestmirror, ovl
-Determining fastest mirrors
- * base: centos.webwerks.com
- * epel: epel.mirror.net.in
- * extras: centos.webwerks.com
- * updates: centos.mirror.net.in
-Package iptables-1.4.21-16.el7.x86_64 already installed and latest version
-Package lsof-4.87-4.el7.x86_64 already installed and latest version
-Resolving Dependencies
---> Running transaction check
----> Package haproxy.x86_64 0:1.5.14-3.el7 will be installed
---> Finished Dependency Resolution
-
-Dependencies Resolved
-
-================================================================================
- Package           Arch             Version                Repository      Size
-================================================================================
-Installing:
- haproxy           x86_64           1.5.14-3.el7           base           833 k
-
-Transaction Summary
-================================================================================
-Install  1 Package
-
-Total download size: 833 k
-Installed size: 2.6 M
-Downloading packages:
-Running transaction check
-Running transaction test
-Transaction test succeeded
-Running transaction
-  Installing : haproxy-1.5.14-3.el7.x86_64                                  1/1 
-  Verifying  : haproxy-1.5.14-3.el7.x86_64                                  1/1 
-
-Installed:
-  haproxy.x86_64 0:1.5.14-3.el7                                                 
-
-Complete!
-Loaded plugins: fastestmirror, ovl
-Cleaning repos: base epel extras updates
-Cleaning up everything
-Cleaning up list of fastest mirrors
- ---> 5ebe8274a091
-Removing intermediate container 7123bfce040f
-Step 3 : ADD conf/ /var/lib/haproxy/conf/
- ---> 8af1f8e3fba4
-Removing intermediate container 002c3389bc9c
-Step 4 : ADD conf/ /var/lib/containers/router/certs/
- ---> 40d6f41c7ab1
-Removing intermediate container 8fa0a348c249
-Step 5 : EXPOSE 80
- ---> Running in a9177b1df97c
- ---> b068dc4c1c35
-Removing intermediate container a9177b1df97c
-Successfully built b068dc4c1c35
-Sending build context to Docker daemon 5.632 kB
-Step 1 : FROM openshift/origin-base
- ---> 7870a22fd5cb
-Step 2 : ENV VERSION 1.6 GOARM 5 GOPATH /go GOROOT /usr/local/go OS_VERSION_FILE /go/src/github.com/openshift/origin/os-version-defs TMPDIR /openshifttmp
- ---> Running in 6d1fc65fb0b3
- ---> ae8d5554ea43
-Removing intermediate container 6d1fc65fb0b3
-Step 3 : ENV PATH $PATH:$GOROOT/bin:$GOPATH/bin
- ---> Running in f11d5d70ec40
- ---> 7d7fe7c0cb1a
-Removing intermediate container f11d5d70ec40
-Step 4 : RUN mkdir $TMPDIR &&     INSTALL_PKGS="gcc zip mercurial" &&     yum install -y $INSTALL_PKGS &&     rpm -V $INSTALL_PKGS &&     yum clean all &&     curl https://storage.googleapis.com/golang/go$VERSION.linux-amd64.tar.gz | tar -C /usr/local -xzf - &&     go get golang.org/x/tools/cmd/cover github.com/tools/godep github.com/golang/lint/golint &&     touch /os-build-image
- ---> Running in 8f8d1e41bf80
-Loaded plugins: fastestmirror, ovl
-[91mhttp://centos.mirror.net.in/centos/7.2.1511/os/x86_64/repodata/c6411f1cc8a000ed2b651b49134631d279abba1ec1f78e5dcca79a52d8c1eada-primary.sqlite.bz2: [Errno 14] curl#18 - "transfer closed with 420586 bytes remaining to read"
-Trying other mirror.
-[0mDetermining fastest mirrors
- * base: centos.webwerks.com
- * epel: epel.mirror.net.in
- * extras: centos.webwerks.com
- * updates: centos.mirror.net.in
-Resolving Dependencies
---> Running transaction check
----> Package gcc.x86_64 0:4.8.5-4.el7 will be installed
---> Processing Dependency: libgomp = 4.8.5-4.el7 for package: gcc-4.8.5-4.el7.x86_64
---> Processing Dependency: cpp = 4.8.5-4.el7 for package: gcc-4.8.5-4.el7.x86_64
---> Processing Dependency: glibc-devel >= 2.2.90-12 for package: gcc-4.8.5-4.el7.x86_64
---> Processing Dependency: libmpfr.so.4()(64bit) for package: gcc-4.8.5-4.el7.x86_64
---> Processing Dependency: libmpc.so.3()(64bit) for package: gcc-4.8.5-4.el7.x86_64
---> Processing Dependency: libgomp.so.1()(64bit) for package: gcc-4.8.5-4.el7.x86_64
----> Package mercurial.x86_64 0:2.6.2-6.el7_2 will be installed
----> Package zip.x86_64 0:3.0-10.el7 will be installed
---> Running transaction check
----> Package cpp.x86_64 0:4.8.5-4.el7 will be installed
----> Package glibc-devel.x86_64 0:2.17-106.el7_2.8 will be installed
---> Processing Dependency: glibc-headers = 2.17-106.el7_2.8 for package: glibc-devel-2.17-106.el7_2.8.x86_64
---> Processing Dependency: glibc = 2.17-106.el7_2.8 for package: glibc-devel-2.17-106.el7_2.8.x86_64
---> Processing Dependency: glibc-headers for package: glibc-devel-2.17-106.el7_2.8.x86_64
----> Package libgomp.x86_64 0:4.8.5-4.el7 will be installed
----> Package libmpc.x86_64 0:1.0.1-3.el7 will be installed
----> Package mpfr.x86_64 0:3.1.1-4.el7 will be installed
---> Running transaction check
----> Package glibc.x86_64 0:2.17-106.el7_2.6 will be updated
---> Processing Dependency: glibc = 2.17-106.el7_2.6 for package: glibc-common-2.17-106.el7_2.6.x86_64
----> Package glibc.x86_64 0:2.17-106.el7_2.8 will be an update
----> Package glibc-headers.x86_64 0:2.17-106.el7_2.8 will be installed
---> Processing Dependency: kernel-headers >= 2.2.1 for package: glibc-headers-2.17-106.el7_2.8.x86_64
---> Processing Dependency: kernel-headers for package: glibc-headers-2.17-106.el7_2.8.x86_64
---> Running transaction check
----> Package glibc-common.x86_64 0:2.17-106.el7_2.6 will be updated
----> Package glibc-common.x86_64 0:2.17-106.el7_2.8 will be an update
----> Package kernel-headers.x86_64 0:3.10.0-327.28.3.el7 will be installed
---> Finished Dependency Resolution
-
-Dependencies Resolved
-
-================================================================================
- Package             Arch        Version                     Repository    Size
-================================================================================
-Installing:
- gcc                 x86_64      4.8.5-4.el7                 base          16 M
- mercurial           x86_64      2.6.2-6.el7_2               updates      2.6 M
- zip                 x86_64      3.0-10.el7                  base         260 k
-Installing for dependencies:
- cpp                 x86_64      4.8.5-4.el7                 base         5.9 M
- glibc-devel         x86_64      2.17-106.el7_2.8            updates      1.0 M
- glibc-headers       x86_64      2.17-106.el7_2.8            updates      663 k
- kernel-headers      x86_64      3.10.0-327.28.3.el7         updates      3.2 M
- libgomp             x86_64      4.8.5-4.el7                 base         130 k
- libmpc              x86_64      1.0.1-3.el7                 base          51 k
- mpfr                x86_64      3.1.1-4.el7                 base         203 k
-Updating for dependencies:
- glibc               x86_64      2.17-106.el7_2.8            updates      3.6 M
- glibc-common        x86_64      2.17-106.el7_2.8            updates       11 M
-
-Transaction Summary
-================================================================================
-Install  3 Packages (+7 Dependent packages)
-Upgrade             ( 2 Dependent packages)
-
-Total download size: 45 M
-Downloading packages:
-Delta RPMs disabled because /usr/bin/applydeltarpm not installed.
---------------------------------------------------------------------------------
-Total                                              666 kB/s |  45 MB  01:09     
-Running transaction check
-Running transaction test
-Transaction test succeeded
-Running transaction
-  Updating   : glibc-2.17-106.el7_2.8.x86_64                               1/14 
-  Updating   : glibc-common-2.17-106.el7_2.8.x86_64                        2/14 
-  Installing : mpfr-3.1.1-4.el7.x86_64                                     3/14 
-  Installing : libmpc-1.0.1-3.el7.x86_64                                   4/14 
-  Installing : cpp-4.8.5-4.el7.x86_64                                      5/14 
-  Installing : libgomp-4.8.5-4.el7.x86_64                                  6/14 
-  Installing : kernel-headers-3.10.0-327.28.3.el7.x86_64                   7/14 
-  Installing : glibc-headers-2.17-106.el7_2.8.x86_64                       8/14 
-  Installing : glibc-devel-2.17-106.el7_2.8.x86_64                         9/14 
-  Installing : gcc-4.8.5-4.el7.x86_64                                     10/14 
-  Installing : zip-3.0-10.el7.x86_64                                      11/14 
-  Installing : mercurial-2.6.2-6.el7_2.x86_64                             12/14 
-  Cleanup    : glibc-2.17-106.el7_2.6.x86_64                              13/14 
-  Cleanup    : glibc-common-2.17-106.el7_2.6.x86_64                       14/14 
-  Verifying  : cpp-4.8.5-4.el7.x86_64                                      1/14 
-  Verifying  : gcc-4.8.5-4.el7.x86_64                                      2/14 
-  Verifying  : zip-3.0-10.el7.x86_64                                       3/14 
-  Verifying  : libgomp-4.8.5-4.el7.x86_64                                  4/14 
-  Verifying  : glibc-devel-2.17-106.el7_2.8.x86_64                         5/14 
-  Verifying  : kernel-headers-3.10.0-327.28.3.el7.x86_64                   6/14 
-  Verifying  : mpfr-3.1.1-4.el7.x86_64                                     7/14 
-  Verifying  : mercurial-2.6.2-6.el7_2.x86_64                              8/14 
-  Verifying  : glibc-headers-2.17-106.el7_2.8.x86_64                       9/14 
-  Verifying  : libmpc-1.0.1-3.el7.x86_64                                  10/14 
-  Verifying  : glibc-common-2.17-106.el7_2.8.x86_64                       11/14 
-  Verifying  : glibc-2.17-106.el7_2.8.x86_64                              12/14 
-  Verifying  : glibc-common-2.17-106.el7_2.6.x86_64                       13/14 
-  Verifying  : glibc-2.17-106.el7_2.6.x86_64                              14/14 
-
-Installed:
-  gcc.x86_64 0:4.8.5-4.el7           mercurial.x86_64 0:2.6.2-6.el7_2          
-  zip.x86_64 0:3.0-10.el7           
-
-Dependency Installed:
-  cpp.x86_64 0:4.8.5-4.el7                                                      
-  glibc-devel.x86_64 0:2.17-106.el7_2.8                                         
-  glibc-headers.x86_64 0:2.17-106.el7_2.8                                       
-  kernel-headers.x86_64 0:3.10.0-327.28.3.el7                                   
-  libgomp.x86_64 0:4.8.5-4.el7                                                  
-  libmpc.x86_64 0:1.0.1-3.el7                                                   
-  mpfr.x86_64 0:3.1.1-4.el7                                                     
-
-Dependency Updated:
-  glibc.x86_64 0:2.17-106.el7_2.8     glibc-common.x86_64 0:2.17-106.el7_2.8    
-
-Complete!
-Loaded plugins: fastestmirror, ovl
-Cleaning repos: base epel extras updates
-Cleaning up everything
-Cleaning up list of fastest mirrors
-[91m  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                             [0m[91m    Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0[0m[91m  0 80.8M    0   508    0     0    339      0 69:29:05  0:00:01 69:29:04   339[0m[91m  0 80.8M    0  105k    0     0  56847      0  0:24:51  0:00:01  0:24:50 56823[0m[91m  0 80.8M    0  355k    0     0   121k      0  0:11:19  0:00:02  0:11:17  121k[0m[91m  0 80.8M    0  527k    0     0   134k      0  0:10:13  0:00:03  0:10:10  134k[0m[91m  0 80.8M    0  638k    0     0   128k      0  0:10:41  0:00:04  0:10:37  128k[0m[91m  0 80.8M    0  741k    0     0   125k      0  0:10:59  0:00:05  0:10:54  167k[0m[91m  1 80.8M    1  868k    0     0   125k      0  0:10:59  0:00:06  0:10:53  152k[0m[91m  1 80.8M    1  978k    0     0   123k      0  0:11:09  0:00:07  0:11:02  124k[0m[91m  1 80.8M    1 1149k    0     0   127k      0  0:10:47  0:00:08  0:10:39  122k[0m[91m  1 80.8M    1 1280k    0     0   129k      0  0:10:41  0:00:09  0:10:32  129k[0m[91m  1 80.8M    1 1463k    0     0   134k      0  0:10:17  0:00:10  0:10:07  144k[0m[91m  1 80.8M    1 1611k    0     0   135k      0  0:10:11  0:00:11  0:10:00  148k[0m[91m  2 80.8M    2 1720k    0     0   132k      0  0:10:25  0:00:12  0:10:13  146k[0m[91m  2 80.8M    2 1813k    0     0   130k      0  0:10:35  0:00:13  0:10:22  134k[0m[91m  2 80.8M    2 1954k    0     0   130k      0  0:10:32  0:00:14  0:10:18  134k[0m[91m  2 80.8M    2 2078k    0     0   130k      0  0:10:33  0:00:15  0:10:18  122k[0m[91m  2 80.8M    2 2203k    0     0   130k      0  0:10:36  0:00:16  0:10:20  117k[0m[91m  2 80.8M    2 2314k    0     0   129k      0  0:10:41  0:00:17  0:10:24  120k[0m[91m  2 80.8M    2 2381k    0     0   125k      0  0:10:57  0:00:18  0:10:39  113k[0m[91m  2 80.8M    2 2449k    0     0   122k      0  0:11:13  0:00:19  0:10:54   98k[0m[91m  3 80.8M    3 2550k    0     0   121k      0  0:11:19  0:00:20  0:10:59 96457[0m[91m  3 80.8M    3 2696k    0     0   123k      0  0:11:12  0:00:21  0:10:51   98k[0m[91m  3 80.8M    3 2833k    0     0   123k      0  0:11:10  0:00:22  0:10:48  103k[0m[91m  3 80.8M    3 2961k    0     0   123k      0  0:11:08  0:00:23  0:10:45 [0m[91m 115k[0m[91m  3 80.8M    3 3149k    0     0   126k      0  0:10:55  0:00:24  0:10:31  140k[0m[91m  4 80.8M    4 3314k    0     0   127k      0  0:10:47  0:00:25  0:10:22  152k[0m[91m  4 80.8M    4 3494k    0     0   129k      0  0:10:37  0:00:26  0:10:11  159k[0m[91m  4 80.8M    4 3653k    0     0   130k      0  0:10:33  0:00:27  0:10:06  163k[0m[91m  4 80.8M    4 3801k    0     0   131k      0  0:10:30  0:00:28  0:10:02  167k[0m[91m  4 80.8M    4 3950k    0     0   132k      0  0:10:27  0:00:29  0:09:58  160k[0m[91m  4 80.8M    4 4110k    0     0   132k      0  0:10:22  0:00:30  0:09:52  159k[0m[91m  5 80.8M    5 4286k    0     0   134k      0  0:10:16  0:00:31  0:09:45  158k[0m[91m  5 80.8M    5 4414k    0     0   133k      0  0:10:18  0:00:32  0:09:46  152k[0m[91m  5 80.8M    5 4526k    0     0   133k      0  0:10:20  0:00:33  0:09:47  145k[0m[91m  5 80.8M    5 4622k    0     0   132k      0  0:10:25  0:00:34  0:09:51  133k[0m[91m  5 80.8M    5 4689k    0     0   130k      0  0:10:34  0:00:35  0:09:59  115k[0m[91m  5 80.8M    5 4789k    0     0   129k      0  0:10:38  0:00:36  0:10:02  100k[0m[91m  5 80.8M    5 4930k    0     0   130k      0  0:10:36  0:00:37  0:09:59  104k[0m[91m  6 80.8M    6 5054k    0     0   129k      0  0:10:37  0:00:38  0:09:59  105k[0m[91m  6 80.8M    6 5252k    0     0   131k      0  0:10:29  0:00:39  0:09:50  126k[0m[91m  6 80.8M    6 5429k    0     0   132k      0  0:10:24  0:00:40  0:09:44  146k[0m[91m  6 80.8M    6 5580k    0     0   133k      0  0:10:22  0:00:41  0:09:41  157k[0m[91m  6 80.8M    6 5677k    0     0   132k      0  0:10:26  0:00:42  0:09:44  149k[0m[91m  7 80.8M    7 5810k    0     0   132k      0  0:10:26  0:00:43  0:09:43  149k[0m[91m  7 80.8M    7 5990k    0     0   133k      0  0:10:20  0:00:44  0:09:36  147k[0m[91m  7 80.8M    7 6151k    0     0   133k      0  0:10:18  0:00:45  0:09:33  145k[0m[91m  7 80.8M    7 6285k    0     0   134k      0  0:10:17  0:00:46  0:09:31  141k[0m[91m  7 80.8M    7 6445k    0     0   134k      0  0:10:15  [0m[91m0:00:47  0:09:28  153k[0m[91m  8 80.8M    8 6695k    0     0   136k      0  0:10:04  0:00:48  0:09:16  179k[0m[91m  8 80.8M    8 6946k    0     0   138k      0  0:09:56  0:00:50  0:09:06  186k[0m[91m  8 80.8M    8 7138k    0     0   140k      0  0:09:50  0:00:50  0:09:00  197k[0m[91m  8 80.8M    8 7314k    0     0   140k      0  0:09:47  0:00:51  0:08:56  205k[0m[91m  8 80.8M    8 7442k    0     0   140k      0  0:09:48  0:00[0m[91m:52  0:08:56  199k[0m[91m  9 80.8M    9 7522k    0     0   139k      0  0:09:53  0:00:53  0:09:00  165k[0m[91m  9 80.8M    9 7696k    0     0   140k      0  0:09:50  0:00:54  0:08:56  154k[0m[91m  9 80.8M    9 7864k    0     0   140k      0  0:09:48  0:00:55  0:08:53  145k[0m[91m  9 80.8M    9 8040k    0     0   141k      0  0:09:46  0:00:56  0:08:50  145k[0m[91m  9 80.8M    9 8218k    0     0   141k      0  0:09:43  0:00:57  0:08:46  155k[0m[91m 10 80.8M   10 8368k    0     0   141k      0  0:09:43  0:00:58  0:08:45  166k[0m[91m 10 80.8M   10 8507k    0     0   141k      0  0:09:43  0:00:59  0:08:44  161k[0m[91m 10 80.8M   10 8628k    0     0   141k      0  0:09:44  0:01:00  0:08:44  152k[0m[91m 10 80.8M   10 8757k    0     0   141k      0  0:09:45  0:01:01  0:08:44  143k[0m[91m 10 80.8M   10 8901k    0     0   141k      0  0:09:45  0:01:02  0:08:43  136k[0m[91m 10 80.8M   10 9090k    0     0   142k      0  0:09:42  0:01:03  0:08:39  146k[0m[91m 11 80.8M   11 9375k    0     0   144k      0  0:09:33  0:01:04  0:08:29  174k[0m[91m 11 80.8M   11 9755k    0     0   148k      0  0:09:19  0:01:05  0:08:14  226k[0m[91m 12 80.8M   12  9.8M    0     0   151k      0  0:09:07  0:01:06  0:08:01  272k[0m[91m 12 80.8M   12 10.0M    0     0   151k      0  0:09:06  0:01:07  0:07:59  278k[0m[91m 12 80.8M   12 10.1M    0     0   151k      0  0:09:07  0:01:08  0:07:59  267k[0m[91m 12 80.8M   12 10.3M    0     0   152k      0  0:09:04  0:01:09  0:07:55  251k[0m[91m 13 80.8M   13 10.6M    0     0   153k      0  0:08:58  0:01:10  0:07:48  229k[0m[91m 13 80.8M   13 10.8M    0     0   154k      0  0:08:55  0:01:11  0:07:44  200k[0m[91m 13 80.8M   13 11.0M    0     0   154k      0  0:08:54  0:01:12  0:07:42  198k[0m[91m 13 80.8M   13 11.2M    0     0   155k      0  0:08:53  0:01:13  0:07:40  210k[0m[91m 14 80.8M   14 11.3M    0     0   155k      0  0:08:52  0:01:14  0:07:38  201k[0m[91m 14 80.8M   14 11.6M    0     0   156k      0  0:08:48  0:01:15  0:07:33  198k[0m[91m 14 80.8M   14 11.9M    0     0   158k      0  0:08:41  0:01:16  0:07:25  219k[0m[91m 14 80.8M   14 12.0M    0     0   158k      0  0:08:43  0:01:17  0:07:26  205k[0m[91m 14 80.8M   14 12.1M    0     0   157k      0  0:08:47  0:01:18  0:07:29  182k[0m[91m 15 80.8M   15 12.2M    0     0   156k      0  0:08:48  0:01:19  0:07:29  175k[0m[91m 15 80.8M   15 12.3M    0     0   156k      0  0:08:48  0:01:21  0:07:27  156k[0m[91m 15 80.8M   15 12.5M    0     0   156k      0  0:08:48  0:01:21  0:07:27  121k[0m[91m 15 80.8M   15 12.6M    0     0   156k      0  0:08:49  0:01:22  0:07:27  131k[0m[91m 15 80.8M   15 12.8M    0     0   156k      0  0:08:48  0:01:23  0:07:25  153k[0m[91m 16 80.8M   16 13.0M    0     0   157k      0  0:08:46  0:01:24  0:07:22  165k[0m[91m 16 80.8M   16 13.2M    0     0   157k      0  0:08:45  0:01:25  0:07:20  171k[0m[91m 16 80.8M   16 13.3M    0     0   157k      0  0:08:46  0:01:26  0:07:20  166k[0m[91m 16 80.8M   16 13.4M    0     0   156k      0  0:08:49  0:01:27  0:07:22  154k[0m[91m 16 80.8M   16 13.4M    0     0   155k      0  0:08:52  0:01:28  0:07:24  [0m[91m132k[0m[91m 16 80.8M   16 13.6M    0     0   155k      0  0:0[0m[91m8:54  0:01:30  0:07:24  119k[0m[91m 17 80.8M   17 13.7M    0     0   155k      0  0:08:53  0:01:30  0:07:23  116k[0m[91m 17 80.8M   17 13.9M    0     0   155k      0  0:08:51  0:01:31  0:07:20  131k[0m[91m 17 80.8M   17 14.1M    0     0   155k      0  0:08:51  0:01:32  0:07:19  148k[0m[91m 17 80.8M   17 14.2M    0     0   155k      0  0:08:53  0:01:33  0:07:20  151k[0m[91m 17 80.8M   17 14.3M    0     0   154k      0  0:08:55  0:01:34  0:07:21  148k[0m[91m 17 80.8M   17 14.4M    0     0   154k      0  0:08:56  0:01:35  0:07:21  137k[0m[91m 18 80.8M   18 14.6M    0     0   154k      0  0:08:54  0:01:36  0:07:18  137k[0m[91m 18 80.8M   18 14.8M    0     0   154k      0  0:08:54  0:01:37  0:07:17  137k[0m[91m 18 80.8M   18 14.9M    0     0   155k      0  0:08:54  0:01:38  0:07:16  151k[0m[91m 18 80.8M   18 15.1M    0     0   155k      0  0:08:53  0:01:40  0:07:13  161k[0m[91m 18 80.8M   18 15.3M    0     0   155k      0  0:08:51  0:01:40  0:07:11  181k[0m[91m 19 80.8M   19 15.5M    0     0   156k      0  0:08:49  0:01:41  0:07:08  186k[0m[91m 19 80.8M   19 15.7M    0     0   156k      0  0:08:48  0:01:42  0:07:06  187k[0m[91m 19 80.8M   19 15.8M    0     0   156k      0  0:08:48  0:01:43  0:07:05  187k[0m[91m 19 80.8M   19 16.1M    0     0   157k      0  0:08:46  0:01:44  0:07:02  205k[0m[91m 20 80.8M   20 16.3M    0     0   158k      0  0:08:42  0:01:45  0:06:57  214k[0m[91m 20 80.8M   20 16.6M    0     0   159k      0  0:08:40  0:01:46  0:06:54  216k[0m[91m 20 80.8M   20 16.8M    0     0   160k      0  0:08:37  0:01:47  0:06:50  234k[0m[91m 21 80.8M   21 17.0M    0     0   160k      0  0:08:36  0:01:48  0:06:48  236k[0m[91m 21 80.8M   21 17.2M    0     0   160k      0  0:08:34  0:01:49  0:06:45  234k[0m[91m 21 80.8M   21 17.5M    0     0   161k      0  0:08:32  0:01:50  0:06:42  227k[0m[91m 21 80.8M   21 17.7M    0     0   162k      0  0:08:28  0:01:51  0:06:37  236k[0m[91m 22 80.8M   22 18.0M    0     0   163k      0  0:08:25  0:01:52  0:06:33  240k[0m[91m 22 80.8M   22 18.3M    0     0   164k      0  0:08:22  0:01:53  0:06:29  265k[0m[91m 22 80.8M   22 18.5M    0     0   165k      0  0:08:21  0:01:54  0:06:27  258k[0m[91m 23 80.8M   23 18.7M    0     0   165k      0  0:08:19  0:01:55  0:06:24  256k[0m[91m 23 80.8M   23 18.9M    0     0   166k      0  0:08:18  0:01:56  0:06:22  241k[0m[91m 23 80.8M   23 19.1M    0     0   166k      0  0:08:18  0:01:57  0:06:21  220k[0m[91m 23 80.8M   23 19.2M    0     0   165k      0  0:08:19  0:01:58  0:06:21  188k[0m[91m 24 80.8M   24 19.4M    0     0   166k      0  0:08:17  0:01:59  0:0[0m[91m6:18  195k[0m[91m 24 80.8M   24 19.7M    0     0   167k      0  0:08:14  0:02:00  0:06:14  211k[0m[91m 24 80.8M   24 20.1M    0     0   169k      0  0:08:09  0:02:01  0:06:08  238k[0m[91m[0m[91m [0m[91m25 80.8M   25 20.4M    0     0   170k      0  0:[0m[91m08:07  0:02:02  0:06:05  262k[0m[91m 25 80.8M   25 20.5M    0     0   169k      0  0:08:07  0:02:03  0:06:04  263k[0m[91m 25 80.8M   25 20.7M    0     0   169k      0  0:08:07  0:02:04  0:06:03  251k[0m[91m 25 80.8M   25 20.8M    0     0   169k      0  0:08:08  0:02:05  0:06:03  220k[0m[91m 26 80.8M   26 21.0M    0     0   169k      0  0:08:07  0:02:06  0:06:01  192k[0m[91m 26 80.8M   26 21.3M    0     0   171k      0  0:08:04  0:02:07  0:05:57  195k[0m[91m 26 80.8M   26 21.7M    0     0   172k      0  0:07:59  0:02:08  0:05:51  242k[0m[91m 27 80.8M   27 22.0M    0     0   174k      0  0:07:55  0:02:09  0:05:46  282k[0m[91m 27 80.8M   27 22.4M    0     0   175k      0  0:07:51  0:02:10  0:05:41  329k[0m[91m 28 80.8M   28 22.8M    0     0   177k      0  0:07:47  0:02:11  0:05:36  360k[0m[91m 28 80.8M   28 22.9M    0     0   176k      0  0:07:48  0:02:12  0:05:36  328k[0m[91m 28 80.8M   28 23.1M    0     0   177k      0  0:07:47  0:02:13  0:05:34  298k[0m[91m 29 80.8M   29 23.4M    0     0   178k      0  0:07:45  0:02:14  0:05:31  278k[0m[91m 29 80.8M   29 23.6M    0     0   178k      0  0:07:44  0:02:15  0:05:29  246k[0m[91m 29 80.8M   29 23.8M    0     0   178k      0  0:07:44  0:02:16  0:05:28  202k[0m[91m 29 80.8M   29 23.9M    0     0   177k      0  0:07:45  0:02:18  0:05:27  198k[0m[91m 29 80.8M   29 24.0M    0     0   177k      0  0:07:46  0:02:18  0:05:28  181k[0m[91m 29 80.8M   29 24.2M    0     0   177k      0  0:07:46  0:02:19  0:05:27  158k[0m[91m 30 80.8M   30 24.3M    0     0   176k      0  0:07:48  0:02:20  0:05:28  137k[0m[91m 30 80.8M   30 24.4M    0     0   176k      0  0:07:49  0:02:21  0:05:28  134k[0m[91m 30 80.8M   30 24.6M    0     0   176k      0  0:07:49  0:02:22  0:05:27  139k[0m[91m 30 80.8M   30 24.7M    0     0   176k      0  0:07:50  0:02:23  0:05:27  136k[0m[91m 30 80.8M   30 24.8M    0     0   175k      0  0:07:50  0:02:24  0:05:26  134k[0m[91m 30 80.8M   30 25.0M    0     0   175k      0  0:07:51  0:02:25  0:05:26  137k[0m[91m 31 80.8M   31 25.1M    0     0   174k      0  0:07:53  0:02:26  0:05:27  130k[0m[91m 31 80.8M   31 25.2M    0     0   174k      0  0:07:54  0:02:27  0:05:27  119k[0m[91m 31 80.8M   31 25.3M    0     0   174k      0  0:07:55  0:02:28  0:05:27  118k[0m[91m 31 80.8M   31 25.4M    0     0   173k      0  0:07:57  0:02:29  0:05:28  105k[0m[91m 31 80.8M   31 25.4M    0     0   173k      0  0:07:58  0:02:30  0:05:28   98k[0m[91m 31 80.8M   31 25.6M    0     0   172k      0  0:07:59  0:02:31  0:05:28  107k[0m[91m 31 80.8M   31 25.7M    0     0   172k      0  0:08:00  0:02:32  0:05:28  113k[0m[91m 32 80.8M   32 25.9M    0     0   172k      0  0:08:00  0:02:33  0:05:27  122k[0m[91m 32 80.8M   32 26.1M    0     0   173k      0  0:07:58  0:02:34  0:05:24  157k[0m[91m 32 80.8M   32 26.3M    0     0   173k      0  0:07:58  0:02:35  0[0m[91m:05:23  175k[0m[91m 32 80.8M   32 26.5M    0     0   173k      0  0:07:58  0:02:36  0:05:22  181k[0m[91m 33 80.8M   33 26.7M    0     0   173k      0  0:07:58  0:02:37  0:05:21  193k[0m[91m 33 80.8M   33 26.9M    0     0   173k      0  0:07:57  0:02:38  0:05:19  207k[0m[91m 33 80.8M   33 27.2M    0     0   174k      0  0:07:54  0:02:39  0:05:15  223k[0m[91m 34 80.8M   34 27.5M    0     0   175k      0  0:07:51  0:02:40  0:05:11  254k[0m[91m 34 80.8M   34 27.8M    0     0   175k      0  0:07:50  0:02:41  0:05:09  263k[0m[91m 34 80.8M   34 27.9M    0     0   175k      0  0:07:50  0:02:42  0:05:08  265k[0m[91m 34 80.8M   34 28.2M    0     0   176k      0  0:07:49  0:02:43  0:05:06  265k[0m[91m 35 80.8M   35 28.5M    0     0   177k      0  0:07:47  0:02:44  0:05:03  256k[0m[91m 35 80.8M   35 28.7M    0     0   177k      0  0:07:46  0:02:46  0:05:00  241k[0m[91m 35 80.8M   35 28.9M    0     0   177k      0  0:07:46  0:02:46  0:05:00  233k[0m[91m 36 80.8M   36 29.2M    0     0   178k      0  0:07:44  0:02:47  0:04:57  246k[0m[91m 36 80.8M   36 29.5M    0     0   179k      0  0:07:42  0:02:48  0:04:54  269k[0m[91m 36 80.8M   36 29.8M    0     0   179k      0  0:07:40  0:02:49  0:04:51  275k[0m[91m 37 80.8M   37 30.0M    0     0   179k      0  0:07:40  0:02:50  0:04:50  254k[0m[91m 37 80.8M   37 30.2M    0     0   179k      0  0:07:40  0:02:51  0:04:49  255k[0m[91m 37 80.8M   37 30.4M    0     0   180k      0  0:07:39  0:02:52  0:04:47  246k[0m[91m 37 80.8M   37 30.5M    0     0   180k      0  0:07:39  0:02:53  0:04:46  214k[0m[91m 38 80.8M   38 30.8M    0     0   180k      0  0:07:39  0:02:54  0:04:45  195k[0m[91m 38 80.8M   38 31.0M    0     0   180k      0  0:07:38  0:02:55  0:04:43  208k[0m[91m 38 80.8M   38 31.2M    0     0   180k      0  0:07:38  0:02:56  0:04:42  204k[0m[91m 38 80.8M   38 31.4M    0     0   180k      0  0:07:37  0:02:57  0:04:40  208k[0m[91m 39 80.8M   39 31.6M    0     0   181k      0  0:07:36  0:02:58  0:04:38  223k[0m[91m 39 80.8M   39 31.8M    0     0   181k      0  0:07:36  0:02:59  [0m[91m0:04:37  220k[0m[91m 39 80.8M   39 32.1M    0     0   181k      0  0:07:35  0:03:00  0:04:35  223k[0m[91m 39 80.8M   39 32.2M    0     0   181k      0  0:07:35  0:03:01  0:04:34  220k[0m[91m 40 80.8M   40 32.4M    0     0   181k      0  0:07:35  0:03:02  0:04:33  210k[0m[91m 40 80.8M   40 32.7M    0     0   182k      0  0:07:34  0:03:03  0:04:31  204k[0m[91m 40 80.8M   40 32.9M    0     0   182k      0  0:07:34  0:03:04  0:04:30  211k[0m[91m 40 80.8M   40 33.1M    0     0   182k      0  0:07:34  0:03:05  0:04:29  201k[0m[91m 41 80.8M   41 33.2M    0 [0m[91m    0   182k      0  0:07:34  0:03:06  0:04:28  202k[0m[91m 41 80.8M   41 33.4M    0     0   182k      0  0:07:33  0:03:07  0:04:26  211k[0m[91m 41 80.8M   41 33.7M    0     0   182k      0  0:07:33  0:03:08  0:04:25  207k[0m[91m 42 80.8M   42 33.9M    0     0   183k      0  0:07:31  0:03:09  0:04:22  220k[0m[91m 42 80.8M   42 34.3M    0     0   184k      0  0:07:29  0:03:10  0:04:19  249k[0m[91m 42 80.8M   42 34.5M    0     0   184k      0  0:07:29  0:03:11  0:04:18  265k[0m[91m 42 80.8M   42 34.7M    0     0   184k      0  0:07:29  0:03:12  0:04:17  255k[0m[91m 43 80.8M   43 34.9M    0     0   184k      0  0:07:28  0:03:13  0:04:15  252k[0m[91m 43 80.8M   43 35.1M    0     0   184k      0  0:07:28  0:03:14  0:04:14  227k[0m[91m 43 80.8M   43 35.2M    0     0   184k      0  0:07:29  0:03:15  0:04:14  184k[0m[91m 43 80.8M   43 35.4M    0     0   184k      0  0:07:29  0:03:16  0:04:13  176k[0m[91m 43 80.8M   43 35.5M    0     0   183k      0  0:07:30  0:03:17  0:04:13  159k[0m[91m 44 80.8M   44 35.6M    0     0   183k      0  0:07:30  0:03:18  0:04:12  150k[0m[91m 44 80.8M   44 35.8M    0     0   183k      0  0:07:30  0:03:19  0:04:11  153k[0m[91m 44 80.8M   44 36.0M    0     0   183k      0  0:07:30  0:03:20  0:04:10  170k[0m[91m 44 80.8M   44 36.2M    0[0m[91m     0   183k      0  0:07:31  0:03:21  0:04:10  160k[0m[91m 44 80.8M   44 36.3M    0     0   183k      0  0:07:31  0:03:22  0:04:09  175k[0m[91m 45 80.8M   45 36.5M    0     0   183k      0  0:07:31  0:03:23  0:04:08  182k[0m[91m 45 80.8M   45 36.8M    0     0   184k      0  0:07:29  0:03:24  0:04:05  200k[0m[91m 46 80.8M   46 37.2M    0     0   185k      0  0:07:27  0:03:25  0:04:02  234k[0m[91m 46 80.8M   46 37.6M    0     0   186k      0  0:07:24  0:03:26  0:03:58  296k[0m[91m 47 80.8M   47 38.0M    0     0   187k      0  0:07:22  0:03:27  0:03:55  339k[0m[91m 47 80.8M   47 38.2M    0     0   187k      0  0:07:22  0:03:28  0:03:54  337k[0m[91m 47 80.8M   47 38.4M    0     0   187k      0  0:07:21  0:03:29  0:03:52  329k[0m[91m 47 80.8M   47 38.6M    0     0   187k      0  0:07:21  0:03:30  0:03:51  297k[0m[91m 48 80.8M   48 38.9M    0     0   188k      0  0:07:19  0:03:31  0:03:48  268k[0m[91m 48 80.8M   48 39.1M    0     0   188k      0  0:07:20  0:03:32  0:03:48  226k[0m[91m 48 80.8M   48 39.2M    0     0   188k      0  0:07:20  0:03:33  0:03:47  217k[0m[91m 48 80.8M   48 39.3M    0     0   187k      0  0:07:21  0:03:34  0:03:47  181k[0m[91m 48 80.8M   48 39.4M    0     0   187k      0  0:07:22  0:03:35  0:03:47  162k[0m[91m 48 80.8M   48 39.5M    0     0   186k      0  0:07:23  0:03:36  0:03:47  129k[0m[91m 49 80.8M   49 39.7M    0     0   187k      0  0:07:22  0:03:37  0:03:45  136k[0m[91m 49 80.8M   49 40.0M    0     0   187k      0  0:07:21  0:03:38  0:03:43  160k[0m[91m 49 80.8M   49 40.2M    0     0   187k      0  0:07:21  0:03:39  0:03:42  197k[0m[91m 50 80.8M   50 40.4M    0     0   187k      0  0:07:21  0:03:40  0:03:41  204k[0m[91m 50 80.8M   50 40.5M    0     0   187k      0  0:07:22  0:03:41  0:03:41  197k[0m[91m 50 80.8M   50 40.6M    0     0   186k      0  0:07:23  0:03:42  0:03:41  171k[0m[91m 50 80.8M   50 40.7M    0     0   186k      0  0:07:24  0:03:43  0:03:41  139k[0m[91m 50 80.8M   50 40.9M    0     0   186k      0  0:07:24  0:03:44  0:03:40  125k[0m[91m 50 80.8M   50 41.0M    0     0   186k      0  0:07:24  0:03:45  0:03:39  125k[0m[91m 50 80.8M   50 41.1M    0     0   185k      0  0:07:25  0:03:46  0:03:39  129k[0m[91m 51 80.8M   51 41.3M    0     0   185k      0  0:07:26  0:03:47  0:03:39  137k[0m[91m 51 80.8M   51 41.4M    0     0   185k      0  0:07:26  0:03:48  0:03:38  153k[0m[91m 51 80.8M   51 41.6M    0     0   185k      0  0:07:25  0:03:49  0:03:36  159k[0m[91m 51 80.8M   51 41.9M    0     0   186k      0  0:07:25  0:03:50  0:03:35  179k[0m[91m 52 80.8M   52 42.1M    0     0   186k      0  0:07:24  0:03:51  0:03:33  203k[0m[91m 52 80.8M   52 42.3M    0     0   185k      0  0:07:25  0:03:52  0:03:33  203k[0m[91m 52 80.8M   52 42.4M    0     0   185k      0  0:07:25  0:03:53  0:03:32  193k[0m[91m 52 80.8M   52 42.6M    0     0   185k      0  0:07:25  0:03:54  0:03:31  194k[0m[91m 53 80.8M   53 42.9M    0     0   186k      0  0:07:24  0:03:55  0:03:29  203k[0m[91m 53 80.8M   53 43.2M    0     0   186k      0  0:07:22  0:03:56  0:03:26  220k[0m[91m 53 80.8M   53 43.5M    0     0   187k      0  0:07:21  0:03:57  0:03:24  254k[0m[91m 54 80.8M   54 43.7M    0     0   187k      0  0:07:21  0:03:58  0:03:23  275k[0m[91m 54 80.8M   54 43.9M    0     0   187k      0  0:07:21  0:03:59  0:03:22  269k[0m[91m 54 80.8M   54 44.1M    0     0   187k      0  0:07:21  0:04:00  0:03:21  241k[0m[91m 54 80.8M   54 44.2M    0     0   187k      0  0:07:22  0:04:01  0:03:21  199k[0m[91m 54 80.8M   54 44.3M    0     0   186k      0  0:07:23  0:04:02  0:03:21  161k[0m[91m 54 80.8M   54 44.4M    0     0   186k      0  0:07:23  0:04:03  0:03:20  134k[0m[91m 55 80.8M   55 44.5M    0     0   186k      0  0:07:24  0:04:04  0:03:20  128k[0m[91m 55 80.8M   55 44.7M    0     0   186k      0  0:07:24  0:04:05  0:03:19  125k[0m[91m 55 80.8M   55 44.9M    0     0   186k      0  0:07:24  0:04:06  0:03:18  137k[0m[91m 55 80.8M   55 45.0M    0     0   186k      0  0:07:25  0:04:07  0:03:18  146k[0m[91m 55 80.8M   55 45.1M    0     0   185k      0  0:07:25  0:04:08  0:03:17  145k[0m[91m 56 80.8M   56 45.2M    0     0   185k      0  0:07:26  0:04:09  0:03:17  145k[0m[91m 56 80.8M   56 45.4M    0     0   185k      0[0m[91m  0:07:26  0:04:10  0:03:16  140k[0m[91m 56 80.8M   56 45.5M    0     0   185k      0  0:07:26  0:04:11  0:03:15  138k[0m[91m 56 80.8M   56 45.7M    0     0   185k      0  0:07:26  0:04:12  0:03:14  147k[0m[91m 56 80.8M   56 45.9M    0     0   185k      0  0:07:27  0:04:13  0:03:14  160k[0m[91m 56 80.8M   56 46.0M    0     0   185k      0  0:07:27  0:04:14  0:03:13  159k[0m[91m 57 80.8M   57 46.2M    0     0   184k      0  0:07:27  0:04:15  0:03:12  160k[0m[91m 57 80.8M   57 46.3M    0     0   184k      0  0:07:28  0:04:16  0:03:12  158k[0m[91m 57 80.8M   57 46.4M    0     0   184k      0  0:07:28  0:04:17  0:03:11  143k[0m[91m 57 80.8M   57 46.5M    0     0   184k      0  0:07:29  0:04:18  0:03:11  125k[0m[91m 57 80.8M   57 46.6M    0     0   183k      0  0:07:30  0:04:19  0:03:11  117k[0m[91m 57 80.8M   57 46.7M    0     0   183k      0  0:07:31  0:04:20  0:03:11  114k[0m[91m 58 80.8M   58 46.9M    0     0   183k      0  0:07:31  0:04:22  0:03:09  110k[0m[91m 58 80.8M   58 47.0M    0     0   183k      0  0:07:31  0:04:22  0:03:09  119k[0m[91m 58 80.8M   58 47.1M    0     0   183k      0  0:07:32  0:04:23  0:03:09  134k[0m[91m 58 80.8M   58 47.3M    0     0   183k      0  0:07:32  0:04:25  0:03:07  150k[0m[91m 58 80.8M   58 47.5M    0     0   183k      0  0:07:32  0:04:25  0:03:07  155k[0m[91m 58 80.8M   58 47.6M    0     0   182k      0  0:07:32  0:04:26  0:03:06  155k[0m[91m 59 80.8M   59 47.8M    0     0   182k      0  0:07:33  0:04:27  0:03:06  155k[0m[91m 59 80.8M   59 48.0M    0     0   182k      0  0:07:32  0:04:28  0:03:04  173k[0m[91m 59 80.8M   59 48.2M    0     0   183k      0  0:07:32  0:04:29  0:03:03  184k[0m[91m 59 80.8M   59 48.4M    0     0   183k      0  0:07:32  0:04:30  0:03:02  192k[0m[91m 60 80.8M   60 48.6M    0     0   183k      0  0:07:32  0:04:31  0:03:01  194k[0m[91m 60 80.8M   60 48.7M    0     0   182k      0  0:07:33  0:04:32  0:03:01  185k[0m[91m 60 80.8M   60 48.7M    0     0   182k      0  0:07:34  0:04:33  0:03:01  146k[0m[91m 60 80.8M   60 48.8M    0     0   182k      0  0:07:34  0:04:34  0:03:00  121k[0m[91m 60 80.8M   60 49.0M    0     0   181k      0  0:07:35  0:04:35  0:03:00  115k[0m[91m 60 80.8M   60 49.2M    0     0   181k      0  0:07:35  0:04:36  0:02:59  124k[0m[91m 60 80.8M   60 49.3M    0     0   181k      0  0:07:35  0:04:37  0:02:58  124k[0m[91m[0m[91m 61 80.8M   61 49.4M    0     0   181k      0  0:07:36  0:04:38  0:02:58  139k[0m[91m 61 80.8M   61 49.6M    0     0   181k      0[0m[91m  0:07:35  0:04:39  0:02:56  159k[0m[91m 61 80.8M   61 49.9M    0     0   182k      0  0:07:34  0:04:40  0:02:54  183k[0m[91m 61 80.8M   61 50.0M    0     0   181k      0  0:07:35  0:04:41  0:02:54  177k[0m[91m 62 80.8M   62 50.2M    0     0   181k      0  0:07:35  0:04:42  0:02:53  182k[0m[91m 62 80.8M   62 50.3M    0     0   181k      0  0:07:35  0:04:43  0:02:52  195k[0m[91m 62 80.8M   62 50.6M    0     0   182k      0  0:07:34  0:04:44  0:02:50  206k[0m[91m 62 80.8M   62 50.9M    0     0   182k      0  0:07:34  0:04:45  0:02:49  200k[0m[91m 63 80.8M   63 51.1M    0     0   182k      0  0:07:33  0:04:46  0:02:47  215k[0m[91m 63 80.8M   63 51.2M    0     0   182k      0  0:07:33  0:04:47  0:02:46  221k[0m[91m 63 80.8M   63 51.4M    0     0   182k      0  0:07:33  0:04:48  0:02:45  223k[0m[91m 63 80.8M   63 51.6M    0     0   182k      0  0:07:34  0:04:49  0:02:45  198k[0m[91m 63 80.8M   63 51.7M    0     0   182k      0  0:07:34  0:04:50  0:02:44  169k[0m[91m 64 80.8M   64 51.8M    0     0   181k      0  0:07:35  0:04:51  0:02:44  153k[0m[91m 64 80.8M   64 52.0M    0     0   182k      0  0:07:34  0:04:52  0:02:42  157k[0m[91m 64 80.8M   64 52.2M    0     0   181k      0  0:07:35  0:04:53  0:02:42  146k[0m[91m 64 80.8M   64 52.2M    0     0   181k      0[0m[91m  0:07:36  0:04:54  0:02:42  135k[0m[91m 64 80.8M   64 52.3M    0     0   181k      0  0:07:37  0:04:55  0:02:42  124k[0m[91m 64 80.8M   64 52.4M    0     0   180k      0  0:07:38  0:04:56  0:02:42  112k[0m[91m 64 80.8M   64 52.5M    0     0   180k      0  0:07:38  0:04:57  0:02:41   99k[0m[91m 65 80.8M   65 52.6M    0     0   180k      0  0:07:39  0:04:58  0:02:41 89997[0m[91m 65 80.8M   65 52.7M    0     0   180k      0  0:07:39  0:05:00  0:02:39 95068[0m[91m 65 80.8M   65 52.8M    0     0   179k      0  0:07:40  0:05:00  0:02:40  102k[0m[91m 65 80.8M   65 52.9M    0     0   179k      0  0:07:41  0:05:01  0:02:40  106k[0m[91m 65 80.8M   [0m[91m65 53.0M    0     0   179k      0  0:07:41  0:05:02  0:02:39   98k[0m[91m 65 80.8M   65 53.1M    0     0   178k      0  0:07:42  0:05:03  0:02:39 99191[0m[91m 65 80.8M   65 53.1M    0     0   178k      0  0:07:43  0:05:04  0:02:39 91743[0m[91m 65 80.8M   65 53.2M    0     0   178k      0  0:07:44  0:05:05  0:02[0m[91m:39 88963[0m[91m 65 80.8M   65 53.3M    0     0   177k      0  0:07:45  0:05:06  0:02:39 84179[0m[91m 66 80.8M   66 53.4M    0     0   177k      0  0:07:46  0:05:07  0:02:39 79269[0m[91m 66 80.8M   66 53.5M    0     0   177k      0  0:07:46  0:05:08  0:02:38 85409[0m[91m 66 80.8M   66 53.6M    0     0   177k      0  0:07:47  0:05:09  0:02:38 88330[0m[91m 66 80.8M   66 53.6M    0     0   176k      0  0:07:48  0:05:10  0:02:38 82126[0m[91m 66 80.8M   66 53.7M    0     0   176k      0  0:07:49  0:05:11  0:02:38 88701[0m[91m 66 80.8M   66 53.9M    0     0   176k      0  0:07:49  0:05:12  0:02:37   99k[0m[91m 66 80.8M   66 54.0M    0     0   176k      0  0:07:49  0:05:13  0:02:36  110k[0m[91m 66 80.8M   66 54.1M    0     0   176k      0  0:07:50  0:05:14  0:02:36  111k[0m[91m 67 80.8M   67 54.2M    0     0   175k      0  0:07:51  0:05:15  0:02:36  117k[0m[91m 67 80.8M   67 54.3M    0     0   175[0m[91mk      0  0:07:51  0:05:16  0:02:35  119k[0m[91m 67 80.8M   67 54.4M    0     0   175k      0  0:07:52  0:05:17  0:02:35  115k[0m[91m 67 80.8M   67 54.5M    0     0   175k      0  0:07:52  0:05:18  0:02:34  109k[0m[91m 67 80.8M   67 54.7M    0     0   175k      0  0:07:52  0:05:19  0:02:33  124k[0m[91m 67 80.8M   67 54.9M    0     0   175k      0  0:07:52  0:05:20  0:02:32  147k[0m[91m 68 80.8M   68 55.1M    0     0   175k      0  0:07:52  0:05:21  0:02:31  160k[0m[91m 68 80.8M   68 55.3M    0     0   175k      0  0:07:52  0:05:22  0:02:30  172k[0m[91m 68 80.8M   68 55.5M    0     0   175k      0  0:07:51  0:05:23  0:02:28  193k[0m[91m 68 80.8M   68 55.6M    0     0   175k      0  0:07:52  0:05:24  0:02:28  183k[0m[91m 68 80.8M   68 55.7M    0     0   175k      0  0:07:52  0:05:25  0:0[0m[91m2:27  163k[0m[91m 69 80.8M   69 55.8M    0     0   174k      0  0:07:53  0:05:26  0:02:27  148k[0m[91m 69 80.8M   69 55.9M    0     0   174k      0  0:07:54  0:05:27  0:02:27  126k[0m[91m 69 80.8M   69 56.0M    0     0   174k      0  0:07:54  0:05:28  0:02:26  101k[0m[91m 69 80.8M   69 56.1M    0     0   174k      0  0:07:55  0:05:29  0:02:26  100k[0m[91m 69 80.8M   69 56.2M    0     0   173k      0  0:07:56  0:05:30  0:02:26 95627[0m[91m 69 80.8M   69 56.2M    0     0   173k      0  0:07:56  0:05:31  0:02:25 89223[0m[91m 69 80.8M   69 56.3M    0     0   173k      0  0:07:57  0:05:32  0:02:25 93405[0m[91m 69 80.8M   69 56.4M    0     0   173k      0  0:07:58  0:05:33  0:02:25 89917[0m[91m 69 80.8M   69 56.5M    0     0   172k      0  0:07:59  0:05:34  0:02:25 84071[0m[91m 70 80.8M   70 56.6M    0     0   172k      0  0:07:59  0:05:35  [0m[91m0:02:24 83661[0m[91m 70 80.8M   70 56.7M    0     0   172k      0  0:08:00  0:05:36  0:02:24 88707[0m[91m 70 80.8M   70 56.8M    0     0   172k      0  0:08:00  0:05:37  0:02:23 94807[0m[91m 70 80.8M   70 56.9M    0     0   172k      0  0:08:01  0:05:38  0:02:23  101k[0m[91m 70 80.8M   70 57.1M    0     0   172k      0  0:08:01  0:05:39  0:02:22  121k[0m[91m 70 80.8M   70 57.3M    0     0   172k      0  0:08:01  0:05:40  0:02:21  143k[0m[91m 71 80.8M   71 57.4M    0     0   172k      0  0:08:00  0:05:41  0:02:19  158k[0m[91m 71 80.8M   71 57.7M    0     0   172k      0  0:08:00  0:05:42  0:02:18  188k[0m[91m 71 80.8M   71 57.9M    0     0   172k      0  0:08:00  0:05:43  0:02:17  194k[0m[91m 71 80.8M   71 58.0M    0     0   172k      0  0:08:00  0:05:44  0:02:16  192k[0m[91m 72 80.8M   72 58.2M    0     0   172k      0  0:08:00  0:05:45  0:02:15  191k[0m[91m 72 80.8M   72 58.3M    0     0   172k      0  0:08:00  0:05:46  0:02:14  179k[0m[91m 72 80.8M   72 58.5M    0     0   172k      0  0:08:00  0:05:47  0:02:13  156k[0m[91m 72 80.8M   72 58.6M    0     0   172k      0  0:08:01  0:05:48  0:02:13  148k[0m[91m 72 80.8M   72 58.7M    0     0   171k      0  0:08:01  0:05:49  0:02:12  133k[0m[91m 72 80.8M   72 58.8M    0     0   171k      0  0:08:02  0:05:50  0[0m[91m:02:12  116k[0m[91m 72 80.8M   72 58.9M    0     0   171k      0  0:08:03  0:05:51  0:02:12  110k[0m[91m 72 80.8M   72 59.0M    0     0   171k      0  0:08:03  0:05:52  0:02:11  101k[0m[91m 73 80.8M   73 59.1M    0     0   171k      0  0:08:04  0:05:53  0:02:11   98k[0m[91m 73 80.8M   73 59.2M    0     0   170k      0  0:08:04  0:05:54  0:02:10  103k[0m[91m 73 80.8M   73 59.3M    0     0   170k      0  0:08:05  0:05:55  0:02:10  106k[0m[91m 73 80.8M   73 59.4M    0     0   170k      0  0:08:05  0:05:56  0:02:09  115k[0m[91m[0m[91m 73 80.8M   73 59.5M    0     0   170k      0  0:08:05  0:05:57  0:02:08  114k[0m[91m 73 80.8M   73 59.6M    0     0   170k      0  0:08:06  0:05:58  0:02:08  112k[0m[91m 73 80.8M   73 59.7M    0     0   169k      0  0:08:07  0:05:59  0:02:08 99922[0m[91m 73 80.8M   73 59.7M    0     0   169k      0  0:08:08  0:06:00  0:02:08 87522[0m[91m 73 80.8M   73 59.8M    0     0   169k      0  0:08:09  0:06:01  0:02:08 72991[0m[91m 74 80.8M   74 59.8M    0     0   168k      0  0:08:10  0:06:02  0:02:08 68987[0m[91m 74 80.8M   74 59.9M    0     0   168k      0  0:08:10  0:06:03  0:02:07 66345[0m[91m 74 80.8M   74 60.0M    0     0   168k      0  0:08:11  0:06:04  0:02:07 64191[0m[91m 74 80.8M   74 60.0M    0     0   168k      0  0:08:12  0:06:05  0:02:07 66783[0m[91m 74 80.8M   74 60.1M    0     0   167k      0  0:08:12  0:06:06  0:02:06 78574[0m[91m 74 80.8M   74 60.3M    0     0   168k      0  0:08:12  0:06:07  0:02:05 99609[0m[91m 74 80.8M   74 60.5M    0     0   168k      0  0:08:12  0:06:08 [0m[91m 0:02:04  118k[0m[91m 75 80.8M   75 60.7M    0     0   168k      0  0:08:12  0:06:09  0:02:03  144k[0m[91m 75 80.8M   75 60.8M    0     0   167k      0  0:08:13  0:06:10  0:02:03  152k[0m[91m 75 80.8M   75 60.9M    0     0   167k      0  0:08:13  0:06:11  0:02:02  152k[0m[91m 75 80.8M   75 61.0M    0     0   167k      0  0:08:14  0:06:13  0:02:01  130k[0m[91m 75 80.8M   75 61.0M    0     0   167k      0  0:08:15  0:06:13  0:02:02  104k[0m[91m 75 80.8M   75 61.1M    0     0   166k      0  0:08:16  0:06:14  0:02:02 85146[0m[91m 75 80.8M   75 61.2M    0     0   166k      0  0:08:16  0:06:15  0:02:01 80731[0m[91m 75 80.8M   75 61.2M    0     0   166k      0  0:08:17  0:06:16  0:02:01 75958[0m[91m 76 80.8M   76 61.4M    0     0   166k      0  0:08:17  0:06:17  0:02:00   98k[0m[91m 76 80.8M   76 61.6M    0     0   166k      0  0:08:17  0:06:19  0:01:58  115k[0m[91m 76 80.8M   76 61.7M    0     0   166k      0  0:08:17  0:06:19  0:01:58  128k[0m[91m 76 80.8M   76 61.8M    0     0   166k      0  0:08:17  0:06:20  0:01:57  135k[0m[91m 76 80.8M   76 61.9M    0     0   166k      0  0:08:18  0:06:21  0:01:57  133k[0m[91m 76 80.8M   76 62.0M    0     0   165k      0  0:08:18  0:06:22  0:01:56  120k[0m[91m 76 80.8M   76 62.2M    0     0   165k      0  0:08:18  0:06:23  0:01:55  126k[0m[91m 77 80.8M   77 62.3M    0     0   165k      0  0:08:19  0:06:24  0:01:55  128k[0m[91m 77 80.8M   77 62.4M    0     0   165k      0  0:08:19  0:06:25  0:01:54  126k[0m[91m 77 80.8M   77 62.6M    0     0   165k      0  0:08:19  0:06:26  0:01:53  136k[0m[91m 77 80.8M   77 62.7M    0     0   165k      0  0:08:19  0:06:27  0:01:52  145k[0m[91m 77 80.8M   77 62.9M    0     0   165k      0  0:08:19  0:06:28  0:01:51  146k[0m[91m 77 80.8M   77 63.0M    0     0   165k      0  0:08:20  0:06:29  0:01:51  140k[0m[91m 78 80.8M   78 63.1M    0     0   165k      0  0:08:20  0:06:30  0:01:50  147k[0m[91m 78 80.8M   78 63.3M    0     0   165k      0  0:08:20  0:06:31  0:01:49  153k[0m[91m 78 80.8M   78 63.5M    0     0   165k      0  0:08:19  0:06:32  0:01:47  156k[0m[91m 78 80.8M   78 63.7M    0     0   165k      0  0:08:19  0:06:33  0:01:46  171k[0m[91m 79 80.8M   79 63.9M    0     0   165k      0  0:08:19  0:06:34  0:01:45  191k[0m[91m 79 80.8M   79 64.1M    0     0   166k      0  0:08:18  0:06:35  0:01:43  203k[0m[91m 79 80.8M   79 64.4M    0     0   166k      0  0:08:18  0:06:36  0:01:42  218k[0m[91m 79 80.8M   79 64.6M    0     0   166k      0  0:08:17  0:06:37  0:01:40  222k[0m[91m 80 80.8M   80 64.8M    0     0   166k      0  0:08:17  0:06:38  0:01:3[0m[91m9  216k[0m[91m 80 80.8M   80 64.9M    0     0   166k      0  0:08:17  0:06:39  0:01:38  205k[0m[91m 80 80.8M   80 65.0M    0     0   166k      0  0:08:18  0:06:40  0:01:38  181k[0m[91m 80 80.8M   80 65.1M    0     0   166k      0  0:08:18  0:06:41  0:01:37  149k[0m[91m 80 80.8M   80 65.2M    0     0   165k      0  0:08:19  0:06:42  0:01:37  131k[0m[91m 80 80.8M   80 65.4M    0     0   165k      0  0:08:19  0:06:44  0:01:35  117k[0m[91m 81 80.8M   81 65.5M    0     0   165k      0  0:08:19  0:06:44  0:01:35  109k[0m[91m 81 80.8M   81 65.6M    0     0   165k      0  0:08:19  0:06:45  0:01:34  120k[0m[91m 81 80.8M   81 65.8M    0     0   165k      0  0:08:19  0:06:[0m[91m46  0:01:33  139k[0m[91m 81 80.8M   81 66.0M    0     0   165k      0  0:08:19  0:06:47  0:01:32  162k[0m[91m 82 80.8M   82 66.3M    0     0   166k      0  0:08:18  0:06:48  0:01:30  188k[0m[91m 82 80.8M   82 66.5M    0     0   166k      0  0:08:18  0:06:49  0:01:29  210k[0m[91m 82 80.8M   82 66.7M    0     0   166k      0  0:08:17  0:06:50  0:01:27  228k[0m[91m 82 80.8M   82 66.8M    0     0   166k      0  0:08:18  0:06:51  0:01:27  205k[0m[91m 82 80.8M   82 66.9M    0     0   166k      0  0:08:18  0:06:52  0:01:26  185k[0m[91m 83 80.8M   83 67.1M    0     0   166k      0  0:08:18  0:06:53  0:01:25  170k[0m[91m 83 80.8M   83 67.3M    0     0   166k      0  0:08:18  0:06:54  0:01:24  156k[0m[91m[0m[91m 83 80.8M   83 67.4M    0     0   165k      0  0:08:18  0:06:55  0:01:23  12[0m[91m9k[0m[91m 83 80.8M   83 67.5M    0     0   165k      0  0:08:19  0:06:56  0:01:23  137k[0m[91m 83 80.8M   83 67.6M    0     0   165k      0  0:08:19  0:06:57  0:01:22  131k[0m[91m 83 80.8M   83 67.7M    0     0   165k      0  0:08:19  0:06:58  0:01:21  125k[0m[91m 84 80.8M   84 68.0M    0     0   165k      0  0:08:19  0:06:59  0:01:20  142k[0m[91m 84 80.8M   84 68.1M    0     0   165k      0  0:08:19  0:07:00  0:01:19  154k[0m[91m 84 80.8M   84 68.2M    0     0   165k      0  0:08:19  0:07:01  0:01:18  158k[0m[91m 84 80.8M   84 68.4M    0     0   165k      0  0:08:20  0:07:02  0:01:18  160k[0m[91m 84 80.8M   84 68.5M    0     0   165k      0  0:08:20  0:07:03  0:01:17  149k[0m[91m 84 80.8M   84 68.6M    0     0   165k      0  0:08:20  0:07:04  0:01:16  131k[0m[91m 85 80.8M   85 68.7M    0     0   165k      0  0:08:20  0:07:05  0:01:15  129k[0m[91m 85 80.8M   85 68.9M    0     0   165k      0  0:08:20  0:07:06  0:01:14  130k[0m[91m 85 80.8M   85 69.0M    0     0   165k      0  0:08:21  0:07:07  0:01:14  123k[0m[91m 85 80.8M   85 69.0M    0     0   164k      0  0:08:22  0:07:08  0:01:14  119k[0m[91m 85 80.8M   85 69.1M    0     0   164k      0  0:08:22  0:07:09  0:01:13  106k[0m[91m 85 80.8M   85 69.3M    0     0   164k      0  0:08:22  0:07:10  0:01:12  107k[0m[91m 85 80.8M   85 69.4M    0     0   164k      0  0:08:22  0:07:11  0:01:11  114k[0m[91m 86 80.8M   86 69.7M    0     0   164k      0  0:08:22  0:07:12  0:01:10  145k[0m[91m 86 80.8M   86 69.9M    0     0   165k      0  0:08:21  0:07:13  0:01:08  184k[0m[91m 86 80.8M   86 70.1M    0     0   165k      0  0:08:21  0:07:14  0:01:07  204k[0m[91m 87 80.8M   87 70.3M    0     0   165k      0  0:08:20  0:07:15  0:01:05  218k[0m[91m 87 80.8M   87 70.6M    0     0   165k      0  0:08:20  0:07:16  0:01:04  230k[0m[91m 87 80.8M   87 70.8M    0     0   165k      0  0:08:19  0:07:17  0:01:02  240k[0m[91m 87 80.8M   87 71.0M    0     0   165k      0  0:08:19  0:07:18  0:01:01  224k[0m[91m 88 80.8M   88 71.2M    0     0   165k      0  0:08:19  0:07:19  0:01:00  226k[0m[91m 88 80.8M   88 71.5M    0     0   166k      0  0:08:18  0:07:20  0:00:58  246k[0m[91m 88 80.8M   88 71.9M    0     0   166k      0  0:08:17  0:07:21  0:00:56  264k[0m[91m 89 80.8M   89 72.0M    0     0   166k      0  0:08:16  0:07:22  0:00:54  243k[0m[91m 89 80.8M   8[0m[91m9 72.2M    0     0   166k      0  0:08:17  0:07:23  0:00:54  233k[0m[91m 89 80.8M   89 72.3M    0     0   166k      0  0:08:17  0:07:24  0:00:53  220k[0m[91m 89 80.8M   89 72.4M    0     0   166k      0  0:08:17  0:07:26  0:00:51  178k[0m[91m 89 80.8M   89 72.5M    0     0   166k      0  0:08:18  0:07:26  0:00:52  137k[0m[91m 89 80.8M   89 72.6M    0     0   166k      0  0:08:18  0:07:27  0:00:51  115k[0m[91m 89 80.8M   89 72.7M    0     0   165k      0  0:08:19  0:07:28  0:00:51  105k[0m[91m 90 80.8M   90 72.9M    0     0   165k      0  0:08:19  0:07:29  0:00:50  109k[0m[91m 90 80.8M   90 73.0M    0     0   165k      0  0:08:19  0:07:30  0:00:49  118k[0m[91m 90 80.8M   90 73.2M    0     0   165k      0  0:08:19  0:07:31  0:[0m[91m00:48  131k[0m[91m 90 80.8M   90 73.4M    0     0   165k      0  0:08:18  0:07:32  0:00:46  159k[0m[91m 90 80.8M   90 73.5M    0     0   165k      0  0:08:19  0:07:33  0:00:46  166k[0m[91m 91 80.8M   91 73.7M    0     0   166k      0  0:08:18  0:07:34  0:00:44  175k[0m[91m 91 80.8M   91 73.9M    0     0   166k      0  0:08:18  0:07:35  0:00:43  176k[0m[91m 91 80.8M   91 74.0M    0     0   165k      0  0:08:18  0:07:36  0:00:42  171k[0m[91m 91 80.8M   91 74.1M    0     0   165k      0  0:08:19  0:07:37  0:00:42  154k[0m[91m 91 80.8M   91 74.2M    0     0   165k      0  0:08:19  0:07:38  0:00:41  147k[0m[91m 91 80.8M   91 74.3M    0     0   165k    [0m[91m  0  0:08:19  0:07:39  0:00:40  127k[0m[91m 92 80.8M   92 74.5M    0     0   165k      0  0:08:20  0:07:40  0:00:40  127k[0m[91m 92 80.8M   92 74.7M    0     0   165k      0  0:08:19  0:07:41  0:00:38  145k[0m[91m 92 80.8M   92 74.9M    0     0   165k      0  0:08:19  0:07:42  0:00:37  153k[0m[91m 92 80.8M   92 75.1M    0     0   165k      0  0:08:19  0:07:43  0:00:36  170k[0m[91m 93 80.8M   93 75.2M    0     0   165k      0  0:08:19  0:07:44  0:00:35  186k[0m[91m 93 80.8M   93 75.4M    0     0   165k      0  0:08:19  0:07:45  0:00:34  179k[0m[91m 93 80.8M   93 75.5M    0     0   165k      0  0:08:20  0:07:46  0:00:34  150k[0m[91m 93 80.8M   93 75.6M    0     0   165k      0  0:08:20  0:07:47  0:00:33  146k[0m[91m 93 80.8M   93 75.8M    0     0   165k      0  0:08:19  0:07:48  0:00:31  150k[0m[91m 93 80.8M   93 76.0M    0     0   165k      0  0:08:19  0:07:49  0:00:30  145k[0m[91m 94 80.8M   94 76.1M    0     0   165k      0  0:08:20  0:07:50  0:00:30  153k[0m[91m 94 80.8M   94 76.2M    0     0   165k      0  0:08:20  0:07:51  0:00:29  159k[0m[91m[0m[91m [0m[91m9[0m[91m4 80.8M   94 76.3M    0     0   165k      0[0m[91m  0:08:20  0:07:52  0:00:28  152k[0m[91m 94 80.8M   94 76.5M    0     0   165k      0  0:08:20  0:07:53  0:00:27  138k[0m[91m 94 80.8M   94 76.6M    0     0   165k      0  0:08:21  0:07:54  0:00:27  132k[0m[91m 94 80.8M   94 76.7M    0     0   165k      0  0:08:21  0:07:55  0:00:26  113k[0m[91m 94 80.8M   94 76.8M    0     0   164k      0  0:08:22  0:07:56  0:00:26  106k[0m[91m 95 80.8M   95 76.8M    0     0   164k      0  0:08:22  0:07:57  0:00:25  106k[0m[91m 95 80.8M   95 77.0M    0     0   164k      0  0:08:22  0:07:58  0:00:24  102k[0m[91m 95 80.8M   95 77.2M    0     0   164k      0  0:08:22  0:07:59  0:00:23  117k[0m[91m 95 80.8M   95 77.5M    0     0   165k      0  0:08:21  0:08:00  0:00:21  163k[0m[91m 96 80.8M   96 77.7M    0     0   165k      0  0:08:21  0:08:01  0:00:20  186k[0m[91m 96 80.8M   96 77.8M    0     0   165k      0  0:08:21  0:08:02  0:00:19  188k[0m[91m 96 80.8M   96 77.9M    0     0   164k      0  0:08:22  0:08:03  0:00:19  186k[0m[91m 96 80.8M   96 78.0M    0     0   164k      0  0:08:22  0:08:04  0:00:18  168k[0m[91m 96 80.8M   96 78.1M    0     0   164k      0  0:08:22  0:08:05  0:00:17  131k[0m[91m 96 80.8M   96 78.3M    0     0   164k      0  0:08:22  0:08:06  0:00:16  125k[0m[91m 97 80.8M   97 78.4M    0     0   164k      0  0:08:22  0:08:07  0:00:15  136k[0m[91m 97 80.8M   97 78.6M    0     0   164k      0  0:08:22  0:08:08  0:00:14  144k[0m[91m 97 80.8M   97 78.8M    0     0   164k      0  0:08:22  0:08:09  0:00:13  153k[0m[91m 97 80.8M   97 78.9M    0     0   164k      0  0:08:22  0:08:10  0:00:12  172k[0m[91m 97 80.8M   97 79.1M    0     0   164k      0  0:08:22  0:08:11  0:00:11  179k[0m[91m 98 80.8M   98 79.4M    0     0   164k      0  0:08:21  0:08:12  0:00:09  190k[0m[91m 98 80.8M   98 79.6M    0     0   165k      0  0:08:21  0:08:13  0:00:08  199k[0m[91m 98 80.8M   98 79.8M    0     0   165k      0  0:08:21  0:08:14  0:00:07  214k[0m[91m 99 80.8M   99 80.1M    0     0   165k      0  0:08:20  0:08:15  0:00:05  229k[0m[91m 99 80.8M   99 80.3M    0     0   165k      0  0:08:19  0:08:16  0:00:03  243k[0m[91m 99 80.8M   99 80.5M    0     0   165k      0  0:08:20  0:08:17  0:00:03  226k[0m[91m 99 80.8M   99 80.6M    0     0   165k      0  0:08:20  0:08:18  0:00:02  214k[0m[91m 99 80.8M   99 80.7M    0     0   165k      0  0:08:20  0:08:19  0:00:01  185k[0m[91m100 80.8M  100 80.8M    0     0   165k      0  0:08:20  0:08:20 --:--:--  155k100 80.8M  100 8[0m[91m0.8M    0     0   165k      0  0:08:20  0:08:20 --:--:--  123k
-[0m ---> 05bb9c6a242c
-Removing intermediate container 8f8d1e41bf80
-Step 5 : WORKDIR /go/src/github.com/openshift/origin
- ---> Running in 5519fa1c9e61
- ---> 13b64925f01d
-Removing intermediate container 5519fa1c9e61
-Step 6 : ADD openshift-origin-build.sh /usr/bin/openshift-origin-build.sh
- ---> 493a67d9107a
-Removing intermediate container 705b2a244e17
-Step 7 : CMD tar mxzf - && hack/build-cross.sh
- ---> Running in d1f616a3a44a
- ---> bf9e248365a2
-Removing intermediate container d1f616a3a44a
-Successfully built bf9e248365a2
-Sending build context to Docker daemon 7.168 kB
-Step 1 : FROM centos:centos7
- ---> 970633036444
-Step 2 : RUN INSTALL_PKGS="centos-release-openshift-origin" &&     yum install -y $INSTALL_PKGS &&     rpm -V $INSTALL_PKGS &&     yum clean all
- ---> Running in 6b318d608551
-Loaded plugins: fastestmirror, ovl
-Determining fastest mirrors
- * base: centos.webwerks.com
- * extras: centos.webwerks.com
- * updates: centos.excellmedia.net
-Resolving Dependencies
---> Running transaction check
----> Package centos-release-openshift-origin.noarch 0:1-1.el7.centos will be installed
---> Processing Dependency: centos-release-paas-common for package: centos-release-openshift-origin-1-1.el7.centos.noarch
---> Running transaction check
----> Package centos-release-paas-common.noarch 0:1-1.el7.centos will be installed
---> Finished Dependency Resolution
-
-Dependencies Resolved
-
-================================================================================
- Package                            Arch      Version           Repository
-                                                                           Size
-================================================================================
-Installing:
- centos-release-openshift-origin    noarch    1-1.el7.centos    extras     11 k
-Installing for dependencies:
- centos-release-paas-common         noarch    1-1.el7.centos    extras     11 k
-
-Transaction Summary
-================================================================================
-Install  1 Package (+1 Dependent package)
-
-Total download size: 22 k
-Installed size: 37 k
-Downloading packages:
-[91mwarning: /var/cache/yum/x86_64/7/extras/packages/centos-release-openshift-origin-1-1.el7.centos.noarch.rpm: Header V3 RSA/SHA256 Signature, key ID f4a80eb5: NOKEY
-[0mPublic key for centos-release-openshift-origin-1-1.el7.centos.noarch.rpm is not installed
---------------------------------------------------------------------------------
-Total                                               88 kB/s |  22 kB  00:00     
-Retrieving key from file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
-[91mImporting GPG key 0xF4A80EB5:
- Userid     : "CentOS-7 Key (CentOS 7 Official Signing Key) <security@centos.org>"
- Fingerprint: 6341 ab27 53d7 8a78 a7c2 7bb1 24c6 a8a7 f4a8 0eb5
- Package    : centos-release-7-2.1511.el7.centos.2.10.x86_64 (@CentOS)
- From       : /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
-[0mRunning transaction check
-Running transaction test
-Transaction test succeeded
-Running transaction
-  Installing : centos-release-paas-common-1-1.el7.centos.noarch             1/2 
-  Installing : centos-release-openshift-origin-1-1.el7.centos.noarch        2/2 
-  Verifying  : centos-release-paas-common-1-1.el7.centos.noarch             1/2 
-  Verifying  : centos-release-openshift-origin-1-1.el7.centos.noarch        2/2 
-
-Installed:
-  centos-release-openshift-origin.noarch 0:1-1.el7.centos                       
-
-Dependency Installed:
-  centos-release-paas-common.noarch 0:1-1.el7.centos                            
-
-Complete!
-Loaded plugins: fastestmirror, ovl
-Cleaning repos: base centos-openshift-origin extras updates
-Cleaning up everything
-Cleaning up list of fastest mirrors
- ---> 478c9068d623
-Removing intermediate container 6b318d608551
-Step 3 : RUN INSTALL_PKGS="origin-pod" &&     yum install -y $INSTALL_PKGS &&     rpm -V $INSTALL_PKGS &&     yum clean all
- ---> Running in 12a3d5713203
-Loaded plugins: fastestmirror, ovl
-Determining fastest mirrors
- * base: centos.webwerks.com
- * extras: centos.webwerks.com
- * updates: centos.excellmedia.net
-Resolving Dependencies
---> Running transaction check
----> Package origin-pod.x86_64 0:1.2.1-1.el7 will be installed
---> Finished Dependency Resolution
-
-Dependencies Resolved
-
-================================================================================
- Package        Arch       Version            Repository                   Size
-================================================================================
-Installing:
- origin-pod     x86_64     1.2.1-1.el7        centos-openshift-origin     428 k
-
-Transaction Summary
-================================================================================
-Install  1 Package
-
-Total download size: 428 k
-Installed size: 1.5 M
-Downloading packages:
-[91mwarning: /var/cache/yum/x86_64/7/centos-openshift-origin/packages/origin-pod-1.2.1-1.el7.x86_64.rpm: Header V4 RSA/SHA1 Signature, key ID 2f297ecc: NOKEY
-[0mPublic key for origin-pod-1.2.1-1.el7.x86_64.rpm is not installed
-Retrieving key from file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-SIG-PaaS
-[91mImporting GPG key 0x2F297ECC:
- Userid     : "CentOS PaaS SIG (https://wiki.centos.org/SpecialInterestGroup/PaaS) <security@centos.org>"
- Fingerprint: c5e8 ab44 6fa7 893d 7490 51f1 c34c 5bd4 2f29 7ecc
- Package    : centos-release-paas-common-1-1.el7.centos.noarch (@extras)
- From       : /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-SIG-PaaS
-[0mRunning transaction check
-Running transaction test
-Transaction test succeeded
-Running transaction
-  Installing : origin-pod-1.2.1-1.el7.x86_64                                1/1 
-  Verifying  : origin-pod-1.2.1-1.el7.x86_64                                1/1 
-
-Installed:
-  origin-pod.x86_64 0:1.2.1-1.el7                                               
-
-Complete!
-Loaded plugins: fastestmirror, ovl
-Cleaning repos: base centos-openshift-origin extras updates
-Cleaning up everything
-Cleaning up list of fastest mirrors
- ---> 1eeec557cc67
-Removing intermediate container 12a3d5713203
-Step 4 : RUN ln -s /usr/bin/pod /pod
- ---> Running in 2c70ee91273e
- ---> 464d111267bc
-Removing intermediate container 2c70ee91273e
-Step 5 : ENTRYPOINT /pod
- ---> Running in 430b123cdc07
- ---> fc7656fcbaee
-Removing intermediate container 430b123cdc07
-Successfully built fc7656fcbaee
-Sending build context to Docker daemon 6.656 kB
-Step 1 : FROM centos:centos7
- ---> 970633036444
-Step 2 : MAINTAINER Scott Dodson <sdodson@redhat.com>
- ---> Running in 80edcf2ea0bf
- ---> a3e925258edd
-Removing intermediate container 80edcf2ea0bf
-Step 3 : ADD https://copr.fedoraproject.org/coprs/maxamillion/origin-next/repo/epel-7/maxamillion-origin-next-epel-7.repo /etc/yum.repos.d/
-
- ---> c11f0e0157b0
-Removing intermediate container c967f77438f4
-Step 4 : RUN yum swap -y -- remove systemd-container\* -- install systemd systemd-libs
- ---> Running in d9e5ab313d69
-Loaded plugins: fastestmirror, ovl
-[91mNo Match for argument: systemd-container*
-[0mswap remove systemd-container*
- ---> 4d6ab60fda76
-Removing intermediate container d9e5ab313d69
-Step 5 : RUN INSTALL_PKGS="openvswitch" &&     yum install -y $INSTALL_PKGS &&     rpm -V $INSTALL_PKGS &&     yum clean all
- ---> Running in 1d26de381023
-Loaded plugins: fastestmirror, ovl
-Determining fastest mirrors
- * base: centos.webwerks.com
- * extras: centos.webwerks.com
- * updates: centos.excellmedia.net
-Resolving Dependencies
---> Running transaction check
----> Package openvswitch.x86_64 0:2.4.0-1.el7.centos will be installed
---> Processing Dependency: iproute for package: openvswitch-2.4.0-1.el7.centos.x86_64
---> Processing Dependency: openssl for package: openvswitch-2.4.0-1.el7.centos.x86_64
---> Running transaction check
----> Package iproute.x86_64 0:3.10.0-54.el7_2.1 will be installed
---> Processing Dependency: libxtables.so.10()(64bit) for package: iproute-3.10.0-54.el7_2.1.x86_64
----> Package openssl.x86_64 1:1.0.1e-51.el7_2.5 will be installed
---> Processing Dependency: make for package: 1:openssl-1.0.1e-51.el7_2.5.x86_64
---> Running transaction check
----> Package iptables.x86_64 0:1.4.21-16.el7 will be installed
---> Processing Dependency: libnfnetlink.so.0()(64bit) for package: iptables-1.4.21-16.el7.x86_64
---> Processing Dependency: libnetfilter_conntrack.so.3()(64bit) for package: iptables-1.4.21-16.el7.x86_64
----> Package make.x86_64 1:3.82-21.el7 will be installed
---> Running transaction check
----> Package libnetfilter_conntrack.x86_64 0:1.0.4-2.el7 will be installed
---> Processing Dependency: libmnl.so.0(LIBMNL_1.1)(64bit) for package: libnetfilter_conntrack-1.0.4-2.el7.x86_64
---> Processing Dependency: libmnl.so.0(LIBMNL_1.0)(64bit) for package: libnetfilter_conntrack-1.0.4-2.el7.x86_64
---> Processing Dependency: libmnl.so.0()(64bit) for package: libnetfilter_conntrack-1.0.4-2.el7.x86_64
----> Package libnfnetlink.x86_64 0:1.0.1-4.el7 will be installed
---> Running transaction check
----> Package libmnl.x86_64 0:1.0.3-7.el7 will be installed
---> Finished Dependency Resolution
-
-Dependencies Resolved
-
-================================================================================
- Package               Arch   Version             Repository               Size
-================================================================================
-Installing:
- openvswitch           x86_64 2.4.0-1.el7.centos  maxamillion-origin-next 2.2 M
-Installing for dependencies:
- iproute               x86_64 3.10.0-54.el7_2.1   updates                 526 k
- iptables              x86_64 1.4.21-16.el7       base                    424 k
- libmnl                x86_64 1.0.3-7.el7         base                     23 k
- libnetfilter_conntrack
-                       x86_64 1.0.4-2.el7         base                     53 k
- libnfnetlink          x86_64 1.0.1-4.el7         base                     26 k
- make                  x86_64 1:3.82-21.el7       base                    420 k
- openssl               x86_64 1:1.0.1e-51.el7_2.5 updates                 712 k
-
-Transaction Summary
-================================================================================
-Install  1 Package (+7 Dependent packages)
-
-Total download size: 4.3 M
-Installed size: 15 M
-Downloading packages:
-[91mwarning: /var/cache/yum/x86_64/7/base/packages/libmnl-1.0.3-7.el7.x86_64.rpm: Header V3 RSA/SHA256 Signature, key ID f4a80eb5: NOKEY
-[0mPublic key for libmnl-1.0.3-7.el7.x86_64.rpm is not installed
-Public key for openssl-1.0.1e-51.el7_2.5.x86_64.rpm is not installed
-[91mwarning: /var/cache/yum/x86_64/7/maxamillion-origin-next/packages/openvswitch-2.4.0-1.el7.centos.x86_64.rpm: Header V3 RSA/SHA1 Signature, key ID 669b00e2: NOKEY
-[0mPublic key for openvswitch-2.4.0-1.el7.centos.x86_64.rpm is not installed
---------------------------------------------------------------------------------
-Total                                              959 kB/s | 4.3 MB  00:04     
-Retrieving key from file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
-[91mImporting GPG key 0xF4A80EB5:
- Userid     : "CentOS-7 Key (CentOS 7 Official Signing Key) <security@centos.org>"
- Fingerprint: 6341 ab27 53d7 8a78 a7c2 7bb1 24c6 a8a7 f4a8 0eb5
- Package    : centos-release-7-2.1511.el7.centos.2.10.x86_64 (@CentOS)
- From       : /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
-[0mRetrieving key from https://copr-be.cloud.fedoraproject.org/results/maxamillion/origin-next/pubkey.gpg
-[91mImporting GPG key 0x669B00E2:
- Userid     : "maxamillion_origin-next (None) <maxamillion#origin-next@copr.fedorahosted.org>"
- Fingerprint: d035 03ff a639 e74e ddc0 430c c38b 81dd 669b 00e2
- From       : https://copr-be.cloud.fedoraproject.org/results/maxamillion/origin-next/pubkey.gpg
-[0mRunning transaction check
-Running transaction test
-Transaction test succeeded
-Running transaction
-  Installing : libnfnetlink-1.0.1-4.el7.x86_64                              1/8 
-  Installing : 1:make-3.82-21.el7.x86_64                                    2/8 
-  Installing : 1:openssl-1.0.1e-51.el7_2.5.x86_64                           3/8 
-  Installing : libmnl-1.0.3-7.el7.x86_64                                    4/8 
-  Installing : libnetfilter_conntrack-1.0.4-2.el7.x86_64                    5/8 
-  Installing : iptables-1.4.21-16.el7.x86_64                                6/8 
-  Installing : iproute-3.10.0-54.el7_2.1.x86_64                             7/8 
-  Installing : openvswitch-2.4.0-1.el7.centos.x86_64                        8/8 
-  Verifying  : iptables-1.4.21-16.el7.x86_64                                1/8 
-  Verifying  : libnfnetlink-1.0.1-4.el7.x86_64                              2/8 
-  Verifying  : libmnl-1.0.3-7.el7.x86_64                                    3/8 
-  Verifying  : openvswitch-2.4.0-1.el7.centos.x86_64                        4/8 
-  Verifying  : iproute-3.10.0-54.el7_2.1.x86_64                             5/8 
-  Verifying  : libnetfilter_conntrack-1.0.4-2.el7.x86_64                    6/8 
-  Verifying  : 1:make-3.82-21.el7.x86_64                                    7/8 
-  Verifying  : 1:openssl-1.0.1e-51.el7_2.5.x86_64                           8/8 
-
-Installed:
-  openvswitch.x86_64 0:2.4.0-1.el7.centos                                       
-
-Dependency Installed:
-  iproute.x86_64 0:3.10.0-54.el7_2.1                                            
-  iptables.x86_64 0:1.4.21-16.el7                                               
-  libmnl.x86_64 0:1.0.3-7.el7                                                   
-  libnetfilter_conntrack.x86_64 0:1.0.4-2.el7                                   
-  libnfnetlink.x86_64 0:1.0.1-4.el7                                             
-  make.x86_64 1:3.82-21.el7                                                     
-  openssl.x86_64 1:1.0.1e-51.el7_2.5                                            
-
-Complete!
-Loaded plugins: fastestmirror, ovl
-Cleaning repos: base extras maxamillion-origin-next updates
-Cleaning up everything
-Cleaning up list of fastest mirrors
- ---> 47828c083d6f
-Removing intermediate container 1d26de381023
-Step 6 : ADD scripts/* /usr/local/bin/
- ---> 5978a1bc2ab8
-Removing intermediate container dad2014784cf
-Step 7 : RUN chmod +x /usr/local/bin/*
- ---> Running in 38369596b34f
- ---> 24198bb69af8
-Removing intermediate container 38369596b34f
-Step 8 : VOLUME /etc/openswitch
- ---> Running in 80b8a47ecf1a
- ---> 6455841902d0
-Removing intermediate container 80b8a47ecf1a
-Step 9 : ENV HOME /root
- ---> Running in 8742aa446724
- ---> af665da098b3
-Removing intermediate container 8742aa446724
-Step 10 : ENTRYPOINT /usr/local/bin/ovs-run.sh
- ---> Running in 510dd44a2555
- ---> 79ee7e21e37c
-Removing intermediate container 510dd44a2555
-Successfully built 79ee7e21e37c
-Sending build context to Docker daemon 7.168 kB
-Step 1 : FROM openshift/origin-base
- ---> 7870a22fd5cb
-Step 2 : RUN INSTALL_PKGS="origin" &&     yum install -y $INSTALL_PKGS &&     rpm -V $INSTALL_PKGS &&     yum clean all
- ---> Running in c2f828d722e1
-Loaded plugins: fastestmirror, ovl
-Determining fastest mirrors
- * base: centos.webwerks.com
- * epel: epel.mirror.net.in
- * extras: centos.webwerks.com
- * updates: centos.excellmedia.net
-No package origin available.
-[91mError: Nothing to do
-[0m
