@@ -2,52 +2,52 @@ build-images:
     builds:
       - context: /home/moahmed/Work/projects/centos-pipeline/github/projects/origin/images/base
         file: Dockerfile.centos7
-        tag: openshift/origin-base:1.2
+        tag: openshift/origin-base:1.2.1
       - context: /home/moahmed/Work/projects/centos-pipeline/github/projects/origin/images/builder/docker/custom-docker-builder
         file: Dockerfile
-        tag: openshift/origin-custom-docker-builder:1.2
+        tag: openshift/origin-custom-docker-builder:1.2.1
       - context: /home/moahmed/Work/projects/centos-pipeline/github/projects/origin/images/router/haproxy-base
         file: Dockerfile
-        tag: openshift/origin-haproxy-router-base:1.2
+        tag: openshift/origin-haproxy-router-base:1.2.1
       - context: /home/moahmed/Work/projects/centos-pipeline/github/projects/origin/images/release
         file: Dockerfile
-        tag: openshift/origin-release:1.2
+        tag: openshift/origin-release:1.2.1
       - context: /home/moahmed/Work/projects/centos-pipeline/github/projects/origin/images/pod
         file: Dockerfile.centos7
-        tag: openshift/origin-pod:1.2
+        tag: openshift/origin-pod:1.2.1
       - context: /home/moahmed/Work/projects/centos-pipeline/github/projects/origin/images/openvswitch
         file: Dockerfile
-        tag: openshift/openvswitch:1.2
+        tag: openshift/openvswitch:1.2.1
       - context: /home/moahmed/Work/projects/centos-pipeline/github/projects/origin/images/origin
         file: Dockerfile.centos7
-        tag: openshift/origin:1.2
+        tag: openshift/origin:1.2.1
       - context: /home/moahmed/Work/projects/centos-pipeline/github/projects/origin/images/router/haproxy
         file: Dockerfile.centos7
-        tag: openshift/origin-haproxy-router:1.2
+        tag: openshift/origin-haproxy-router:1.2.1
       - context: /home/moahmed/Work/projects/centos-pipeline/github/projects/origin/images/ipfailover/keepalived
         file: Dockerfile
-        tag: openshift/origin-keepalived-ipfailover:1.2
+        tag: openshift/origin-keepalived-ipfailover:1.2.1
       - context: /home/moahmed/Work/projects/centos-pipeline/github/projects/origin/images/dockerregistry
         file: Dockerfile.centos7
-        tag: openshift/origin-docker-registry:1.2
+        tag: openshift/origin-docker-registry:1.2.1
       - context: /home/moahmed/Work/projects/centos-pipeline/github/projects/origin/images/router/egress
         file: Dockerfile
-        tag: openshift/origin-egress-router:1.2
+        tag: openshift/origin-egress-router:1.2.1
       - context: /home/moahmed/Work/projects/centos-pipeline/github/projects/origin/images/deployer
         file: Dockerfile
-        tag: openshift/origin-deployer:1.2
+        tag: openshift/origin-deployer:1.2.1
       - context: /home/moahmed/Work/projects/centos-pipeline/github/projects/origin/images/recycler
         file: Dockerfile.centos7
-        tag: openshift/origin-recycler:1.2
+        tag: openshift/origin-recycler:1.2.1
       - context: /home/moahmed/Work/projects/centos-pipeline/github/projects/origin/images/builder/docker/docker-builder
         file: Dockerfile
-        tag: openshift/origin-docker-builder:1.2
+        tag: openshift/origin-docker-builder:1.2.1
       - context: /home/moahmed/Work/projects/centos-pipeline/github/projects/origin/images/builder/docker/sti-builder
         file: Dockerfile
-        tag: openshift/origin-sti-builder:1.2
+        tag: openshift/origin-sti-builder:1.2.1
       - context: /home/moahmed/Work/projects/centos-pipeline/github/projects/origin/images/router/f5
         file: Dockerfile
-        tag: openshift/origin-f5-router:1.2
+        tag: openshift/origin-f5-router:1.2.1
       - context: /home/moahmed/Work/projects/centos-pipeline/github/projects/origin/images/node
         file: Dockerfile.centos7
-        tag: openshift/node:1.2
+        tag: openshift/node:1.2.1
