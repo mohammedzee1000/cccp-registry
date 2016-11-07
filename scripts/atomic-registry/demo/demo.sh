@@ -21,7 +21,7 @@ cont_step;
 echo "Pre-Steps : "
 cont_step;
 yum -y install docker atomic centos-release-openshift-origin;
-yum -y intall oc-clients;
+yum -y install oc-clients;
 cat /etc/sysconfig/docker | grep "registry.centos.org";
 if [ $? -ne 0 ]; then
 	echo "ADD_REGISTRY='--add-registry registry.centos.org'" >> /etc/sysconfig/docker
