@@ -1,0 +1,29 @@
+#!/bin/bash
+# USAGE : set envoriment variables and then run
+
+# AR_USER : Atomic registry user
+# AR_PASSWD : Password of atomic registry user
+# AR_HOST : URL of the atomic registry (make sure you have done any configs required such as certs, add-registry etc)
+# AR_CONTAINER_NAMESPACE : This will be the name of the project. For example for container openshift/origin, this should be openshift
+# AR_CONTAINER_NAME : Name of the container, in the above example, it would be origin or origin:latest
+
+if [ -z ${AR_USER} || -z ${AR_PASSWD} || -z ${AR_HOST} || -z ${AR_CONTAINER_NAMESPACE} || -z ${AR_CONTAINER_NAME} ]; then
+	echo "Please provide values for ATOMIC_USER, ATOMIC_PASSWD, ATOMIC_URL and ATOMIC_IMAGE;";
+	exit 1;
+fi
+
+oc login -u ${AR_HOST} ${AR_USER} -p ${AR_PASSWD};
+oc get projects | grep ${AR_CONTAINER_NAMESPACE};
+
+if [ $? -ne 0 ]; then
+	oc new-project ${AR_CONTAINER_NAMESPACE};
+	oc policy add-role-to-group registry-viewer system:authenticated system:unauthenticated;
+fi
+
+oc project ${AR_CONTAINER_NAMESPACE};
+TOKEN=`oc whoami -t`;
+docker login -p ${TOKEN} -u unused -e test@example.com ${AR_HOST}:5000;
+docker push ${AR_HOST}:5000/${AR_CONTAINER_NAMESPACE}/${AR_CONTAINER_NAME};
+
+docker logout ${AR_HOST}
+oc logout;
