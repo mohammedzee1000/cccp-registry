@@ -24,7 +24,7 @@ yum -y install docker atomic centos-release-openshift-origin;
 yum -y install origin-clients;
 cat /etc/sysconfig/docker | grep "registry.centos.org";
 if [ $? -ne 0 ]; then
-	echo "ADD_REGISTRY='--add-registry registry.centos.org'" >> /etc/sysconfig/docker
+	echo "ADD_REGISTRY='--add-registry registry.centos.org --add-registry localhost:5000'" >> /etc/sysconfig/docker;
 fi
 systemctl enable --now docker;
 close_step;
@@ -46,6 +46,7 @@ do
 		break;
 	fi
 done
+/var/run/setup-atomic-registry.sh
 close_step;
 
 echo "3. Pulling an image for demo purposes...";
@@ -56,7 +57,7 @@ close_step
 
 echo "4. Retagging and pushing....";
 cont_step;
-docker tag -t busybox localhost:5000/simple/box;
+docker tag busybox localhost:5000/simple/box;
 oc login localhost:8443 -u test -p test;
 oc new-project simple;
 oc policy add-role-to-group registry-viewer system:authenticated system:unauthenticated;
