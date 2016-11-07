@@ -1,7 +1,10 @@
 #!/bin/bash
 
-function cont() {
+function close_step() {
 	echo -e "\n###################################\n"
+}
+
+function cont_step() {
 	read -n 1 -s -p "Press any key to continue";
 	echo;
 }
@@ -13,22 +16,25 @@ function cont() {
 set -ex;
 
 echo "Atomic Registry DEMO";
-cont;
+cont_step;
 
 echo "Pre-Steps : "
+cont_step;
 yum -y install docker atomic;
 cat /etc/sysconfig/docker | grep registry.centos.org
 if [ $? -ne 0 ]; then
 	echo "ADD_REGISTRY='--add-registry registry.centos.org'" >> /etc/sysconfig/docker
 fi
 systemctl enable --now docker;
+close_step;
 
-cont;
 echo "1. Installing atomic registry....";
+cont_step;
 atomic install projectatomic/atomic-registry-install;
+close_step;
 
-cont;
 echo "2. Starting atomic registry, please wait for 5 mins....";
+cont_step;
 systemctl enable --now atomic-registry-master.service;
 while :
 do
@@ -38,13 +44,15 @@ do
 		break;
 	fi
 done
+close_step;
 
-cont;
 echo "3. Pulling an image for demo purposes...";
+cont_step;
 docker pull busybox;
+close_step
 
-cont;
 echo "4. Retagging and pushing....";
+cont_step;
 docker tag -t busybox localhost:5000/simple/box;
 oc login localhost:8443 -u test -p test;
 oc new-project simple;
@@ -52,19 +60,22 @@ oc policy add-role-to-group registry-viewer system:authenticated system:unauthen
 TOKEN=`oc whoami -t`;
 docker login -p ${TOKEN} -u unused -e test@test.com localhost:5000;
 docker push localhost:5000/simple/box;
+close_step;
 
-cont;
 echo "5. Deleting local copy...";
+cont_step;
 docker rmi localhost:5000/simple/box
+close_step;
 
-cont;
 echo "6. Ensuring docker is logged out (anonymous pull & no push)...";
+cont_step;
 docker logout localhost:5000
+close_step;
 
-cont;
 echo "7. Pulling image from atomic registry (anonymous pull)...";
+docker pull localhost:5000/simple/box
+cont_step;
 
-cont;
 echo "8. Atempting anonymous push to atomic registry...";
-
-cont;
+docker push localhost:5000/simple/box;
+cont_step;
