@@ -31,6 +31,7 @@ close_step;
 echo "1. Installing atomic registry....";
 cont_step;
 atomic install projectatomic/atomic-registry-install;
+docker images;
 close_step;
 
 echo "2. Starting atomic registry, please wait for 5 mins....";
