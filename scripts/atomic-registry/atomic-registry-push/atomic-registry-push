@@ -12,7 +12,13 @@ if [ -z ${AR_USER} || -z ${AR_PASSWD} || -z ${AR_HOST} || -z ${AR_CONTAINER_NAME
 	exit 1;
 fi
 
-oc login -u ${AR_HOST} ${AR_USER} -p ${AR_PASSWD};
+echo ${AR_HOST} | grep ":";
+
+if [ $? -ne 0 ]; then
+	AR_HOST="${AR_HOST}:8443"
+fi
+
+oc login ${AR_HOST} -u ${AR_USER} -p ${AR_PASSWD};
 oc get projects | grep ${AR_CONTAINER_NAMESPACE};
 
 if [ $? -ne 0 ]; then
@@ -25,5 +31,5 @@ TOKEN=`oc whoami -t`;
 docker login -p ${TOKEN} -u unused -e test@example.com ${AR_HOST}:5000;
 docker push ${AR_HOST}:5000/${AR_CONTAINER_NAMESPACE}/${AR_CONTAINER_NAME};
 
-docker logout ${AR_HOST}
+docker logout ${AR_HOST}:5000
 oc logout;
