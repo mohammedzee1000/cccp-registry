@@ -26,16 +26,20 @@ class Matcher:
             yaml_data = load(the_file)
         return yaml_data
 
-    def _mark_container_exists(self, container_name, exists):
-        self._containers_exist[container_name] = exists
+    def _mark_container_exists(self, app_id, job_id, desired_tag, exists):
+
+        if app_id not in self._containers_exist:
+            self._containers_exist[app_id] = {}
+        if job_id not in self._containers_exist[app_id]:
+            self._containers_exist[app_id][job_id] = {}
+        self._containers_exist[app_id][job_id][desired_tag] = exists
 
     def _check_registry_for_container(self, app_id, job_id, desired_tag):
 
         container_name = app_id + "/" + job_id
-        container_full_name = container_name + ":" + desired_tag
-        self._mark_container_exists(container_full_name, False)
+        self._mark_container_exists(app_id, job_id, desired_tag, False)
         if container_name in self._image_list and desired_tag in self._registry_query.get_repo_tags(container_name):
-            self._mark_container_exists(container_full_name, True)
+            self._mark_container_exists(app_id, job_id, desired_tag, True)
 
     def run(self):
 
