@@ -53,7 +53,7 @@ class WikiCentosOrg(object):
     @staticmethod
     def _form_title(title):
         if title:
-            return "\n" + ("=" * 3) + title + ("=" * 3) + "\n"
+            return "\n" + ("=" * 3) + " " + title + " " + ("=" * 3) + "\n"
         else:
             raise Exception("Please provide title")
 
@@ -74,7 +74,7 @@ class WikiCentosOrg(object):
         row_data = "||"
         for item in items:
             row_data += str(item) + "||"
-        return "\n" + row_data + "\n"
+        return row_data + "\n"
 
     @staticmethod
     def _form_link(data, url):
@@ -90,7 +90,9 @@ class WikiCentosOrg(object):
     def _normalize_url(url):
         parsed = list(urlparse(url))
         parsed[2] = re.sub("/{2,}", "/", parsed[2])
-        return urlunparse(parsed)
+        unparsed = urlunparse(parsed)
+        unparsed = unparsed.replace("git://", "https://")
+        return unparsed
 
     def __init__(self, dump_file_path):
         self._dump_file_path = dump_file_path

@@ -47,7 +47,7 @@ class IndexReader(object):
 
         if not matched:
             section = entry["app-id"]
-            title = entry["app-id"]
+            title = entry["app-id"] + " Containers"
 
         return title, section, container_name, target_file_url
 
