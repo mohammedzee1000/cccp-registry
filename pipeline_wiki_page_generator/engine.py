@@ -61,7 +61,7 @@ class IndexReader(object):
                 sl_no += 1
                 name = item["name"]
                 url = item["url"]
-                registry_url = config["registry"] + name
+                registry_url = config["registry"] + "/" + name
                 if check_image_exists(name):
                     self._wiki_centos_org.add_table_row(sl_no, url, registry_url, name)
                 else:
