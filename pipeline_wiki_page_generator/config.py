@@ -40,7 +40,7 @@ config = {
             "title": "Mattermost Containers",
             "pattern": [
                 "^.*/mattermost*$",
-                "^sgk/.*$"
+                "^mattermost/.*$"
             ]
         }),
         ("predef_postgresql", {
