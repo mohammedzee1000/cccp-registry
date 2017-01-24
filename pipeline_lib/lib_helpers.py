@@ -27,4 +27,3 @@ class IndexValidator(Validator):
 
     def __init__(self, index_file):
         Validator.__init__(self)
-        self.

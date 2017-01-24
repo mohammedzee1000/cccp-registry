@@ -48,6 +48,10 @@ def check_image_exists(container_name):
     return exists
 
 
+def normalize_title(title):
+    return title.replace("-", " ").replace("_", " ").title()
+
+
 class WikiCentosOrg(object):
 
     @staticmethod
@@ -104,6 +108,7 @@ class WikiCentosOrg(object):
             dump_file.write(data)
 
     def add_title(self, title):
+        title = normalize_title(title)
         self._write_dump_file(self._form_title(title))
 
     def add_section_indicator(self, section, end=False):
