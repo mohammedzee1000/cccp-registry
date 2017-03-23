@@ -44,9 +44,9 @@ config = {
             ]
         }),
         ("predef_postgresql", {
-            "title": "Postgresql Container",
+            "title": "Postgresql Containers",
             "pattern": [
-                "^mohammedzee1000/postgresql.*$"
+                "^postgresql/postgresql*$"
             ]
         }),
         ("predef_jboss", {
