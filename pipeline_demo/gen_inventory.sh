@@ -40,4 +40,6 @@ setup_nfs=True
 test_nfs_share=${SCANNER}:/nfsshare
 deployment=test
 allowed_hosts = "['127.0.0.1', '${JENKINS_SLAVE}']"
+db_backup_host_path=/srv/pipeline-logs/db/cccp/
+cccp_index_repo_branch=master
 EOF
