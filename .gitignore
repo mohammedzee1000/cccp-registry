@@ -3,6 +3,7 @@
 ### Example user template
 
 # IntelliJ project files
+.vagrant
 .idea
 *.iml
 out
