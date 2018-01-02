@@ -1,0 +1,1 @@
+../pipeline_gen_inventory.sh
