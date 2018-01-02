@@ -25,8 +25,10 @@ ${OPENSHIFT}
 [scanner_worker]
 ${SCANNER}
 
+[sentry]
+${JENKINS_MASTER}
+
 [all:vars]
-db_host=${JENKINS_MASTER}
 cccp_index_repo=https://github.com/mohammedzee1000/test_index.git
 beanstalk_server=${OPENSHIFT}
 copy_ssl_certs=True
@@ -40,6 +42,13 @@ setup_nfs=True
 test_nfs_share=${SCANNER}:/nfsshare
 deployment=test
 allowed_hosts = "['127.0.0.1', '${JENKINS_SLAVE}']"
-db_backup_host_path=/srv/pipeline-logs/db/cccp/
+db_host=${JENKINS_MASTER}
+db_backup_nfs_path=/srv/db/cccp
+db_local_volume=/srv/local-db-volume/cccp/
 cccp_index_repo_branch=master
+
+[jenkins_master:vars]
+logrotate_maxsize=100M
+logrotate_rotate=5
 EOF
+
