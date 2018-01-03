@@ -112,19 +112,48 @@ GEN_INVENTORY() {
     sh ./gen_inventory.sh ${INVENTORY_FILE} ${JM} ${JS} ${OS} ${SC}
 }
 
+# Core Choice functions
+
+SETUP() {
+
+    SETUP_NODES;
+    GEN_INVENTORY;
+    echo "Great, the nodes are ready along with a sample inventory file. The next steps, however,";
+    echo "will require manual intervention. Please start an ssh tunnel and then run the playbook" ;
+    echo "with provided inventory file";
+
+    echo "1.  sshuttle -v -r ${DEVCLOUD_USER}@${DEVCLOUD_JUMP_NODE} -e 'ssh -A' 172.29.0.0/16";
+    echo "2a  Make sure you get you ssh keys accepted into the nodes, rememebr password is centos by default on all nodes";
+    echo "2b.  ssh centos@${JM}";
+    echo "2c.  ssh centos@${JS}";
+    echo "2d.  ssh centos@${OS}";
+    echo "2e.  ssh centos@${SC}";
+    echo "3a. CD to directory wuth pipeline code";
+    echo "3b. ansible-playbook provisions/main.yml -bu centos -i /path/to/generated/inventory"
+
+}
+
+DEL_NODES() {
+
+    openstack_node_delete ${ND_JM_NAME};
+    openstack_node_delete ${ND_JS_NAME};
+    openstack_node_delete ${ND_OS_NAME};
+    openstack_node_delete ${ND_SC_NAME};
+
+}
+
 # MAIN BEGINS
 
-SETUP_NODES;
-GEN_INVENTORY;
-echo "Great, the nodes are ready along with a sample inventory file. The next steps, however,";
-echo "will require manual intervention. Please start an ssh tunnel and then run the playbook" ;
-echo "with provided inventory file";
+ACT=${1:-"SETUP"};
 
-echo "1.  sshuttle -v -r ${DEVCLOUD_USER}@${DEVCLOUD_JUMP_NODE} -e 'ssh -A' 172.29.0.0/16";
-echo "2a  Make sure you get you ssh keys accepted into the nodes, rememebr password is centos by default on all nodes";
-echo "2b.  ssh centos@${JM}";
-echo "2c.  ssh centos@${JS}";
-echo "2d.  ssh centos@${OS}";
-echo "2e.  ssh centos@${SC}";
-echo "3a. CD to directory wuth pipeline code";
-echo "3b. ansible-playbook provisions/main.yml -bu centos -i /path/to/generated/inventory"
+case ${ACT} in
+    setup)
+        SETUP;
+    ;;
+    delete)
+        DEL_NODES;
+    ;;
+    *)
+    echo "Invalid choice";
+    ;;
+esac
